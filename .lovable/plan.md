@@ -1,51 +1,77 @@
-## Scope
+# Admin Backend Plan
 
-The uploaded `shikana-main.zip` is a Next.js 16 / React 19 app with:
-- **~70 page files** across public site (`shared-ui/*`), auth (`login`, `otp`, `forgot-password`), and admin panel (`admin/ui/*` — users, admin-users, aspirants, audit-trails, blogs, donations, events, jobs, members, merchandise, local-groups, roles, settings, volunteer)
-- **~150 components** (shadcn/ui, motion primitives, hero sections, forms, tables, dialogs)
-- Axios-based API layer (`lib/axios.js`) talking to an external backend
-- Auth context, cookie-based session, OTP flow
-- Many heavy deps: GSAP, Three.js/OGL, face-api.js, react-pdf, pdfjs-dist, recharts, dnd-kit, react-hook-form, zod, sonner
+The admin UI pages already exist (members, aspirants, volunteers, jobs/applications, events, blogs, donations, merchandise, local-groups, admin-users, audit-trails, roles, settings). They currently use placeholder/mock data. This plan builds the backend that powers them.
 
-This project is **TanStack Start**, not Next.js. A clean port can't be done in one shot — it'll take several iterations, and some Next-specific features (`app/layout.tsx`, `next/image`, `next/link`, `useRouter`, `[param]` folder dynamic routes, `"use client"` directives) must be converted file by file.
+## 1. Roles & access control
 
-## Phased plan
+- `app_role` enum: `super_admin`, `admin`, `editor`, `moderator`, `member`
+- `user_roles` table (`user_id`, `role`) — never store roles on profiles
+- `has_role(_user_id, _role)` security-definer function
+- `has_any_role(_user_id, _roles[])` helper
+- All admin routes gated by `has_any_role(uid, ['super_admin','admin','editor','moderator'])` via `_authenticated/admin` `beforeLoad` check calling a `getMyAdminContext` server fn
+- Public `profiles` table auto-created on signup via trigger
 
-I'll port in vertical slices so you have a runnable app at each stage. This plan covers **Phase 1 only**; we'll iterate after you see it.
+## 2. Domain tables (all in `public`, RLS on, GRANTs included)
 
-### Phase 1 — Foundation + public landing page (this turn)
+```text
+profiles(id=auth uid, full_name, phone, avatar_url, county, constituency, ward, id_number, dob, gender, created_at)
+members(id, profile_id, member_no unique, status[pending|active|suspended|expired], tier, joined_at, expires_at)
+local_groups(id, name unique, county, constituency, ward, leader_profile_id, description, created_at)
+aspirants(id, profile_id, position_id, status[pending|approved|rejected|withdrawn], manifesto, motivation, reviewed_by, reviewed_at, notes)
+political_positions(id, title, level[national|county|constituency|ward], description, is_active)
+party_positions(id, title, description, is_active)            -- internal
+volunteers(id, profile_id, skills[], availability, areas_of_interest, status[pending|approved|rejected], reviewed_by, reviewed_at, notes)
+events(id, category_id, title, slug unique, description, location, starts_at, ends_at, cover_url, capacity, is_published)
+event_categories(id, name unique, color)
+event_registrations(id, event_id, profile_id, status, registered_at)
+blogs(id, title, slug unique, excerpt, body, cover_url, author_id, status[draft|published], published_at, tags[])
+publications(id, title, file_url, description, published_at)
+jobs(id, title, slug unique, description, location, type, is_open, posted_by, closes_at, created_at)
+job_applications(id, job_id, profile_id, cover_letter, cv_url, status[submitted|reviewing|shortlisted|rejected|hired], notes)
+merchandise(id, name, slug unique, description, price_cents, currency, stock, images[], is_active)
+donations(id, donor_name, donor_email, donor_phone, amount_cents, currency, method, reference, status[pending|completed|failed], notes, created_at)
+contact_messages(id, name, email, subject, body, status[new|read|replied], created_at)
+faqs(id, question, answer, category, sort_order, is_published)
+audit_logs(id, actor_id, action, entity, entity_id, diff jsonb, created_at)
+settings(key primary key, value jsonb, updated_by, updated_at)
+```
 
-1. **Dependencies.** Add the runtime libs the ported code needs: `axios`, `js-cookie`, `react-hook-form`, `@hookform/resolvers`, `zod`, `react-hot-toast`, `motion`, `gsap`, `lucide-react`, `@tabler/icons-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, `date-fns`, `embla-carousel-react`, `recharts`, `next-themes`, plus the missing Radix primitives (`react-toast`, `react-select`, `react-slot`, etc.). Skip Three.js/face-api/pdfjs until pages that need them are ported.
-2. **Design tokens.** Port the Shikana Tailwind v4 tokens / fonts into `src/styles.css` so colors and typography match.
-3. **Shared layout primitives.** Copy `components/ui/*` (shadcn) into `src/components/ui/`, replacing the template's versions where names overlap. Bring over `lib/utils.ts`, `hooks/use-mobile.ts`.
-4. **Assets.** Move `public/*` images into the project's `public/` folder so they keep working.
-5. **Public site shell.** Convert `app/layout.tsx` + `components/header.tsx` + `components/footer.tsx` into a TanStack pathless layout `src/routes/_public.tsx`.
-6. **Home page.** Convert `app/page.tsx` (with `hero-section`, `mission-vision`, `impact-story-home`, `thematic-areas`, `events-preview`, `blog-preview`, `testimonials-section`, `newsletter-cta`) into `src/routes/index.tsx`.
-7. **404/error pages** stay as-is in `__root.tsx`.
+## 3. RLS policy patterns
 
-Deferred (later phases, in this order):
-- **Phase 2:** Remaining public pages (`about`, `contact`, `faq`, `donate`, `events`, `blog`, `careers`, `volunteer`, `local-group`, `publications`, `register`, `verify-membership`, legal pages).
-- **Phase 3:** Auth flow (`/login`, `/otp`, `/forgot-password`) + `AuthContext` adapted for TanStack (router context + `_authenticated` guard).
-- **Phase 4:** Admin shell (`app-sidebar`, `site-header`, `nav-*`) under `src/routes/_authenticated/admin/`.
-- **Phase 5:** Admin CRUD pages in batches (dashboard + users → aspirants/volunteers/members → blogs/events/jobs → donations/merchandise/local-groups → audit-trails/roles/settings).
+- Public read (published only): blogs/events/publications/faqs/merchandise/jobs/political_positions where `is_published`/`is_active`/`status='published'`
+- Authenticated self-write: aspirants/volunteers/event_registrations/job_applications/donations insert where `profile_id = auth.uid()`; read own rows
+- Admin/editor full write: gated via `has_any_role`
+- `audit_logs`: insert via trigger only; read for admins
+- `user_roles`: read self; write super_admin only
 
-### Things I will NOT change without asking
+## 4. Server functions (`src/lib/admin/*.functions.ts`)
 
-- The backend API base URL inside `lib/axios.js` — I'll keep it pointed at the same host so your existing backend keeps working.
-- The visual design — it's ported 1:1, not redesigned.
+One file per domain. Each exports list/get/create/update/delete fns guarded by `requireSupabaseAuth` + role check, plus status transitions (approve/reject) for aspirants/volunteers/applications. Public-facing read fns (events, blogs, etc.) live in `src/lib/public/*.functions.ts`.
 
-## Technical notes
+Audit trail middleware: every admin mutation writes to `audit_logs` with actor, action, entity, before/after diff.
 
-- `next/link` → `@tanstack/react-router` `<Link to=...>`.
-- `next/navigation` `useRouter` / `usePathname` → `useNavigate` / `useLocation`.
-- `next/image` → plain `<img>` with the asset URL (no automatic optimization in this stack).
-- `app/[param]/page.tsx` → `src/routes/segment.$param.tsx` with `Route.useParams()`.
-- `"use client"` directives are removed — every TanStack route component is already a client component unless explicitly SSR'd.
-- `app/layout.tsx` becomes a pathless `_public.tsx` layout (or `_authenticated.tsx` for the admin) rendering `<Outlet />`.
-- Axios calls stay client-side for now. If/when you want them server-side, we can wrap each endpoint in `createServerFn`.
-- I'll wire `react-hot-toast` alongside the existing `sonner` rather than rip out the template's toaster.
+## 5. Storage buckets
 
-## What I need from you before starting Phase 1
+- `avatars` (public read, owner write)
+- `blog-covers`, `event-covers`, `merch-images`, `publications`, `cv-uploads` (CV is private; admin read via signed URLs)
 
-1. **Backend URL.** What's the API base URL (`NEXT_PUBLIC_API_URL` or hardcoded value) the frontend should hit? I'll read `lib/axios.js` to confirm, but if it's an env var I need the value.
-2. **Confirm scope.** OK to start with Phase 1 (foundation + landing page only) and iterate, or do you want a different starting slice (e.g. admin shell first)?
+## 6. Wiring the existing admin pages
+
+Replace mock data in each `_authenticated.admin.ui.*.tsx` route + its table/dialog components with TanStack Query calls to the new server fns (loader `ensureQueryData` + `useSuspenseQuery`, mutations via `useMutation` + invalidate).
+
+Also wire matching public pages (events, blogs, publications, donate, listings, register, volunteer, careers, political-position, party-position, contact, faq) to public read fns.
+
+## 7. Auth wiring
+
+- Signup trigger creates `profiles` row; default role = `member`
+- Admin user creation dialog calls a `createAdminUser` server fn (admin-only) that invites via Supabase Admin API and assigns role
+- `/admin` `beforeLoad` redirects non-admins to `/`
+
+## Open questions before I start
+
+1. Roles list above OK, or do you want different titles?
+2. Donations: integrate a payment provider (M-Pesa Daraja / Stripe / Paddle) now, or just record manual donations for now and add payments later?
+3. Merchandise: same — full checkout now, or admin-managed catalogue with "request to buy" for now?
+4. CV uploads for job applications — private bucket with admin-only signed URLs OK?
+
+Once you confirm, I'll execute in this order: migration → server fns → wire admin pages → wire public pages.
