@@ -3,7 +3,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { Send, ArrowLeft, Upload, FileCheck } from "lucide-react"
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { useRouter } from "@/lib/next-shims"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"

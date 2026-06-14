@@ -20,7 +20,7 @@ import api from "@/lib/axios"
 import { Spinner } from "./ui/spinner"
 import { useRouter } from "@/lib/next-shims"
 import { Roles } from "../lib/roles";
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
   const [otp, setOtp] = useState("")

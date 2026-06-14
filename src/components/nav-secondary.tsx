@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 
 export function NavSecondary({
   items,

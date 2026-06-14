@@ -1,5 +1,5 @@
 
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { Heart, TrendingUp } from "lucide-react"
 import { Herotext } from "./hero-text"
 

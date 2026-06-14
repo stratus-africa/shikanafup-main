@@ -1,5 +1,5 @@
 
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { blogArticles } from '@/lib/blog-data'
 import { Calendar, ArrowRight } from 'lucide-react'
 

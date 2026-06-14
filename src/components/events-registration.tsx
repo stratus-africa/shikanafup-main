@@ -1,6 +1,6 @@
 
 import { useState, Suspense } from 'react'
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

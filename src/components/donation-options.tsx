@@ -3,7 +3,7 @@ import { useState } from "react"
 import { Heart, Loader2, CheckCircle, XCircle, User, Mail, Phone, DollarSign } from "lucide-react"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"
-import Link from "@/lib/next-shims" // Ensure Link is imported
+import { Link } from "@/lib/next-shims"
 
 type PaymentMethod = "mpesa" | "airtel"
 type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed"

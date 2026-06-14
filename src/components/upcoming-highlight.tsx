@@ -1,5 +1,5 @@
 
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { Calendar, MapPin, Clock, ArrowRight } from "lucide-react"
 import api from "@/lib/axios";
 import { useState, useEffect } from "react";

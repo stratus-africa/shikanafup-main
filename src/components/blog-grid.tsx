@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import api from "@/lib/axios"
 import { Calendar, User, ArrowRight } from "lucide-react"
 import { Button } from "./ui/button"

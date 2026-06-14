@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Send, CheckCircle, AlertCircle, Lock } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"
 import { Button } from "./ui/button"

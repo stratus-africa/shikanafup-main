@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { CheckCircle } from "lucide-react"
 import api from "@/lib/axios"
 import toast, { Toaster } from "react-hot-toast"
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { CancelMembership } from "./cancel-membership"
 import {
   Select,
