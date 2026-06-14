@@ -50,6 +50,7 @@ import { Route as AuthenticatedAdminUiBlogsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminUiAuditTrailsRouteImport } from './routes/_authenticated.admin.ui.audit-trails'
 import { Route as AuthenticatedAdminUiAspirantsRouteImport } from './routes/_authenticated.admin.ui.aspirants'
 import { Route as AuthenticatedAdminUiAdminUsersRouteImport } from './routes/_authenticated.admin.ui.admin-users'
+import { Route as AuthenticatedAdminUiJobsJobIdApplicationsRouteImport } from './routes/_authenticated.admin.ui.jobs.$jobId.applications'
 
 const OtpRoute = OtpRouteImport.update({
   id: '/otp',
@@ -269,6 +270,12 @@ const AuthenticatedAdminUiAdminUsersRoute =
     path: '/ui/admin-users',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminUiJobsJobIdApplicationsRoute =
+  AuthenticatedAdminUiJobsJobIdApplicationsRouteImport.update({
+    id: '/$jobId/applications',
+    path: '/$jobId/applications',
+    getParentRoute: () => AuthenticatedAdminUiJobsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -301,7 +308,7 @@ export interface FileRoutesByFullPath {
   '/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
   '/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
   '/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
-  '/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRoute
+  '/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRouteWithChildren
   '/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
@@ -310,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
+  '/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
@@ -342,7 +350,7 @@ export interface FileRoutesByTo {
   '/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
   '/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
   '/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
-  '/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRoute
+  '/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRouteWithChildren
   '/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
@@ -351,6 +359,7 @@ export interface FileRoutesByTo {
   '/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
+  '/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -386,7 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
   '/_authenticated/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
   '/_authenticated/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
-  '/_authenticated/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRoute
+  '/_authenticated/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRouteWithChildren
   '/_authenticated/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/_authenticated/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/_authenticated/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
@@ -395,6 +404,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/_authenticated/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/_public/events/$id/register': typeof PublicEventsIdRegisterRoute
+  '/_authenticated/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -438,6 +448,7 @@ export interface FileRouteTypes {
     | '/admin/ui/users'
     | '/admin/ui/volunteer'
     | '/events/$id/register'
+    | '/admin/ui/jobs/$jobId/applications'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -479,6 +490,7 @@ export interface FileRouteTypes {
     | '/admin/ui/users'
     | '/admin/ui/volunteer'
     | '/events/$id/register'
+    | '/admin/ui/jobs/$jobId/applications'
   id:
     | '__root__'
     | '/_authenticated'
@@ -522,6 +534,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ui/users'
     | '/_authenticated/admin/ui/volunteer'
     | '/_public/events/$id/register'
+    | '/_authenticated/admin/ui/jobs/$jobId/applications'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -821,8 +834,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUiAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ui/jobs/$jobId/applications': {
+      id: '/_authenticated/admin/ui/jobs/$jobId/applications'
+      path: '/$jobId/applications'
+      fullPath: '/admin/ui/jobs/$jobId/applications'
+      preLoaderRoute: typeof AuthenticatedAdminUiJobsJobIdApplicationsRouteImport
+      parentRoute: typeof AuthenticatedAdminUiJobsRoute
+    }
   }
 }
+
+interface AuthenticatedAdminUiJobsRouteChildren {
+  AuthenticatedAdminUiJobsJobIdApplicationsRoute: typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
+}
+
+const AuthenticatedAdminUiJobsRouteChildren: AuthenticatedAdminUiJobsRouteChildren =
+  {
+    AuthenticatedAdminUiJobsJobIdApplicationsRoute:
+      AuthenticatedAdminUiJobsJobIdApplicationsRoute,
+  }
+
+const AuthenticatedAdminUiJobsRouteWithChildren =
+  AuthenticatedAdminUiJobsRoute._addFileChildren(
+    AuthenticatedAdminUiJobsRouteChildren,
+  )
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
@@ -832,7 +867,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminUiBlogsRoute: typeof AuthenticatedAdminUiBlogsRoute
   AuthenticatedAdminUiDonationsRoute: typeof AuthenticatedAdminUiDonationsRoute
   AuthenticatedAdminUiEventsRoute: typeof AuthenticatedAdminUiEventsRoute
-  AuthenticatedAdminUiJobsRoute: typeof AuthenticatedAdminUiJobsRoute
+  AuthenticatedAdminUiJobsRoute: typeof AuthenticatedAdminUiJobsRouteWithChildren
   AuthenticatedAdminUiLocalGroupsRoute: typeof AuthenticatedAdminUiLocalGroupsRoute
   AuthenticatedAdminUiMembersRoute: typeof AuthenticatedAdminUiMembersRoute
   AuthenticatedAdminUiMerchandiseRoute: typeof AuthenticatedAdminUiMerchandiseRoute
@@ -850,7 +885,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminUiBlogsRoute: AuthenticatedAdminUiBlogsRoute,
   AuthenticatedAdminUiDonationsRoute: AuthenticatedAdminUiDonationsRoute,
   AuthenticatedAdminUiEventsRoute: AuthenticatedAdminUiEventsRoute,
-  AuthenticatedAdminUiJobsRoute: AuthenticatedAdminUiJobsRoute,
+  AuthenticatedAdminUiJobsRoute: AuthenticatedAdminUiJobsRouteWithChildren,
   AuthenticatedAdminUiLocalGroupsRoute: AuthenticatedAdminUiLocalGroupsRoute,
   AuthenticatedAdminUiMembersRoute: AuthenticatedAdminUiMembersRoute,
   AuthenticatedAdminUiMerchandiseRoute: AuthenticatedAdminUiMerchandiseRoute,
