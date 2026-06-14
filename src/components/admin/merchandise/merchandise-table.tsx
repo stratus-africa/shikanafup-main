@@ -1,241 +1,120 @@
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import toast from "react-hot-toast";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Plus, Pencil, Trash2 } from "lucide-react";
+import { DataToolbar } from "@/components/admin/_shared/data-toolbar";
+import { listMerchandise, createMerchandise, updateMerchandise, deleteMerchandise } from "@/lib/admin/merchandise.functions";
 
-import { useEffect, useMemo, useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Search, MoreHorizontal, Eye, Pencil, Trash2, Plus } from "lucide-react"
-import api from "@/lib/axios"
-import { AddNewMerchandise, MerchandiseData } from "./add-merchandise"
-import toast from "react-hot-toast"
+const KEY = ["admin", "merchandise"];
 
-type Merchandise = MerchandiseData & {
-  createdDate: string
+function MerchForm({ initial, onSubmit, pending }: any) {
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); const imgs = String(fd.get("images") || "").split(",").map((s) => s.trim()).filter(Boolean); onSubmit({
+      ...(initial?.id ? { id: initial.id } : {}),
+      name: fd.get("name"),
+      slug: fd.get("slug") || undefined,
+      description: fd.get("description") || null,
+      price_cents: Math.round(Number(fd.get("price") || 0) * 100),
+      currency: (fd.get("currency") || "KES") as string,
+      stock: Number(fd.get("stock") || 0),
+      images: imgs,
+    }); }} className="space-y-3">
+      <div><Label>Name</Label><Input name="name" required defaultValue={initial?.name ?? ""} /></div>
+      <div className="grid grid-cols-3 gap-3">
+        <div><Label>Price</Label><Input type="number" step="0.01" name="price" required defaultValue={initial ? (initial.price_cents/100).toString() : ""} /></div>
+        <div><Label>Currency</Label><Input name="currency" defaultValue={initial?.currency ?? "KES"} /></div>
+        <div><Label>Stock</Label><Input type="number" name="stock" defaultValue={initial?.stock ?? 0} /></div>
+      </div>
+      <div><Label>Image URLs (comma-separated)</Label><Input name="images" defaultValue={(initial?.images ?? []).join(", ")} /></div>
+      <div><Label>Description</Label><Textarea name="description" rows={5} defaultValue={initial?.description ?? ""} /></div>
+      <DialogFooter><Button type="submit" disabled={pending}>Save</Button></DialogFooter>
+    </form>
+  );
 }
 
 export function MerchandiseTable() {
-  const [data, setData] = useState<Merchandise[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [dialogMode, setDialogMode] = useState<"create" | "edit" | "view">("create")
-  const [selectedItem, setSelectedItem] = useState<Merchandise | undefined>(undefined)
+  const qc = useQueryClient();
+  const list = useServerFn(listMerchandise);
+  const create = useServerFn(createMerchandise);
+  const update = useServerFn(updateMerchandise);
+  const del = useServerFn(deleteMerchandise);
 
-  const fetchMerchandise = async () => {
-    try {
-      setLoading(true)
-      const res = await api.get("/api/merchandise/all")
-      const items = Array.isArray(res.data) ? res.data : (res.data?.data ?? [])
+  const [search, setSearch] = useState("");
+  const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState<any | null>(null);
+  const [confirmDel, setConfirmDel] = useState<any | null>(null);
 
-      // Transform API data to match frontend model
-      const mappedItems = items.map((item: any) => ({
-        ...item,
-        stock: item.stock_quantity ?? item.stock,
-        size: typeof item.size === 'string' ? JSON.parse(item.size) : item.size,
-      }))
+  const { data = [], isLoading, error } = useQuery({ queryKey: KEY, queryFn: () => list() });
+  const inv = () => qc.invalidateQueries({ queryKey: KEY });
+  const createMut = useMutation({ mutationFn: (v: any) => create({ data: v }), onSuccess: () => { inv(); toast.success("Added"); setAdding(false); }, onError: (e: any) => toast.error(e.message) });
+  const updateMut = useMutation({ mutationFn: (v: any) => update({ data: v }), onSuccess: () => { inv(); toast.success("Updated"); setEditing(null); }, onError: (e: any) => toast.error(e.message) });
+  const deleteMut = useMutation({ mutationFn: (id: string) => del({ data: { id } }), onSuccess: () => { inv(); toast.success("Deleted"); setConfirmDel(null); }, onError: (e: any) => toast.error(e.message) });
 
-      setData(mappedItems)
-    } catch (err) {
-      console.error(err)
-      setError("Failed to load merchandise")
-    } finally {
-      setLoading(false)
-    }
-  }
+  const rows = (data as any[]).filter((r) => {
+    const q = search.toLowerCase();
+    return !q || r.name?.toLowerCase().includes(q);
+  });
 
-  useEffect(() => {
-    fetchMerchandise()
-  }, [])
-
-  const filteredData = useMemo(() => {
-    if (!Array.isArray(data)) return []
-    return data.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
-  }, [data, searchTerm])
-
-  const handleMerchandiseAdded = () => {
-    setIsDialogOpen(false)
-    fetchMerchandise()
-  }
-
-  const handleCreate = () => {
-    setDialogMode("create")
-    setSelectedItem(undefined)
-    setIsDialogOpen(true)
-  }
-
-  const handleEdit = (item: Merchandise) => {
-    setDialogMode("edit")
-    setSelectedItem(item)
-    setIsDialogOpen(true)
-  }
-
-  const handleView = (item: Merchandise) => {
-    setDialogMode("view")
-    setSelectedItem(item)
-    setIsDialogOpen(true)
-  }
-
-  const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this item?")) return
-
-    try {
-      await api.delete(`/api/merchandise/delete/${id}`)
-      toast.success("Merchandise deleted successfully")
-      fetchMerchandise()
-    } catch (error) {
-      console.error("Error deleting merchandise:", error)
-      toast.error("Failed to delete merchandise")
-    }
-  }
-
-  if (loading) {
-    return <div className="p-4 text-sm text-muted-foreground">Loading merchandise…</div>
-  }
-
-  if (error) {
-    return <div className="rounded-lg border bg-gray-100 p-6 text-center text-sm text-gray-700">{error}</div>
-  }
+  if (error) return <div className="rounded-md border border-destructive bg-destructive/10 p-4 text-sm text-destructive">Failed to load: {(error as Error).message}</div>;
 
   return (
     <div className="space-y-4">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative max-w-sm flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search merchandise..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 bg-transparent"
-          />
-        </div>
+      <DataToolbar search={search} onSearch={setSearch} placeholder="Search merchandise…" count={rows.length}>
+        <Dialog open={adding} onOpenChange={setAdding}>
+          <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />New Item</Button></DialogTrigger>
+          <DialogContent className="max-w-2xl"><DialogHeader><DialogTitle>New Item</DialogTitle></DialogHeader>
+            <MerchForm onSubmit={(v: any) => createMut.mutate(v)} pending={createMut.isPending} />
+          </DialogContent>
+        </Dialog>
+      </DataToolbar>
 
-        <Button onClick={handleCreate}>
-          <Plus className="mr-2 h-4 w-4" />
-          New Merchandise
-        </Button>
-      </div>
-
-      {/* Table */}
-      <div className="rounded-lg border bg-card overflow-auto">
+      <div className="rounded-md border">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>#</TableHead>
-              <TableHead>Image</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-
+          <TableHeader><TableRow><TableHead>Item</TableHead><TableHead>Price</TableHead><TableHead>Stock</TableHead><TableHead>Active</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
           <TableBody>
-            {filteredData.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={8} className="h-32 text-center text-muted-foreground">
-                  No merchandise found
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredData.map((item, idx) => (
-                <TableRow key={item.id} className="hover:bg-muted/50 transition-colors">
-                  <TableCell>{idx + 1}</TableCell>
-
-                  <TableCell>
-                    <img
-                      src={item.image || "/placeholder.svg?height=40&width=40"}
-                      alt={item.name}
-                      className="h-10 w-10 rounded-md object-cover border"
-                    />
+            {isLoading ? Array.from({ length: 5 }).map((_, i) => <TableRow key={i}><TableCell colSpan={5}><Skeleton className="h-6 w-full" /></TableCell></TableRow>)
+              : rows.length === 0 ? <TableRow><TableCell colSpan={5} className="py-8 text-center text-sm text-muted-foreground">No merchandise yet.</TableCell></TableRow>
+              : rows.map((m: any) => (
+                <TableRow key={m.id}>
+                  <TableCell className="font-medium flex items-center gap-2">
+                    {m.images?.[0] && <img src={m.images[0]} alt="" className="h-10 w-10 rounded object-cover" />}
+                    {m.name}
                   </TableCell>
-
-                  <TableCell className="max-w-xs truncate font-medium" title={item.name}>
-                    {item.name}
-                  </TableCell>
-
-                  <TableCell>{item.category}</TableCell>
-
-                  <TableCell>KES {item.price.toLocaleString()}</TableCell>
-
-                  <TableCell>
-                    {item.stock === 0 ? (
-                      <Badge variant="destructive">Out of Stock</Badge>
-                    ) : item.stock < 10 ? (
-                      <Badge variant="secondary">Low ({item.stock})</Badge>
-                    ) : (
-                      <Badge variant="outline">In Stock</Badge>
-                    )}
-                  </TableCell>
-
-                  <TableCell>
-                    <Badge variant={item.status === "ACTIVE" ? "default" : "secondary"}>{item.status}</Badge>
-                  </TableCell>
-
+                  <TableCell>{m.currency} {(m.price_cents/100).toFixed(2)}</TableCell>
+                  <TableCell>{m.stock}</TableCell>
+                  <TableCell><Badge variant={m.is_active === false ? "outline" : "default"}>{m.is_active === false ? "Off" : "On"}</Badge></TableCell>
                   <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => handleView(item)}>
-                          <Eye className="mr-2 h-4 w-4" />
-                          View
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEdit(item)}>
-                          <Pencil className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-destructive focus:text-destructive"
-                          onClick={() => item.id && handleDelete(item.id)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Button size="icon" variant="ghost" onClick={() => setEditing(m)}><Pencil className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onClick={() => setConfirmDel(m)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
+              ))}
           </TableBody>
         </Table>
       </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="sr-only">Add New Merchandise</DialogTitle>
-          </DialogHeader>
-          <AddNewMerchandise
-            mode={dialogMode}
-            initialData={selectedItem}
-            onSuccess={handleMerchandiseAdded}
-            onCancel={() => setIsDialogOpen(false)}
-          />
+      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        <DialogContent className="max-w-2xl"><DialogHeader><DialogTitle>Edit Item</DialogTitle></DialogHeader>
+          {editing && <MerchForm initial={editing} onSubmit={(v: any) => updateMut.mutate(v)} pending={updateMut.isPending} />}
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!confirmDel} onOpenChange={(o) => !o && setConfirmDel(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader><AlertDialogTitle>Delete "{confirmDel?.name}"?</AlertDialogTitle></AlertDialogHeader>
+          <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => confirmDel && deleteMut.mutate(confirmDel.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
-  )
+  );
 }
