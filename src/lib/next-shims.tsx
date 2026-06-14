@@ -92,6 +92,7 @@ export function useSearchParams(): URLSearchParams {
 }
 
 export function useParams<T extends Record<string, string> = Record<string, string>>(): T {
+  // @ts-expect-error — generic shim across all routes
   return useTSParams({ strict: false }) as T;
 }
 
