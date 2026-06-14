@@ -193,3 +193,26 @@ export function cookies() {
 export function headers() {
   return new Headers();
 }
+
+// next/dynamic — render the dynamic component lazily.
+type DynamicOptions = { ssr?: boolean; loading?: () => React.ReactNode };
+export function dynamic<T = unknown>(
+  loader: () => Promise<{ default: React.ComponentType<T> } | React.ComponentType<T>>,
+  opts?: DynamicOptions,
+): React.ComponentType<T> {
+  const Lazy = React.lazy(async () => {
+    const mod = await loader();
+    return "default" in (mod as object) ? (mod as { default: React.ComponentType<T> }) : { default: mod as React.ComponentType<T> };
+  });
+  const fallback = opts?.loading ? opts.loading() : null;
+  return ((props: T) => (
+    <React.Suspense fallback={fallback as React.ReactNode}>
+      {/* @ts-expect-error pass-through props */}
+      <Lazy {...props} />
+    </React.Suspense>
+  )) as React.ComponentType<T>;
+}
+
+// Default export — `import Link from "next/link"` and `import Image from "next/image"`
+// land here via vite alias. Re-export the most common defaults.
+export default Link;
