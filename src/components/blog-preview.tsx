@@ -1,4 +1,4 @@
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { ArrowRight } from "lucide-react"
 import { useEffect, useState } from "react"
 import api from "@/lib/axios"

@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { Herotext } from "./hero-text"
 

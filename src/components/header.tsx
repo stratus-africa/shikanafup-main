@@ -1,6 +1,6 @@
 
 import { useState } from "react"
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import { usePathname, useRouter } from "@/lib/next-shims"
 import {
   Menu, X, Facebook, Twitter, Instagram, Youtube,

@@ -3,7 +3,7 @@ import type React from "react"
 import { useState } from "react"
 import { Mail, CheckCircle } from "lucide-react"
 import { TextShimmer } from "./motion-primitives/text-shimmer"
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("")

@@ -1,5 +1,5 @@
 
-import Link from "@/lib/next-shims"
+import { Link } from "@/lib/next-shims"
 import {
   Facebook,
   Twitter,
