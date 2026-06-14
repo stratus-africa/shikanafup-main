@@ -212,7 +212,3 @@ export function dynamic<T = unknown>(
     </React.Suspense>
   )) as React.ComponentType<T>;
 }
-
-// Default export — `import Link from "next/link"` and `import Image from "next/image"`
-// land here via vite alias. Re-export the most common defaults.
-export default Link;
