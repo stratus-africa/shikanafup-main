@@ -11,6 +11,25 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
+import { Route as PublicVolunteerRouteImport } from './routes/_public.volunteer'
+import { Route as PublicTermsRouteImport } from './routes/_public.terms'
+import { Route as PublicRegisterRouteImport } from './routes/_public.register'
+import { Route as PublicPublicationsRouteImport } from './routes/_public.publications'
+import { Route as PublicPrivacyRouteImport } from './routes/_public.privacy'
+import { Route as PublicPoliticalPositionRouteImport } from './routes/_public.political-position'
+import { Route as PublicPartyPositionRouteImport } from './routes/_public.party-position'
+import { Route as PublicLocalGroupRouteImport } from './routes/_public.local-group'
+import { Route as PublicListingsRouteImport } from './routes/_public.listings'
+import { Route as PublicFaqRouteImport } from './routes/_public.faq'
+import { Route as PublicEventsRouteImport } from './routes/_public.events'
+import { Route as PublicDonateRouteImport } from './routes/_public.donate'
+import { Route as PublicContactRouteImport } from './routes/_public.contact'
+import { Route as PublicCareersRouteImport } from './routes/_public.careers'
+import { Route as PublicBlogRouteImport } from './routes/_public.blog'
+import { Route as PublicAboutRouteImport } from './routes/_public.about'
+import { Route as PublicEventsIdRouteImport } from './routes/_public.events.$id'
+import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
+import { Route as PublicEventsIdRegisterRouteImport } from './routes/_public.events.$id.register'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -21,24 +40,238 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicVolunteerRoute = PublicVolunteerRouteImport.update({
+  id: '/volunteer',
+  path: '/volunteer',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicTermsRoute = PublicTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicRegisterRoute = PublicRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPublicationsRoute = PublicPublicationsRouteImport.update({
+  id: '/publications',
+  path: '/publications',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPrivacyRoute = PublicPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPoliticalPositionRoute = PublicPoliticalPositionRouteImport.update({
+  id: '/political-position',
+  path: '/political-position',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPartyPositionRoute = PublicPartyPositionRouteImport.update({
+  id: '/party-position',
+  path: '/party-position',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicLocalGroupRoute = PublicLocalGroupRouteImport.update({
+  id: '/local-group',
+  path: '/local-group',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicListingsRoute = PublicListingsRouteImport.update({
+  id: '/listings',
+  path: '/listings',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicFaqRoute = PublicFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEventsRoute = PublicEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicDonateRoute = PublicDonateRouteImport.update({
+  id: '/donate',
+  path: '/donate',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicContactRoute = PublicContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicCareersRoute = PublicCareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicBlogRoute = PublicBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicAboutRoute = PublicAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicEventsIdRoute = PublicEventsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PublicEventsRoute,
+} as any)
+const PublicBlogIdRoute = PublicBlogIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PublicBlogRoute,
+} as any)
+const PublicEventsIdRegisterRoute = PublicEventsIdRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => PublicEventsIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/about': typeof PublicAboutRoute
+  '/blog': typeof PublicBlogRouteWithChildren
+  '/careers': typeof PublicCareersRoute
+  '/contact': typeof PublicContactRoute
+  '/donate': typeof PublicDonateRoute
+  '/events': typeof PublicEventsRouteWithChildren
+  '/faq': typeof PublicFaqRoute
+  '/listings': typeof PublicListingsRoute
+  '/local-group': typeof PublicLocalGroupRoute
+  '/party-position': typeof PublicPartyPositionRoute
+  '/political-position': typeof PublicPoliticalPositionRoute
+  '/privacy': typeof PublicPrivacyRoute
+  '/publications': typeof PublicPublicationsRoute
+  '/register': typeof PublicRegisterRoute
+  '/terms': typeof PublicTermsRoute
+  '/volunteer': typeof PublicVolunteerRoute
+  '/blog/$id': typeof PublicBlogIdRoute
+  '/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
 export interface FileRoutesByTo {
+  '/about': typeof PublicAboutRoute
+  '/blog': typeof PublicBlogRouteWithChildren
+  '/careers': typeof PublicCareersRoute
+  '/contact': typeof PublicContactRoute
+  '/donate': typeof PublicDonateRoute
+  '/events': typeof PublicEventsRouteWithChildren
+  '/faq': typeof PublicFaqRoute
+  '/listings': typeof PublicListingsRoute
+  '/local-group': typeof PublicLocalGroupRoute
+  '/party-position': typeof PublicPartyPositionRoute
+  '/political-position': typeof PublicPoliticalPositionRoute
+  '/privacy': typeof PublicPrivacyRoute
+  '/publications': typeof PublicPublicationsRoute
+  '/register': typeof PublicRegisterRoute
+  '/terms': typeof PublicTermsRoute
+  '/volunteer': typeof PublicVolunteerRoute
   '/': typeof PublicIndexRoute
+  '/blog/$id': typeof PublicBlogIdRoute
+  '/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_public': typeof PublicRouteWithChildren
+  '/_public/about': typeof PublicAboutRoute
+  '/_public/blog': typeof PublicBlogRouteWithChildren
+  '/_public/careers': typeof PublicCareersRoute
+  '/_public/contact': typeof PublicContactRoute
+  '/_public/donate': typeof PublicDonateRoute
+  '/_public/events': typeof PublicEventsRouteWithChildren
+  '/_public/faq': typeof PublicFaqRoute
+  '/_public/listings': typeof PublicListingsRoute
+  '/_public/local-group': typeof PublicLocalGroupRoute
+  '/_public/party-position': typeof PublicPartyPositionRoute
+  '/_public/political-position': typeof PublicPoliticalPositionRoute
+  '/_public/privacy': typeof PublicPrivacyRoute
+  '/_public/publications': typeof PublicPublicationsRoute
+  '/_public/register': typeof PublicRegisterRoute
+  '/_public/terms': typeof PublicTermsRoute
+  '/_public/volunteer': typeof PublicVolunteerRoute
   '/_public/': typeof PublicIndexRoute
+  '/_public/blog/$id': typeof PublicBlogIdRoute
+  '/_public/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/_public/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/blog'
+    | '/careers'
+    | '/contact'
+    | '/donate'
+    | '/events'
+    | '/faq'
+    | '/listings'
+    | '/local-group'
+    | '/party-position'
+    | '/political-position'
+    | '/privacy'
+    | '/publications'
+    | '/register'
+    | '/terms'
+    | '/volunteer'
+    | '/blog/$id'
+    | '/events/$id'
+    | '/events/$id/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_public' | '/_public/'
+  to:
+    | '/about'
+    | '/blog'
+    | '/careers'
+    | '/contact'
+    | '/donate'
+    | '/events'
+    | '/faq'
+    | '/listings'
+    | '/local-group'
+    | '/party-position'
+    | '/political-position'
+    | '/privacy'
+    | '/publications'
+    | '/register'
+    | '/terms'
+    | '/volunteer'
+    | '/'
+    | '/blog/$id'
+    | '/events/$id'
+    | '/events/$id/register'
+  id:
+    | '__root__'
+    | '/_public'
+    | '/_public/about'
+    | '/_public/blog'
+    | '/_public/careers'
+    | '/_public/contact'
+    | '/_public/donate'
+    | '/_public/events'
+    | '/_public/faq'
+    | '/_public/listings'
+    | '/_public/local-group'
+    | '/_public/party-position'
+    | '/_public/political-position'
+    | '/_public/privacy'
+    | '/_public/publications'
+    | '/_public/register'
+    | '/_public/terms'
+    | '/_public/volunteer'
+    | '/_public/'
+    | '/_public/blog/$id'
+    | '/_public/events/$id'
+    | '/_public/events/$id/register'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -61,14 +294,215 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/volunteer': {
+      id: '/_public/volunteer'
+      path: '/volunteer'
+      fullPath: '/volunteer'
+      preLoaderRoute: typeof PublicVolunteerRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/terms': {
+      id: '/_public/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof PublicTermsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/register': {
+      id: '/_public/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof PublicRegisterRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/publications': {
+      id: '/_public/publications'
+      path: '/publications'
+      fullPath: '/publications'
+      preLoaderRoute: typeof PublicPublicationsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/privacy': {
+      id: '/_public/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PublicPrivacyRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/political-position': {
+      id: '/_public/political-position'
+      path: '/political-position'
+      fullPath: '/political-position'
+      preLoaderRoute: typeof PublicPoliticalPositionRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/party-position': {
+      id: '/_public/party-position'
+      path: '/party-position'
+      fullPath: '/party-position'
+      preLoaderRoute: typeof PublicPartyPositionRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/local-group': {
+      id: '/_public/local-group'
+      path: '/local-group'
+      fullPath: '/local-group'
+      preLoaderRoute: typeof PublicLocalGroupRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/listings': {
+      id: '/_public/listings'
+      path: '/listings'
+      fullPath: '/listings'
+      preLoaderRoute: typeof PublicListingsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/faq': {
+      id: '/_public/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof PublicFaqRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/events': {
+      id: '/_public/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof PublicEventsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/donate': {
+      id: '/_public/donate'
+      path: '/donate'
+      fullPath: '/donate'
+      preLoaderRoute: typeof PublicDonateRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/contact': {
+      id: '/_public/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof PublicContactRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/careers': {
+      id: '/_public/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof PublicCareersRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/blog': {
+      id: '/_public/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof PublicBlogRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/about': {
+      id: '/_public/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof PublicAboutRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/events/$id': {
+      id: '/_public/events/$id'
+      path: '/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof PublicEventsIdRouteImport
+      parentRoute: typeof PublicEventsRoute
+    }
+    '/_public/blog/$id': {
+      id: '/_public/blog/$id'
+      path: '/$id'
+      fullPath: '/blog/$id'
+      preLoaderRoute: typeof PublicBlogIdRouteImport
+      parentRoute: typeof PublicBlogRoute
+    }
+    '/_public/events/$id/register': {
+      id: '/_public/events/$id/register'
+      path: '/register'
+      fullPath: '/events/$id/register'
+      preLoaderRoute: typeof PublicEventsIdRegisterRouteImport
+      parentRoute: typeof PublicEventsIdRoute
+    }
   }
 }
 
+interface PublicBlogRouteChildren {
+  PublicBlogIdRoute: typeof PublicBlogIdRoute
+}
+
+const PublicBlogRouteChildren: PublicBlogRouteChildren = {
+  PublicBlogIdRoute: PublicBlogIdRoute,
+}
+
+const PublicBlogRouteWithChildren = PublicBlogRoute._addFileChildren(
+  PublicBlogRouteChildren,
+)
+
+interface PublicEventsIdRouteChildren {
+  PublicEventsIdRegisterRoute: typeof PublicEventsIdRegisterRoute
+}
+
+const PublicEventsIdRouteChildren: PublicEventsIdRouteChildren = {
+  PublicEventsIdRegisterRoute: PublicEventsIdRegisterRoute,
+}
+
+const PublicEventsIdRouteWithChildren = PublicEventsIdRoute._addFileChildren(
+  PublicEventsIdRouteChildren,
+)
+
+interface PublicEventsRouteChildren {
+  PublicEventsIdRoute: typeof PublicEventsIdRouteWithChildren
+}
+
+const PublicEventsRouteChildren: PublicEventsRouteChildren = {
+  PublicEventsIdRoute: PublicEventsIdRouteWithChildren,
+}
+
+const PublicEventsRouteWithChildren = PublicEventsRoute._addFileChildren(
+  PublicEventsRouteChildren,
+)
+
 interface PublicRouteChildren {
+  PublicAboutRoute: typeof PublicAboutRoute
+  PublicBlogRoute: typeof PublicBlogRouteWithChildren
+  PublicCareersRoute: typeof PublicCareersRoute
+  PublicContactRoute: typeof PublicContactRoute
+  PublicDonateRoute: typeof PublicDonateRoute
+  PublicEventsRoute: typeof PublicEventsRouteWithChildren
+  PublicFaqRoute: typeof PublicFaqRoute
+  PublicListingsRoute: typeof PublicListingsRoute
+  PublicLocalGroupRoute: typeof PublicLocalGroupRoute
+  PublicPartyPositionRoute: typeof PublicPartyPositionRoute
+  PublicPoliticalPositionRoute: typeof PublicPoliticalPositionRoute
+  PublicPrivacyRoute: typeof PublicPrivacyRoute
+  PublicPublicationsRoute: typeof PublicPublicationsRoute
+  PublicRegisterRoute: typeof PublicRegisterRoute
+  PublicTermsRoute: typeof PublicTermsRoute
+  PublicVolunteerRoute: typeof PublicVolunteerRoute
   PublicIndexRoute: typeof PublicIndexRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicAboutRoute: PublicAboutRoute,
+  PublicBlogRoute: PublicBlogRouteWithChildren,
+  PublicCareersRoute: PublicCareersRoute,
+  PublicContactRoute: PublicContactRoute,
+  PublicDonateRoute: PublicDonateRoute,
+  PublicEventsRoute: PublicEventsRouteWithChildren,
+  PublicFaqRoute: PublicFaqRoute,
+  PublicListingsRoute: PublicListingsRoute,
+  PublicLocalGroupRoute: PublicLocalGroupRoute,
+  PublicPartyPositionRoute: PublicPartyPositionRoute,
+  PublicPoliticalPositionRoute: PublicPoliticalPositionRoute,
+  PublicPrivacyRoute: PublicPrivacyRoute,
+  PublicPublicationsRoute: PublicPublicationsRoute,
+  PublicRegisterRoute: PublicRegisterRoute,
+  PublicTermsRoute: PublicTermsRoute,
+  PublicVolunteerRoute: PublicVolunteerRoute,
   PublicIndexRoute: PublicIndexRoute,
 }
 
