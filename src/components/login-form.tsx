@@ -1,23 +1,15 @@
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "@/lib/next-shims"
 import { useState } from "react"
 import { Spinner } from "./ui/spinner"
-import api from "@/lib/axios";
-import { useAuth } from "@/context/auth-context";
-import { Roles } from "@/lib/roles";
+import { supabase } from "@/integrations/supabase/client"
+import { useAuth } from "@/context/auth-context"
 import { Eye, EyeOff } from "lucide-react"
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast'
 import { Card, CardContent } from "./ui/card"
 
-// Define the component's props by omitting the conflicting 'ref' and 'key' properties.
-// The rest of the props will now correctly map to standard form attributes.
 type LoginFormProps = Omit<React.ComponentProps<"form">, 'ref' | 'key'>;
 
 export function LoginForm({
@@ -38,45 +30,44 @@ export function LoginForm({
     setIsLoading(true)
 
     try {
-      const formData = new FormData(e.currentTarget)
-      const username = formData.get("username")
-      const password = formData.get("password")
+      const email = username.trim()
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-      const result = await api.post(
-        "/api/users/login",
-        { username, password },
-        { validateStatus: () => true }
+      if (error || !data.session || !data.user) {
+        toast.error(error?.message || "Login failed")
+        return
+      }
 
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id)
+
+      const roleList = (roles ?? []).map((r: any) => r.role as string)
+      const isStaff = roleList.some((r) =>
+        ["super_admin", "admin", "editor", "moderator"].includes(r),
       )
 
-      if (result.data?.statusCode !== 200) {
-        toast.error(result.data?.message || "Login failed")
-        return
+      const userObj = {
+        id: data.user.id,
+        username: data.user.email ?? "",
+        email: data.user.email ?? "",
+        role: roleList[0] ?? "member",
       }
-      const { user, token } = result?.data?.data
 
-      // Use context login
-      localStorage.setItem("user", JSON.stringify(user))
-      localStorage.setItem("token", JSON.stringify(token))
-      login(user, token)
-      toast.success(result.data?.message || "Login successful")
-      const userRole = result.data.data?.user?.role_id;
-      if (userRole == 1 || userRole == 3 || userRole == 4) {
+      login(userObj, data.session.access_token)
+      toast.success("Login successful")
+
+      if (isStaff) {
         router.push("/admin/dashboard")
-        return
+      } else {
+        router.push("/")
       }
-
-      else if (userRole == 2) {
-        router.push("/shared-ui/political-position")
-        return
-      }
-      else {
-        router.push("/login")
-      }
-
-      // router.push("/otp")
-    } catch {
-      toast.error("An unexpected error occurred")
+    } catch (err: any) {
+      toast.error(err?.message || "An unexpected error occurred")
     } finally {
       setIsLoading(false)
     }
@@ -103,28 +94,21 @@ export function LoginForm({
               </h1>
 
               <p className="text-sm text-muted-foreground">
-                Enter your email/phone number and password to continue
+                Enter your email and password to continue
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Username *
+                Email *
               </label>
               <Input
-                type="text"
+                type="email"
                 name="username"
                 value={username}
-                onChange={(e) => {
-                  let val = e.target.value
-                  // If it starts with a number and specifically starts with 0, prepend 254
-                  if (/^\d/.test(val) && val.startsWith("0")) {
-                    val = "254" + val.substring(1)
-                  }
-                  setUsername(val)
-                }}
+                onChange={(e) => setUsername(e.target.value)}
                 className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                placeholder="email or phone number (254...)"
+                placeholder="you@example.com"
               />
             </div>
 
