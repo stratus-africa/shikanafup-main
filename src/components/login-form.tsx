@@ -1,4 +1,3 @@
-"use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -7,7 +6,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/lib/next-shims"
 import { useState } from "react"
 import { Spinner } from "./ui/spinner"
 import api from "@/lib/axios";

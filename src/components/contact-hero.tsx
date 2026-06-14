@@ -1,4 +1,3 @@
-"use client"
 
 import { HeroSection } from "./hero-section"
 import { Herotext } from "./hero-text"

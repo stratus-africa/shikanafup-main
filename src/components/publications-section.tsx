@@ -1,8 +1,7 @@
-"use client"
 
 import React from "react"
 import { FileText, Download, ExternalLink, Shield, Scale, HelpCircle, Gavel } from "lucide-react"
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 import { Button } from "./ui/button"
 
 const partyDocuments = [

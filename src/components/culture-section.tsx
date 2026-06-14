@@ -1,4 +1,3 @@
-"use client"
 
 import { Briefcase, Users, Lightbulb, Heart, Shield, Target } from "lucide-react"
 

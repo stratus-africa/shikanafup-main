@@ -1,4 +1,3 @@
-"use client"
 
 import { useState } from "react"
 import { cn } from "@/lib/utils"
@@ -19,9 +18,9 @@ import {
 import toast, { Toaster } from "react-hot-toast"
 import api from "@/lib/axios"
 import { Spinner } from "./ui/spinner"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/lib/next-shims"
 import { Roles } from "../lib/roles";
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
   const [otp, setOtp] = useState("")

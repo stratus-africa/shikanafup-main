@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/lib/next-shims"
 import { toast } from "react-hot-toast" // assuming you are using react-hot-toast
 import {
   IconLogout,

@@ -1,7 +1,6 @@
-"use client"
 
 import { useEffect, useState } from "react"
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 import api from "@/lib/axios"
 import { Briefcase, ArrowRight, FolderOpen } from "lucide-react"
 import { JobListingSkeleton } from "./skeleton-loaders"

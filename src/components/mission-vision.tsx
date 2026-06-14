@@ -1,4 +1,3 @@
-"use client"
 
 import { Target, Eye } from "lucide-react"
 

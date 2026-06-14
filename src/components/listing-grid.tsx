@@ -1,4 +1,3 @@
-"use client"
 
 import { useEffect, useState } from "react"
 import { ShoppingBag, MessageCircle, Package } from "lucide-react"

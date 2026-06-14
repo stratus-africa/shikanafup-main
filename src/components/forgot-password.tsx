@@ -1,7 +1,6 @@
-"use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/lib/next-shims"
 import toast, { Toaster } from "react-hot-toast"
 import { Card, CardContent } from "./ui/card"
 import { Button } from "@/components/ui/button"

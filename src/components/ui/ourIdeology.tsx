@@ -1,7 +1,6 @@
-"use client"
 
 import { Shield, Users, Landmark, Zap, ArrowRight } from "lucide-react"
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 
 export function OurIdeology() {
   const principles = [

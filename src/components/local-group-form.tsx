@@ -1,10 +1,9 @@
-"use client"
 
 import React, { useState, useEffect } from "react"
 import { Search, MapPin, Send, CheckCircle, ChevronDown, Check } from "lucide-react"
 import api from "@/lib/axios"
 import toast from "react-hot-toast"
-import Link from "next/link" // Added Link import
+import Link from "@/lib/next-shims" // Added Link import
 import { Button } from "./ui/button"
 import { Spinner } from "./ui/spinner"
 import { Input } from "./ui/input"

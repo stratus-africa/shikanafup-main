@@ -1,4 +1,3 @@
-"use client"
 
 import {
   IconDots,
@@ -24,7 +23,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 
 export function NavDocuments({
   items,

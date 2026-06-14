@@ -1,4 +1,3 @@
-"use client"
 
 import { TrendingUp, Users, MapPin, Zap } from "lucide-react"
 import { useEffect, useState } from "react";

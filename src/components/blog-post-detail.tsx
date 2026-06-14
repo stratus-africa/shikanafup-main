@@ -1,4 +1,3 @@
-'use client'
 
 import { Calendar, User, Clock } from 'lucide-react'
 

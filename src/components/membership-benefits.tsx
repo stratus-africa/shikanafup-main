@@ -1,4 +1,3 @@
-"use client"
 
 import { Users, Lightbulb, Calendar, Megaphone, Award, BookOpen } from "lucide-react"
 

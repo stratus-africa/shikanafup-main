@@ -1,7 +1,6 @@
-"use client"
 
 import { Herotext } from "./hero-text"
-import Image from "next/image"
+import { Image } from "@/lib/next-shims"
 
 export function AboutHero() {
   return (

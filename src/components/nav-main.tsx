@@ -1,7 +1,6 @@
-"use client"
 
 import { type LucideIcon } from "lucide-react"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter } from "@/lib/next-shims"
 
 import {
   SidebarGroup,

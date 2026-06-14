@@ -1,4 +1,3 @@
-"use client"
 
 import * as React from "react"
 import { Search, X, ChevronDown, ChevronUp } from "lucide-react"

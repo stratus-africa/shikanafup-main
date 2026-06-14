@@ -1,4 +1,3 @@
-'use client'
 
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useAuth } from '@/context/auth-context'
-import Link from 'next/link'
+import Link from "@/lib/next-shims"
 import toast from 'react-hot-toast'
 
 const commentSchema = z.object({

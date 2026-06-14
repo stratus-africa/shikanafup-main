@@ -1,7 +1,6 @@
-'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import Link from "@/lib/next-shims"
 import { Calendar, Clock, MapPin, Users, Share2, Heart, ArrowRight, Facebook } from 'lucide-react'
 import { events } from '@/lib/events-data'
 

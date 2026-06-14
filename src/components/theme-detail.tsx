@@ -1,6 +1,5 @@
-'use client'
 
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 import { ArrowLeft, Calendar, MapPin, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header"

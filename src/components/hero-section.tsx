@@ -1,7 +1,6 @@
-"use client"
 
 import { useEffect, useState } from "react"
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { Herotext } from "./hero-text"
 

@@ -1,4 +1,3 @@
-'use client';
 import { type JSX } from 'react';
 import { motion, Transition } from 'motion/react';
 import { cn } from '@/lib/utils';

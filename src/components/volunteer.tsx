@@ -1,8 +1,7 @@
-"use client"
 
 import { useState, useEffect, useMemo } from "react"
 import { Send, ChevronDown, Check, Loader2, Search } from 'lucide-react'
-import Link from 'next/link'
+import Link from "@/lib/next-shims"
 import api from "@/lib/axios"
 import toast, { Toaster } from 'react-hot-toast'
 import { Input } from "@/components/ui/input"

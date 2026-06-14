@@ -1,4 +1,3 @@
-"use client"
 
 import * as React from "react"
 import { type Icon } from "@tabler/icons-react"
@@ -10,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 
 export function NavSecondary({
   items,

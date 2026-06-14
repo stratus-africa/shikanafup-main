@@ -1,7 +1,6 @@
-"use client"
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/lib/next-shims"
 
 interface User {
     id: string

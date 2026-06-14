@@ -1,8 +1,7 @@
-"use client"
 
 import { useState } from "react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import Link from "@/lib/next-shims"
+import { usePathname, useRouter } from "@/lib/next-shims"
 import {
   Menu, X, Facebook, Twitter, Instagram, Youtube,
   Phone, Mail, Search

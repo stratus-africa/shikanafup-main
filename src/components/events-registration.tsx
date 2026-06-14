@@ -1,13 +1,12 @@
-'use client'
 
 import { useState, Suspense } from 'react'
-import Link from 'next/link'
+import Link from "@/lib/next-shims"
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ChevronRight, Send, Loader2 } from 'lucide-react'
 import api from "@/lib/axios"
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from "@/lib/next-shims"
 import toast, { Toaster } from 'react-hot-toast'
 
 interface EventsRegistrationProps {

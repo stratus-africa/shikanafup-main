@@ -1,7 +1,6 @@
-"use client"
 
 import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname } from "@/lib/next-shims"
 import { Button } from "./ui/button"
 import { motion, AnimatePresence } from "motion/react"
 import { Cookie } from "lucide-react"

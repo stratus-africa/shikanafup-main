@@ -1,4 +1,3 @@
-"use client"
 
 import { useState } from "react"
 import { Plus, Minus, ChevronDown, ChevronUp, HelpCircle } from "lucide-react"

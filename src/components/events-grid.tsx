@@ -1,6 +1,5 @@
-"use client"
 
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 import { Calendar, MapPin, ArrowRight } from "lucide-react"
 import { useEffect, useState } from "react";
 import api from "@/lib/axios";

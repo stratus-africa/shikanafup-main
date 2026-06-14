@@ -1,4 +1,3 @@
-"use client"
 import { Mail, Bell } from "lucide-react"
 
 export function NewsletterCTA() {

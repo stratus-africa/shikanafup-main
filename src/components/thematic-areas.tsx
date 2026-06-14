@@ -1,6 +1,5 @@
-'use client'
 
-import Link from "next/link"
+import Link from "@/lib/next-shims"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Users, TrendingUp, Briefcase, Building2 } from "lucide-react"
