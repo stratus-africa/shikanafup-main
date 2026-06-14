@@ -1,483 +1,169 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import toast from "react-hot-toast";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Plus, Pencil, Trash2, Tag } from "lucide-react";
+import { DataToolbar } from "@/components/admin/_shared/data-toolbar";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ArrowUpDown, ChevronLeft, ChevronRight, Search, MoreHorizontal, Eye, Pencil, Trash2 } from "lucide-react"
-import api from "@/lib/axios"
-import AddNewEvent from "./add-event"
-import { toast } from "react-hot-toast"
-import { VolunteerTable } from "../volunteer/volunteer-table"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
-import { useEffect, useMemo, useState } from "react"
+  listEvents, listEventCategories,
+  createEvent, updateEvent, deleteEvent, createEventCategory,
+} from "@/lib/admin/events.functions";
 
-type Event = {
-  id: number
-  event_type: string
-  title: string
-  event_date: string
-  from_time: string
-  to_time: string
-  location: string
-  description: string
-  sub_title?: string
-  image?: string
-  is_main?: boolean
+const KEY = ["admin", "events"];
+const CAT_KEY = ["admin", "event-categories"];
+
+function EventForm({ initial, categories, onSubmit, pending }: any) {
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const fd = new FormData(e.currentTarget);
+        const capRaw = String(fd.get("capacity") || "");
+        onSubmit({
+          ...(initial?.id ? { id: initial.id } : {}),
+          title: fd.get("title"),
+          slug: fd.get("slug") || undefined,
+          category_id: fd.get("category_id") || null,
+          description: fd.get("description") || null,
+          location: fd.get("location") || null,
+          starts_at: fd.get("starts_at"),
+          ends_at: fd.get("ends_at") || null,
+          cover_url: fd.get("cover_url") || null,
+          capacity: capRaw ? Number(capRaw) : null,
+        });
+      }}
+      className="space-y-3"
+    >
+      <div><Label>Title</Label><Input name="title" required defaultValue={initial?.title ?? ""} /></div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><Label>Starts at</Label><Input type="datetime-local" name="starts_at" required defaultValue={initial?.starts_at?.slice(0,16) ?? ""} /></div>
+        <div><Label>Ends at</Label><Input type="datetime-local" name="ends_at" defaultValue={initial?.ends_at?.slice(0,16) ?? ""} /></div>
+      </div>
+      <div><Label>Location</Label><Input name="location" defaultValue={initial?.location ?? ""} /></div>
+      <div>
+        <Label>Category</Label>
+        <Select name="category_id" defaultValue={initial?.category_id ?? ""}>
+          <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+          <SelectContent>{(categories ?? []).map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
+        </Select>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><Label>Capacity</Label><Input type="number" name="capacity" defaultValue={initial?.capacity ?? ""} /></div>
+        <div><Label>Cover URL</Label><Input name="cover_url" defaultValue={initial?.cover_url ?? ""} /></div>
+      </div>
+      <div><Label>Description</Label><Textarea name="description" rows={5} defaultValue={initial?.description ?? ""} /></div>
+      <DialogFooter><Button type="submit" disabled={pending}>Save</Button></DialogFooter>
+    </form>
+  );
 }
 
-type SortField = keyof Event | null
-type SortDirection = "asc" | "desc"
-
 export function EventsTable() {
-  const [data, setData] = useState<Event[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [sortField, setSortField] = useState<SortField>(null)
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
-  const [openAddEvent, setOpenAddEvent] = useState(false)
-  const [openViewEvent, setOpenViewEvent] = useState(false)
-  const [openEditEvent, setOpenEditEvent] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
-  const [eventToDelete, setEventToDelete] = useState<Event | null>(null)
-  const [openVolunteers, setOpenVolunteers] = useState(false)
+  const qc = useQueryClient();
+  const list = useServerFn(listEvents);
+  const listCats = useServerFn(listEventCategories);
+  const create = useServerFn(createEvent);
+  const update = useServerFn(updateEvent);
+  const del = useServerFn(deleteEvent);
+  const createCat = useServerFn(createEventCategory);
 
-  const fetchEvents = async () => {
-    try {
-      setLoading(true)
-      const response = await api.get("/api/events/all")
-      const eventsArray = Array.isArray(response.data)
-        ? response.data
-        : Array.isArray(response.data.data)
-          ? response.data.data
-          : []
-      setData(eventsArray)
-    } catch (err) {
-      setError("Unable to load events")
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [search, setSearch] = useState("");
+  const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState<any | null>(null);
+  const [confirmDel, setConfirmDel] = useState<any | null>(null);
+  const [catOpen, setCatOpen] = useState(false);
 
-  useEffect(() => {
-    fetchEvents()
-  }, [])
+  const { data = [], isLoading, error } = useQuery({ queryKey: KEY, queryFn: () => list() });
+  const { data: cats = [] } = useQuery({ queryKey: CAT_KEY, queryFn: () => listCats() });
 
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
-    } else {
-      setSortField(field)
-      setSortDirection("asc")
-    }
-  }
+  const inv = () => qc.invalidateQueries({ queryKey: KEY });
+  const invCat = () => qc.invalidateQueries({ queryKey: CAT_KEY });
 
-  const filteredAndSortedData = useMemo(() => {
-    if (!Array.isArray(data)) return []
+  const createMut = useMutation({ mutationFn: (v: any) => create({ data: v }), onSuccess: () => { inv(); toast.success("Event created"); setAdding(false); }, onError: (e: any) => toast.error(e.message) });
+  const updateMut = useMutation({ mutationFn: (v: any) => update({ data: v }), onSuccess: () => { inv(); toast.success("Updated"); setEditing(null); }, onError: (e: any) => toast.error(e.message) });
+  const deleteMut = useMutation({ mutationFn: (id: string) => del({ data: { id } }), onSuccess: () => { inv(); toast.success("Deleted"); setConfirmDel(null); }, onError: (e: any) => toast.error(e.message) });
+  const createCatMut = useMutation({ mutationFn: (v: any) => createCat({ data: v }), onSuccess: () => { invCat(); toast.success("Category added"); setCatOpen(false); }, onError: (e: any) => toast.error(e.message) });
 
-    let filtered = data.filter((event) => {
-      const term = searchTerm.toLowerCase()
-      return (
-        event.title.toLowerCase().includes(term) ||
-        event.event_type.toLowerCase().includes(term) ||
-        event.location.toLowerCase().includes(term)
-      )
-    })
+  const rows = (data as any[]).filter((r) => {
+    const q = search.toLowerCase();
+    return !q || r.title?.toLowerCase().includes(q) || r.location?.toLowerCase().includes(q);
+  });
 
-    if (sortField) {
-      filtered = [...filtered].sort((a, b) => {
-        const aVal = a[sortField]
-        const bVal = b[sortField]
-
-        if (typeof aVal === "string" && typeof bVal === "string") {
-          return sortDirection === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
-        }
-
-        if (aVal === undefined || bVal === undefined) {
-          return 0
-        }
-
-        return sortDirection === "asc" ? (aVal > bVal ? 1 : -1) : aVal < bVal ? 1 : -1
-      })
-    }
-
-    return filtered
-  }, [data, searchTerm, sortField, sortDirection])
-
-  const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage)
-  const paginatedData = filteredAndSortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-
-  const handleMarkMain = async (event: Event) => {
-    try {
-      const response = await api.post(`/api/events/mark-main/${event.id}`, {
-        is_main: !event.is_main,
-      })
-      setData((prev: any) => prev.map((e: any) => (e.id === event.id ? { ...e, is_main: !e.is_main } : e)))
-    } catch (err) {
-      console.error("Failed to update main status", err)
-    }
-  }
-
-  const handleEventSuccess = () => {
-    setOpenAddEvent(false)
-    setOpenEditEvent(false)
-    fetchEvents()
-  }
-
-  const handleView = (event: Event) => {
-    setSelectedEvent(event)
-    setOpenViewEvent(true)
-  }
-
-  const handleEdit = (event: Event) => {
-    setSelectedEvent(event)
-    setOpenEditEvent(true)
-  }
-
-  const handleDelete = (event: Event) => {
-    setEventToDelete(event)
-    setIsDeleteDialogOpen(true)
-  }
-
-  const handleViewVolunteers = (event: Event) => {
-    setSelectedEvent(event)
-    setOpenVolunteers(true)
-  }
-
-  const confirmDelete = async () => {
-    if (!eventToDelete) return
-    try {
-      const response = await api.delete(`/api/events/delete/${eventToDelete.id}`)
-      if (response.data?.statusCode === 200 || response.data?.success || response.data?.message?.includes("successfully")) {
-        toast.success(response.data.message || "Event deleted successfully")
-        fetchEvents()
-      } else {
-        toast.error(response.data.message || "Delete failed")
-      }
-    } catch (err) {
-      console.error("Delete failed", err)
-      toast.error("An error occurred while deleting")
-    } finally {
-      setIsDeleteDialogOpen(false)
-      setEventToDelete(null)
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-5 w-[200px] bg-gray-300" />
-        <div className="rounded-lg border border-gray-200">
-          <div className="p-4 space-y-3">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full bg-gray-300" />
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="rounded-lg border border-gray-200 bg-gray-100 p-8 text-center">
-        <p className="text-sm font-medium text-gray-700">{error}</p>
-        <Button variant="outline" size="sm" className="mt-4 bg-transparent" onClick={() => window.location.reload()}>
-          Try Again
-        </Button>
-      </div>
-    )
-  }
-
-  const getStatus = (eventDate: string) => {
-    const now = new Date()
-    const eventDay = new Date(eventDate)
-    if (eventDay > now) return "Active"
-    if (eventDay.toDateString() === now.toDateString()) return "Ongoing"
-    return "Passed"
-  }
+  if (error) return <div className="rounded-md border border-destructive bg-destructive/10 p-4 text-sm text-destructive">Failed to load events: {(error as Error).message}</div>;
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search events..."
-            value={searchTerm}
-            onChange={(e: any) => {
-              setSearchTerm(e.target.value)
-              setCurrentPage(1)
-            }}
-            className="pl-9 border border-border rounded-lg bg-transparent outline-none focus:outline-none focus:border-secondary focus:ring-0 transition-colors"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="h-9 px-3">
-            {filteredAndSortedData.length} {filteredAndSortedData.length === 1 ? "event" : "events"}
-          </Badge>
-          <Dialog open={openAddEvent} onOpenChange={setOpenAddEvent}>
-            <DialogTrigger asChild>
-              <Button variant="default" size="sm">
-                + New Event
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-              <AddNewEvent onSuccess={handleEventSuccess} />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
+      <DataToolbar search={search} onSearch={setSearch} placeholder="Search events…" count={rows.length}>
+        <Dialog open={catOpen} onOpenChange={setCatOpen}>
+          <DialogTrigger asChild><Button variant="outline"><Tag className="mr-2 h-4 w-4" />New Category</Button></DialogTrigger>
+          <DialogContent>
+            <DialogHeader><DialogTitle>New Category</DialogTitle></DialogHeader>
+            <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); createCatMut.mutate({ name: fd.get("name"), color: fd.get("color") || undefined }); }} className="space-y-3">
+              <div><Label>Name</Label><Input name="name" required /></div>
+              <div><Label>Color</Label><Input name="color" placeholder="#b81d22" /></div>
+              <DialogFooter><Button type="submit" disabled={createCatMut.isPending}>Save</Button></DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={adding} onOpenChange={setAdding}>
+          <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />New Event</Button></DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader><DialogTitle>New Event</DialogTitle></DialogHeader>
+            <EventForm categories={cats} onSubmit={(v: any) => createMut.mutate(v)} pending={createMut.isPending} />
+          </DialogContent>
+        </Dialog>
+      </DataToolbar>
 
-      <div className="rounded-lg border bg-card overflow-auto">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>#</TableHead>
-              {["event_type", "title", "event_date", "from_time", "to_time", "location"].map((field, idx) => (
-                <TableHead key={idx}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 hover:bg-gray-100 hover:text-inherit focus:ring-0 focus:outline-none"
-                    onClick={() => handleSort(field as SortField)}
-                  >
-                    {field === "event_type" && "Type"}
-                    {field === "title" && "Title"}
-                    {field === "event_date" && "Date"}
-                    {field === "from_time" && "From"}
-                    {field === "to_time" && "To"}
-                    {field === "location" && "Location"}
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-              ))}
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
+            <TableRow><TableHead>Title</TableHead><TableHead>Category</TableHead><TableHead>Starts</TableHead><TableHead>Location</TableHead><TableHead>Capacity</TableHead><TableHead className="text-right">Actions</TableHead></TableRow>
           </TableHeader>
-
           <TableBody>
-            {paginatedData.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={9} className="h-32 text-center text-muted-foreground">
-                  No events found
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedData.map((event: any, idx: number) => (
-                <TableRow key={event.id} className="group hover:bg-muted/50 transition-colors">
-                  <TableCell>{(currentPage - 1) * itemsPerPage + idx + 1}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{event.event_type}</Badge>
-                  </TableCell>
-                  <TableCell className="max-w-xs truncate font-medium" title={event.title}>
-                    {event.title}
-                  </TableCell>
-                  <TableCell>{event.event_date}</TableCell>
-                  <TableCell>{event.from_time}</TableCell>
-                  <TableCell>{event.to_time}</TableCell>
-                  <TableCell className="max-w-xs truncate" title={event.location}>
-                    {event.location}
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        getStatus(event.event_date) === "Passed"
-                          ? "destructive"
-                          : getStatus(event.event_date) === "Ongoing"
-                            ? "secondary"
-                            : "default"
-                      }
-                    >
-                      {getStatus(event.event_date)}
-                    </Badge>
-                  </TableCell>
+            {isLoading ? Array.from({ length: 5 }).map((_, i) => <TableRow key={i}><TableCell colSpan={6}><Skeleton className="h-6 w-full" /></TableCell></TableRow>)
+              : rows.length === 0 ? <TableRow><TableCell colSpan={6} className="py-8 text-center text-sm text-muted-foreground">No events yet.</TableCell></TableRow>
+              : rows.map((e: any) => (
+                <TableRow key={e.id}>
+                  <TableCell className="font-medium">{e.title}</TableCell>
+                  <TableCell>{e.category?.name ? <Badge variant="outline" style={{ borderColor: e.category.color }}>{e.category.name}</Badge> : "—"}</TableCell>
+                  <TableCell className="text-xs">{new Date(e.starts_at).toLocaleString()}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground">{e.location ?? "—"}</TableCell>
+                  <TableCell>{e.capacity ?? "—"}</TableCell>
                   <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => handleMarkMain(event)}>
-                          {event.is_main ? "Unmark as Main" : "Mark as Main"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleViewVolunteers(event)}>
-                          <Eye className="mr-2 h-4 w-4" />
-                          View Volunteers
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleView(event)}>
-                          <Eye className="mr-2 h-4 w-4" />
-                          View
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEdit(event)}>
-                          <Pencil className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-destructive focus:text-destructive"
-                          onClick={() => handleDelete(event)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Button size="icon" variant="ghost" onClick={() => setEditing(e)}><Pencil className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onClick={() => setConfirmDel(e)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
+              ))}
           </TableBody>
         </Table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          {/* ... existing pagination ... */}
-          <p className="text-sm text-muted-foreground">
-            Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-            {Math.min(currentPage * itemsPerPage, filteredAndSortedData.length)} of {filteredAndSortedData.length}{" "}
-            results
-          </p>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((p: number) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
-            <div className="flex items-center gap-1">
-              {[...Array(totalPages)].map((_, i) => {
-                const page = i + 1
-                if (page === 1 || page === totalPages || (page >= currentPage - 1 && page <= currentPage + 1)) {
-                  return (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </Button>
-                  )
-                } else if (page === currentPage - 2 || page === currentPage + 2) {
-                  return (
-                    <span key={page} className="px-1 text-muted-foreground">
-                      …
-                    </span>
-                  )
-                }
-                return null
-              })}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((p: any) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* View Event Dialog */}
-      <Dialog open={openViewEvent} onOpenChange={setOpenViewEvent}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          {selectedEvent && (
-            <AddNewEvent
-              mode="view"
-              initialData={selectedEvent}
-              onSuccess={() => setOpenViewEvent(false)}
-            />
-          )}
+      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>Edit Event</DialogTitle></DialogHeader>
+          {editing && <EventForm initial={editing} categories={cats} onSubmit={(v: any) => updateMut.mutate(v)} pending={updateMut.isPending} />}
         </DialogContent>
       </Dialog>
 
-      {/* Edit Event Dialog */}
-      <Dialog open={openEditEvent} onOpenChange={setOpenEditEvent}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          {selectedEvent && (
-            <AddNewEvent
-              mode="edit"
-              initialData={selectedEvent}
-              onSuccess={handleEventSuccess}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog open={!!confirmDel} onOpenChange={(o) => !o && setConfirmDel(null)}>
         <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the event
-              "{eventToDelete?.title}" and remove the data from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+          <AlertDialogHeader><AlertDialogTitle>Delete "{confirmDel?.title}"?</AlertDialogTitle></AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setEventToDelete(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className={cn(buttonVariants({ variant: "destructive" }))}
-            >
-              Delete Event
-            </AlertDialogAction>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => confirmDel && deleteMut.mutate(confirmDel.id)}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {/* Event Volunteers Dialog */}
-      <Dialog open={openVolunteers} onOpenChange={setOpenVolunteers}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Volunteers for: {selectedEvent?.title}</DialogTitle>
-            <DialogDescription>
-              View and manage volunteers who signed up for this specific event.
-            </DialogDescription>
-          </DialogHeader>
-          {selectedEvent && (
-            <div className="mt-4">
-              <VolunteerTable eventId={selectedEvent.id} />
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
-  )
+  );
 }

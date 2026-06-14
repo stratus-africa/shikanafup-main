@@ -1,389 +1,87 @@
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import toast from "react-hot-toast";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Check, X, RotateCcw, Trash2 } from "lucide-react";
+import { DataToolbar } from "@/components/admin/_shared/data-toolbar";
+import { listAspirants, approveAspirant, rejectAspirant, resetAspirant, deleteAspirant } from "@/lib/admin/aspirants.functions";
 
-import { useEffect, useState, useMemo } from "react"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-    ArrowUpDown,
-    ChevronLeft,
-    ChevronRight,
-    Search,
-    MoreHorizontal,
-    CheckCircle,
-    XCircle,
-    Edit,
-} from "lucide-react"
-import api from "@/lib/axios"
+const KEY = ["admin", "aspirants"];
 
-import { ApproveAspirantDialog } from "./approve-aspirant-dialog"
-import { RejectAspirantDialog } from "./reject-aspirant-dialog"
-import { UpdateAspirantStatusDialog } from "./update-aspirant-status-dialog"
+export function AspirantsTable(_props: { type?: string } = {}) {
+  const qc = useQueryClient();
+  const list = useServerFn(listAspirants);
+  const approve = useServerFn(approveAspirant);
+  const reject = useServerFn(rejectAspirant);
+  const reset = useServerFn(resetAspirant);
+  const del = useServerFn(deleteAspirant);
 
-export type Aspirant = {
-    id: number
-    first_name: string
-    last_name: string
-    email: string
-    phone: string
-    membership_number: string
-    position: string
-    status: string
-    type: "political" | "party"
-}
+  const [search, setSearch] = useState("");
+  const [confirmDel, setConfirmDel] = useState<any | null>(null);
 
-type SortField = keyof Aspirant | null
-type SortDirection = "asc" | "desc"
+  const { data = [], isLoading, error } = useQuery({ queryKey: KEY, queryFn: () => list() });
+  const inv = () => qc.invalidateQueries({ queryKey: KEY });
+  const mk = (fn: any, label: string) => useMutation({
+    mutationFn: (id: string) => fn({ data: { id } }),
+    onSuccess: () => { inv(); toast.success(label); },
+    onError: (e: any) => toast.error(e.message),
+  });
+  const approveMut = mk(approve, "Approved");
+  const rejectMut = mk(reject, "Rejected");
+  const resetMut = mk(reset, "Reset");
+  const deleteMut = useMutation({
+    mutationFn: (id: string) => del({ data: { id } }),
+    onSuccess: () => { inv(); toast.success("Deleted"); setConfirmDel(null); },
+    onError: (e: any) => toast.error(e.message),
+  });
 
-interface AspirantsTableProps {
-    type: "political" | "party"
-}
+  const rows = (data as any[]).filter((r) => {
+    const q = search.toLowerCase();
+    return !q || r.profile?.full_name?.toLowerCase().includes(q) || r.position?.title?.toLowerCase().includes(q);
+  });
 
-export function AspirantsTable({ type }: AspirantsTableProps) {
-    const [data, setData] = useState<Aspirant[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+  if (error) return <div className="rounded-md border border-destructive bg-destructive/10 p-4 text-sm text-destructive">Failed to load: {(error as Error).message}</div>;
 
-    const [searchTerm, setSearchTerm] = useState("")
-    const [sortField, setSortField] = useState<SortField>(null)
-    const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
-    const [currentPage, setCurrentPage] = useState(1)
+  return (
+    <div className="space-y-4">
+      <DataToolbar search={search} onSearch={setSearch} placeholder="Search aspirants…" count={rows.length} />
 
-    const [selectedAspirant, setSelectedAspirant] = useState<Aspirant | null>(null)
-    const [approveOpen, setApproveOpen] = useState(false)
-    const [rejectOpen, setRejectOpen] = useState(false)
-    const [updateOpen, setUpdateOpen] = useState(false)
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader><TableRow><TableHead>Aspirant</TableHead><TableHead>Position</TableHead><TableHead>Level</TableHead><TableHead>Status</TableHead><TableHead>Applied</TableHead><TableHead className="text-right">Actions</TableHead></TableRow></TableHeader>
+          <TableBody>
+            {isLoading ? Array.from({ length: 5 }).map((_, i) => <TableRow key={i}><TableCell colSpan={6}><Skeleton className="h-6 w-full" /></TableCell></TableRow>)
+              : rows.length === 0 ? <TableRow><TableCell colSpan={6} className="py-8 text-center text-sm text-muted-foreground">No aspirants yet.</TableCell></TableRow>
+              : rows.map((a: any) => (
+                <TableRow key={a.id}>
+                  <TableCell><div className="font-medium">{a.profile?.full_name ?? "—"}</div><div className="text-xs text-muted-foreground">{a.profile?.email ?? ""}</div></TableCell>
+                  <TableCell>{a.position?.title ?? "—"}</TableCell>
+                  <TableCell><Badge variant="outline">{a.position?.level ?? "—"}</Badge></TableCell>
+                  <TableCell><Badge variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "outline"}>{a.status}</Badge></TableCell>
+                  <TableCell className="text-xs text-muted-foreground">{new Date(a.created_at).toLocaleDateString()}</TableCell>
+                  <TableCell className="text-right">
+                    <Button size="icon" variant="ghost" disabled={a.status === "approved" || approveMut.isPending} onClick={() => approveMut.mutate(a.id)}><Check className="h-4 w-4 text-green-600" /></Button>
+                    <Button size="icon" variant="ghost" disabled={a.status === "rejected" || rejectMut.isPending} onClick={() => rejectMut.mutate(a.id)}><X className="h-4 w-4 text-destructive" /></Button>
+                    <Button size="icon" variant="ghost" disabled={a.status === "pending" || resetMut.isPending} onClick={() => resetMut.mutate(a.id)}><RotateCcw className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onClick={() => setConfirmDel(a)}><Trash2 className="h-4 w-4" /></Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </div>
 
-    const itemsPerPage = 10
-
-    const fetchAspirants = async () => {
-        try {
-            setLoading(true)
-
-            // Use different endpoints based on type
-            const endpoint = type === "party" ? "/api/party-positions/all" : "/api/aspirants/all"
-            const res = await api.get(endpoint)
-            const rawData = Array.isArray(res.data?.data) ? res.data.data : []
-
-            // Map the data to match the Aspirant type
-            const mappedData: Aspirant[] = rawData.map((item: any) => ({
-                id: item.id,
-                first_name: item.first_name || "",
-                last_name: item.last_name || "",
-                email: item.email || "",
-                phone: item.phone || "",
-                membership_number: item.membership_number || "",
-                position: item.position || "",
-                status: item.status || "Pending",
-                type: type,
-            }))
-
-            setData(mappedData)
-        } catch (err) {
-            console.error(err)
-            setError("Unable to load aspirants")
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    useEffect(() => {
-        fetchAspirants()
-    }, [type])
-
-    const handleSort = (field: SortField) => {
-        if (sortField === field) {
-            setSortDirection(sortDirection === "asc" ? "desc" : "asc")
-        } else {
-            setSortField(field)
-            setSortDirection("asc")
-        }
-    }
-
-    const filteredAndSortedData = useMemo(() => {
-        let filtered = data.filter((item) => {
-            const q = searchTerm.toLowerCase()
-            return (
-                item.first_name.toLowerCase().includes(q) ||
-                item.last_name.toLowerCase().includes(q) ||
-                item.email.toLowerCase().includes(q) ||
-                item.position.toLowerCase().includes(q) ||
-                item.membership_number.toLowerCase().includes(q)
-            )
-        })
-
-        if (sortField) {
-            filtered = [...filtered].sort((a, b) => {
-                const aVal = a[sortField]
-                const bVal = b[sortField]
-                if (typeof aVal === "string" && typeof bVal === "string") {
-                    return sortDirection === "asc"
-                        ? aVal.localeCompare(bVal)
-                        : bVal.localeCompare(aVal)
-                }
-                return 0
-            })
-        }
-
-        return filtered
-    }, [data, searchTerm, sortField, sortDirection])
-
-    const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage)
-    const paginatedData = filteredAndSortedData.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    )
-
-    /* ---------------- LOADING & ERROR ---------------- */
-
-    if (loading) {
-        return (
-            <div className="space-y-4">
-                {[...Array(6)].map((_, i) => (
-                    <Skeleton key={i} className="h-12 w-full bg-gray-300" />
-                ))}
-            </div>
-        )
-    }
-
-    if (error) {
-        return (
-            <div className="rounded-lg border bg-gray-100 p-6 text-center text-sm">
-                {error}
-            </div>
-        )
-    }
-
-    /* ---------------- RENDER ---------------- */
-
-    return (
-        <>
-            <div className="space-y-4">
-                {/* TOP BAR */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="relative max-w-sm flex-1">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                            placeholder="Search aspirants..."
-                            value={searchTerm}
-                            onChange={(e) => {
-                                setSearchTerm(e.target.value)
-                                setCurrentPage(1)
-                            }}
-                            className="pl-9 bg-transparent"
-                        />
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="h-9 px-3">
-                            {filteredAndSortedData.length}{" "}
-                            {filteredAndSortedData.length === 1 ? "applicant" : "applicants"}
-                        </Badge>
-                    </div>
-                </div>
-
-                {/* TABLE */}
-                <div className="rounded-lg border bg-card overflow-auto">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[60px]">#</TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleSort("first_name")}
-                                    >
-                                        First Name
-                                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleSort("last_name")}
-                                    >
-                                        Last Name
-                                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleSort("email")}
-                                    >
-                                        Email
-                                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </TableHead>
-                                <TableHead>
-                                    Phone
-                                </TableHead>
-                                <TableHead>
-                                    Membership No.
-                                </TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleSort("position")}
-                                    >
-                                        Position
-                                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </TableHead>
-                                <TableHead>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleSort("status")}
-                                    >
-                                        Status
-                                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                                    </Button>
-                                </TableHead>
-                                <TableHead className="text-right w-[80px]">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-
-                        <TableBody>
-                            {paginatedData.length === 0 ? (
-                                <TableRow>
-                                    <TableCell colSpan={9} className="h-32 text-center text-muted-foreground">
-                                        No aspirants found
-                                    </TableCell>
-                                </TableRow>
-                            ) : (
-                                paginatedData.map((item, idx) => (
-                                    <TableRow key={item.id} className="hover:bg-muted/50 transition-colors">
-                                        <TableCell className="font-medium text-muted-foreground">
-                                            {(currentPage - 1) * itemsPerPage + idx + 1}
-                                        </TableCell>
-                                        <TableCell className="font-medium">{item.first_name}</TableCell>
-                                        <TableCell className="font-medium">{item.last_name}</TableCell>
-                                        <TableCell>{item.email}</TableCell>
-                                        <TableCell>{item.phone}</TableCell>
-                                        <TableCell>{item.membership_number}</TableCell>
-                                        <TableCell className="font-medium">{item.position}</TableCell>
-                                        <TableCell>
-                                            <Badge variant={
-                                                item.status === 'Approved' ? 'default' :
-                                                    item.status === 'Rejected' ? 'destructive' : 'secondary'
-                                            }>
-                                                {item.status}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                                        <MoreHorizontal className="h-4 w-4" />
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                    <DropdownMenuItem onClick={() => {
-                                                        setSelectedAspirant(item)
-                                                        setApproveOpen(true)
-                                                    }}>
-                                                        <CheckCircle className="mr-2 h-4 w-4" />
-                                                        Approve
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem onClick={() => {
-                                                        setSelectedAspirant(item)
-                                                        setRejectOpen(true)
-                                                    }} className="text-destructive focus:text-destructive">
-                                                        <XCircle className="mr-2 h-4 w-4" />
-                                                        Reject
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem onClick={() => {
-                                                        setSelectedAspirant(item)
-                                                        setUpdateOpen(true)
-                                                    }}>
-                                                        <Edit className="mr-2 h-4 w-4" />
-                                                        Update Status
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-
-                {/* PAGINATION */}
-                {totalPages > 1 && (
-                    <div className="flex items-center justify-between">
-                        <p className="text-sm text-muted-foreground">
-                            Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-                            {Math.min(currentPage * itemsPerPage, filteredAndSortedData.length)}{" "}
-                            of {filteredAndSortedData.length} results
-                        </p>
-
-                        <div className="flex gap-2">
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage((p) => p - 1)}
-                            >
-                                <ChevronLeft className="h-4 w-4" />
-                            </Button>
-
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage((p) => p + 1)}
-                            >
-                                <ChevronRight className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            <ApproveAspirantDialog
-                open={approveOpen}
-                onOpenChange={setApproveOpen}
-                aspirant={selectedAspirant}
-                onSuccess={fetchAspirants}
-            />
-
-            <RejectAspirantDialog
-                open={rejectOpen}
-                onOpenChange={setRejectOpen}
-                aspirant={selectedAspirant}
-                onSuccess={fetchAspirants}
-            />
-
-            <UpdateAspirantStatusDialog
-                open={updateOpen}
-                onOpenChange={setUpdateOpen}
-                aspirant={selectedAspirant}
-                onSuccess={fetchAspirants}
-            />
-        </>
-    )
+      <AlertDialog open={!!confirmDel} onOpenChange={(o) => !o && setConfirmDel(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader><AlertDialogTitle>Delete aspirant entry?</AlertDialogTitle></AlertDialogHeader>
+          <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => confirmDel && deleteMut.mutate(confirmDel.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
 }
