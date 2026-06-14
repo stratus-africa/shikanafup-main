@@ -34,7 +34,7 @@ export function TestimonialsSection() {
   ]
 
   return (
-    <section className="py-8 md:py-16 bg-primary overflow-hidden">
+    <section className="py-8 md:py-16 overflow-hidden" style={{ backgroundColor: "#162443" }}>
       <div className="w-full">
         <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-4">What Our People Say</h2>
         <p className="text-lg text-white/80 text-center mb-16">
@@ -42,8 +42,8 @@ export function TestimonialsSection() {
         </p>
 
         <div className="relative flex overflow-hidden group">
-          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-primary to-transparent" />
-          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-primary to-transparent" />
+          <div className="absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-[#162443] to-transparent" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-[#162443] to-transparent" />
           <div
             className="flex gap-8 px-4 animate-scroll pause-on-hover"
           >
