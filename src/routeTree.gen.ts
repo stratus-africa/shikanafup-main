@@ -32,6 +32,8 @@ import { Route as PublicCareersRouteImport } from './routes/_public.careers'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
+import { Route as PublicSharedUiBlogRouteImport } from './routes/_public.shared-ui.blog'
+import { Route as PublicSharedUiAboutRouteImport } from './routes/_public.shared-ui.about'
 import { Route as PublicEventsIdRouteImport } from './routes/_public.events.$id'
 import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated.admin.dashboard'
@@ -164,6 +166,16 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const PublicSharedUiBlogRoute = PublicSharedUiBlogRouteImport.update({
+  id: '/shared-ui/blog',
+  path: '/shared-ui/blog',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiAboutRoute = PublicSharedUiAboutRouteImport.update({
+  id: '/shared-ui/about',
+  path: '/shared-ui/about',
+  getParentRoute: () => PublicRoute,
 } as any)
 const PublicEventsIdRoute = PublicEventsIdRouteImport.update({
   id: '/$id',
@@ -302,6 +314,8 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/blog/$id': typeof PublicBlogIdRoute
   '/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/shared-ui/about': typeof PublicSharedUiAboutRoute
+  '/shared-ui/blog': typeof PublicSharedUiBlogRoute
   '/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
   '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
@@ -344,6 +358,8 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/blog/$id': typeof PublicBlogIdRoute
   '/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/shared-ui/about': typeof PublicSharedUiAboutRoute
+  '/shared-ui/blog': typeof PublicSharedUiBlogRoute
   '/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
   '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
@@ -389,6 +405,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_public/blog/$id': typeof PublicBlogIdRoute
   '/_public/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/_public/shared-ui/about': typeof PublicSharedUiAboutRoute
+  '/_public/shared-ui/blog': typeof PublicSharedUiBlogRoute
   '/_authenticated/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
   '/_authenticated/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/_authenticated/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
@@ -433,6 +451,8 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/blog/$id'
     | '/events/$id'
+    | '/shared-ui/about'
+    | '/shared-ui/blog'
     | '/admin/ui/admin-users'
     | '/admin/ui/aspirants'
     | '/admin/ui/audit-trails'
@@ -475,6 +495,8 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/blog/$id'
     | '/events/$id'
+    | '/shared-ui/about'
+    | '/shared-ui/blog'
     | '/admin/ui/admin-users'
     | '/admin/ui/aspirants'
     | '/admin/ui/audit-trails'
@@ -519,6 +541,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/dashboard'
     | '/_public/blog/$id'
     | '/_public/events/$id'
+    | '/_public/shared-ui/about'
+    | '/_public/shared-ui/blog'
     | '/_authenticated/admin/ui/admin-users'
     | '/_authenticated/admin/ui/aspirants'
     | '/_authenticated/admin/ui/audit-trails'
@@ -707,6 +731,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_public/shared-ui/blog': {
+      id: '/_public/shared-ui/blog'
+      path: '/shared-ui/blog'
+      fullPath: '/shared-ui/blog'
+      preLoaderRoute: typeof PublicSharedUiBlogRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/about': {
+      id: '/_public/shared-ui/about'
+      path: '/shared-ui/about'
+      fullPath: '/shared-ui/about'
+      preLoaderRoute: typeof PublicSharedUiAboutRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/events/$id': {
       id: '/_public/events/$id'
@@ -964,6 +1002,8 @@ interface PublicRouteChildren {
   PublicTermsRoute: typeof PublicTermsRoute
   PublicVolunteerRoute: typeof PublicVolunteerRoute
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicSharedUiAboutRoute: typeof PublicSharedUiAboutRoute
+  PublicSharedUiBlogRoute: typeof PublicSharedUiBlogRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
@@ -984,6 +1024,8 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicTermsRoute: PublicTermsRoute,
   PublicVolunteerRoute: PublicVolunteerRoute,
   PublicIndexRoute: PublicIndexRoute,
+  PublicSharedUiAboutRoute: PublicSharedUiAboutRoute,
+  PublicSharedUiBlogRoute: PublicSharedUiBlogRoute,
 }
 
 const PublicRouteWithChildren =
@@ -999,3 +1041,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
