@@ -40,7 +40,11 @@ type Member = {
   email: string
   phone: string
   status: "ACTIVE" | "INACTIVE"
-
+  constituency?: string
+  ward?: string
+  dob?: string
+  gender?: string
+  specialInterest?: string
 }
 
 type SortField = keyof Member | null
