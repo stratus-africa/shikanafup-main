@@ -198,13 +198,12 @@ export function Header() {
                   {user.first_name?.[0]?.toUpperCase()}
                 </button>
               ) : (
-                <Button
-                  onClick={() => router.push("/login")}
-                  className="text-white hover:opacity-90 transition-opacity"
-                  style={{ backgroundColor: "#162443" }}
-                >
-                  Login
-                </Button>
+              <Button
+                onClick={() => router.push("/login")}
+                className="text-white hover:opacity-90 transition-opacity bg-primary hover:bg-[#9a181c]"
+              >
+                Login
+              </Button>
               )}
 
               <button
