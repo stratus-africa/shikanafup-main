@@ -36,6 +36,17 @@ import { Route as PublicEventsIdRouteImport } from './routes/_public.events.$id'
 import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated.admin.dashboard'
 import { Route as PublicEventsIdRegisterRouteImport } from './routes/_public.events.$id.register'
+import { Route as AuthenticatedAdminUiVolunteerRouteImport } from './routes/_authenticated.admin.ui.volunteer'
+import { Route as AuthenticatedAdminUiMerchandiseRouteImport } from './routes/_authenticated.admin.ui.merchandise'
+import { Route as AuthenticatedAdminUiMembersRouteImport } from './routes/_authenticated.admin.ui.members'
+import { Route as AuthenticatedAdminUiLocalGroupsRouteImport } from './routes/_authenticated.admin.ui.local-groups'
+import { Route as AuthenticatedAdminUiJobsRouteImport } from './routes/_authenticated.admin.ui.jobs'
+import { Route as AuthenticatedAdminUiEventsRouteImport } from './routes/_authenticated.admin.ui.events'
+import { Route as AuthenticatedAdminUiDonationsRouteImport } from './routes/_authenticated.admin.ui.donations'
+import { Route as AuthenticatedAdminUiBlogsRouteImport } from './routes/_authenticated.admin.ui.blogs'
+import { Route as AuthenticatedAdminUiAuditTrailsRouteImport } from './routes/_authenticated.admin.ui.audit-trails'
+import { Route as AuthenticatedAdminUiAspirantsRouteImport } from './routes/_authenticated.admin.ui.aspirants'
+import { Route as AuthenticatedAdminUiAdminUsersRouteImport } from './routes/_authenticated.admin.ui.admin-users'
 
 const OtpRoute = OtpRouteImport.update({
   id: '/otp',
@@ -171,6 +182,72 @@ const PublicEventsIdRegisterRoute = PublicEventsIdRegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => PublicEventsIdRoute,
 } as any)
+const AuthenticatedAdminUiVolunteerRoute =
+  AuthenticatedAdminUiVolunteerRouteImport.update({
+    id: '/ui/volunteer',
+    path: '/ui/volunteer',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiMerchandiseRoute =
+  AuthenticatedAdminUiMerchandiseRouteImport.update({
+    id: '/ui/merchandise',
+    path: '/ui/merchandise',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiMembersRoute =
+  AuthenticatedAdminUiMembersRouteImport.update({
+    id: '/ui/members',
+    path: '/ui/members',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiLocalGroupsRoute =
+  AuthenticatedAdminUiLocalGroupsRouteImport.update({
+    id: '/ui/local-groups',
+    path: '/ui/local-groups',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiJobsRoute =
+  AuthenticatedAdminUiJobsRouteImport.update({
+    id: '/ui/jobs',
+    path: '/ui/jobs',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiEventsRoute =
+  AuthenticatedAdminUiEventsRouteImport.update({
+    id: '/ui/events',
+    path: '/ui/events',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiDonationsRoute =
+  AuthenticatedAdminUiDonationsRouteImport.update({
+    id: '/ui/donations',
+    path: '/ui/donations',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiBlogsRoute =
+  AuthenticatedAdminUiBlogsRouteImport.update({
+    id: '/ui/blogs',
+    path: '/ui/blogs',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiAuditTrailsRoute =
+  AuthenticatedAdminUiAuditTrailsRouteImport.update({
+    id: '/ui/audit-trails',
+    path: '/ui/audit-trails',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiAspirantsRoute =
+  AuthenticatedAdminUiAspirantsRouteImport.update({
+    id: '/ui/aspirants',
+    path: '/ui/aspirants',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiAdminUsersRoute =
+  AuthenticatedAdminUiAdminUsersRouteImport.update({
+    id: '/ui/admin-users',
+    path: '/ui/admin-users',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
@@ -197,6 +274,17 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/blog/$id': typeof PublicBlogIdRoute
   '/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
+  '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
+  '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
+  '/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
+  '/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
+  '/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
+  '/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRoute
+  '/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
+  '/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
+  '/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
 export interface FileRoutesByTo {
@@ -224,6 +312,17 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/blog/$id': typeof PublicBlogIdRoute
   '/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
+  '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
+  '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
+  '/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
+  '/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
+  '/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
+  '/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRoute
+  '/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
+  '/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
+  '/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
 export interface FileRoutesById {
@@ -254,6 +353,17 @@ export interface FileRoutesById {
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_public/blog/$id': typeof PublicBlogIdRoute
   '/_public/events/$id': typeof PublicEventsIdRouteWithChildren
+  '/_authenticated/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
+  '/_authenticated/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
+  '/_authenticated/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
+  '/_authenticated/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
+  '/_authenticated/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
+  '/_authenticated/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
+  '/_authenticated/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRoute
+  '/_authenticated/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
+  '/_authenticated/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
+  '/_authenticated/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/_authenticated/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/_public/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
 export interface FileRouteTypes {
@@ -283,6 +393,17 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/blog/$id'
     | '/events/$id'
+    | '/admin/ui/admin-users'
+    | '/admin/ui/aspirants'
+    | '/admin/ui/audit-trails'
+    | '/admin/ui/blogs'
+    | '/admin/ui/donations'
+    | '/admin/ui/events'
+    | '/admin/ui/jobs'
+    | '/admin/ui/local-groups'
+    | '/admin/ui/members'
+    | '/admin/ui/merchandise'
+    | '/admin/ui/volunteer'
     | '/events/$id/register'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -310,6 +431,17 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/blog/$id'
     | '/events/$id'
+    | '/admin/ui/admin-users'
+    | '/admin/ui/aspirants'
+    | '/admin/ui/audit-trails'
+    | '/admin/ui/blogs'
+    | '/admin/ui/donations'
+    | '/admin/ui/events'
+    | '/admin/ui/jobs'
+    | '/admin/ui/local-groups'
+    | '/admin/ui/members'
+    | '/admin/ui/merchandise'
+    | '/admin/ui/volunteer'
     | '/events/$id/register'
   id:
     | '__root__'
@@ -339,6 +471,17 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/dashboard'
     | '/_public/blog/$id'
     | '/_public/events/$id'
+    | '/_authenticated/admin/ui/admin-users'
+    | '/_authenticated/admin/ui/aspirants'
+    | '/_authenticated/admin/ui/audit-trails'
+    | '/_authenticated/admin/ui/blogs'
+    | '/_authenticated/admin/ui/donations'
+    | '/_authenticated/admin/ui/events'
+    | '/_authenticated/admin/ui/jobs'
+    | '/_authenticated/admin/ui/local-groups'
+    | '/_authenticated/admin/ui/members'
+    | '/_authenticated/admin/ui/merchandise'
+    | '/_authenticated/admin/ui/volunteer'
     | '/_public/events/$id/register'
   fileRoutesById: FileRoutesById
 }
@@ -541,15 +684,114 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicEventsIdRegisterRouteImport
       parentRoute: typeof PublicEventsIdRoute
     }
+    '/_authenticated/admin/ui/volunteer': {
+      id: '/_authenticated/admin/ui/volunteer'
+      path: '/ui/volunteer'
+      fullPath: '/admin/ui/volunteer'
+      preLoaderRoute: typeof AuthenticatedAdminUiVolunteerRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/merchandise': {
+      id: '/_authenticated/admin/ui/merchandise'
+      path: '/ui/merchandise'
+      fullPath: '/admin/ui/merchandise'
+      preLoaderRoute: typeof AuthenticatedAdminUiMerchandiseRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/members': {
+      id: '/_authenticated/admin/ui/members'
+      path: '/ui/members'
+      fullPath: '/admin/ui/members'
+      preLoaderRoute: typeof AuthenticatedAdminUiMembersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/local-groups': {
+      id: '/_authenticated/admin/ui/local-groups'
+      path: '/ui/local-groups'
+      fullPath: '/admin/ui/local-groups'
+      preLoaderRoute: typeof AuthenticatedAdminUiLocalGroupsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/jobs': {
+      id: '/_authenticated/admin/ui/jobs'
+      path: '/ui/jobs'
+      fullPath: '/admin/ui/jobs'
+      preLoaderRoute: typeof AuthenticatedAdminUiJobsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/events': {
+      id: '/_authenticated/admin/ui/events'
+      path: '/ui/events'
+      fullPath: '/admin/ui/events'
+      preLoaderRoute: typeof AuthenticatedAdminUiEventsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/donations': {
+      id: '/_authenticated/admin/ui/donations'
+      path: '/ui/donations'
+      fullPath: '/admin/ui/donations'
+      preLoaderRoute: typeof AuthenticatedAdminUiDonationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/blogs': {
+      id: '/_authenticated/admin/ui/blogs'
+      path: '/ui/blogs'
+      fullPath: '/admin/ui/blogs'
+      preLoaderRoute: typeof AuthenticatedAdminUiBlogsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/audit-trails': {
+      id: '/_authenticated/admin/ui/audit-trails'
+      path: '/ui/audit-trails'
+      fullPath: '/admin/ui/audit-trails'
+      preLoaderRoute: typeof AuthenticatedAdminUiAuditTrailsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/aspirants': {
+      id: '/_authenticated/admin/ui/aspirants'
+      path: '/ui/aspirants'
+      fullPath: '/admin/ui/aspirants'
+      preLoaderRoute: typeof AuthenticatedAdminUiAspirantsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/admin-users': {
+      id: '/_authenticated/admin/ui/admin-users'
+      path: '/ui/admin-users'
+      fullPath: '/admin/ui/admin-users'
+      preLoaderRoute: typeof AuthenticatedAdminUiAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
+  AuthenticatedAdminUiAdminUsersRoute: typeof AuthenticatedAdminUiAdminUsersRoute
+  AuthenticatedAdminUiAspirantsRoute: typeof AuthenticatedAdminUiAspirantsRoute
+  AuthenticatedAdminUiAuditTrailsRoute: typeof AuthenticatedAdminUiAuditTrailsRoute
+  AuthenticatedAdminUiBlogsRoute: typeof AuthenticatedAdminUiBlogsRoute
+  AuthenticatedAdminUiDonationsRoute: typeof AuthenticatedAdminUiDonationsRoute
+  AuthenticatedAdminUiEventsRoute: typeof AuthenticatedAdminUiEventsRoute
+  AuthenticatedAdminUiJobsRoute: typeof AuthenticatedAdminUiJobsRoute
+  AuthenticatedAdminUiLocalGroupsRoute: typeof AuthenticatedAdminUiLocalGroupsRoute
+  AuthenticatedAdminUiMembersRoute: typeof AuthenticatedAdminUiMembersRoute
+  AuthenticatedAdminUiMerchandiseRoute: typeof AuthenticatedAdminUiMerchandiseRoute
+  AuthenticatedAdminUiVolunteerRoute: typeof AuthenticatedAdminUiVolunteerRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
+  AuthenticatedAdminUiAdminUsersRoute: AuthenticatedAdminUiAdminUsersRoute,
+  AuthenticatedAdminUiAspirantsRoute: AuthenticatedAdminUiAspirantsRoute,
+  AuthenticatedAdminUiAuditTrailsRoute: AuthenticatedAdminUiAuditTrailsRoute,
+  AuthenticatedAdminUiBlogsRoute: AuthenticatedAdminUiBlogsRoute,
+  AuthenticatedAdminUiDonationsRoute: AuthenticatedAdminUiDonationsRoute,
+  AuthenticatedAdminUiEventsRoute: AuthenticatedAdminUiEventsRoute,
+  AuthenticatedAdminUiJobsRoute: AuthenticatedAdminUiJobsRoute,
+  AuthenticatedAdminUiLocalGroupsRoute: AuthenticatedAdminUiLocalGroupsRoute,
+  AuthenticatedAdminUiMembersRoute: AuthenticatedAdminUiMembersRoute,
+  AuthenticatedAdminUiMerchandiseRoute: AuthenticatedAdminUiMerchandiseRoute,
+  AuthenticatedAdminUiVolunteerRoute: AuthenticatedAdminUiVolunteerRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
@@ -656,3 +898,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
