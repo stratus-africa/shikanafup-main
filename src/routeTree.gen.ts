@@ -13,6 +13,7 @@ import { Route as OtpRouteImport } from './routes/otp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicVolunteerRouteImport } from './routes/_public.volunteer'
 import { Route as PublicTermsRouteImport } from './routes/_public.terms'
@@ -30,8 +31,10 @@ import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicCareersRouteImport } from './routes/_public.careers'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as PublicEventsIdRouteImport } from './routes/_public.events.$id'
 import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
+import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated.admin.dashboard'
 import { Route as PublicEventsIdRegisterRouteImport } from './routes/_public.events.$id.register'
 
 const OtpRoute = OtpRouteImport.update({
@@ -51,6 +54,10 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
 } as any)
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
@@ -138,6 +145,11 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => PublicRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const PublicEventsIdRoute = PublicEventsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -148,6 +160,12 @@ const PublicBlogIdRoute = PublicBlogIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => PublicBlogRoute,
 } as any)
+const AuthenticatedAdminDashboardRoute =
+  AuthenticatedAdminDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const PublicEventsIdRegisterRoute = PublicEventsIdRegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -159,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/about': typeof PublicAboutRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
@@ -175,14 +194,17 @@ export interface FileRoutesByFullPath {
   '/register': typeof PublicRegisterRoute
   '/terms': typeof PublicTermsRoute
   '/volunteer': typeof PublicVolunteerRoute
+  '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/blog/$id': typeof PublicBlogIdRoute
   '/events/$id': typeof PublicEventsIdRouteWithChildren
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof PublicIndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/about': typeof PublicAboutRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
@@ -199,17 +221,19 @@ export interface FileRoutesByTo {
   '/register': typeof PublicRegisterRoute
   '/terms': typeof PublicTermsRoute
   '/volunteer': typeof PublicVolunteerRoute
-  '/': typeof PublicIndexRoute
+  '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/blog/$id': typeof PublicBlogIdRoute
   '/events/$id': typeof PublicEventsIdRouteWithChildren
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_public/about': typeof PublicAboutRoute
   '/_public/blog': typeof PublicBlogRouteWithChildren
   '/_public/careers': typeof PublicCareersRoute
@@ -227,6 +251,7 @@ export interface FileRoutesById {
   '/_public/terms': typeof PublicTermsRoute
   '/_public/volunteer': typeof PublicVolunteerRoute
   '/_public/': typeof PublicIndexRoute
+  '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_public/blog/$id': typeof PublicBlogIdRoute
   '/_public/events/$id': typeof PublicEventsIdRouteWithChildren
   '/_public/events/$id/register': typeof PublicEventsIdRegisterRoute
@@ -238,6 +263,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/otp'
+    | '/admin'
     | '/about'
     | '/blog'
     | '/careers'
@@ -254,14 +280,17 @@ export interface FileRouteTypes {
     | '/register'
     | '/terms'
     | '/volunteer'
+    | '/admin/dashboard'
     | '/blog/$id'
     | '/events/$id'
     | '/events/$id/register'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/forgot-password'
     | '/login'
     | '/otp'
+    | '/admin'
     | '/about'
     | '/blog'
     | '/careers'
@@ -278,16 +307,18 @@ export interface FileRouteTypes {
     | '/register'
     | '/terms'
     | '/volunteer'
-    | '/'
+    | '/admin/dashboard'
     | '/blog/$id'
     | '/events/$id'
     | '/events/$id/register'
   id:
     | '__root__'
+    | '/_authenticated'
     | '/_public'
     | '/forgot-password'
     | '/login'
     | '/otp'
+    | '/_authenticated/admin'
     | '/_public/about'
     | '/_public/blog'
     | '/_public/careers'
@@ -305,12 +336,14 @@ export interface FileRouteTypes {
     | '/_public/terms'
     | '/_public/volunteer'
     | '/_public/'
+    | '/_authenticated/admin/dashboard'
     | '/_public/blog/$id'
     | '/_public/events/$id'
     | '/_public/events/$id/register'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
@@ -345,6 +378,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/': {
@@ -466,6 +506,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAboutRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_public/events/$id': {
       id: '/_public/events/$id'
       path: '/$id'
@@ -480,6 +527,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicBlogIdRouteImport
       parentRoute: typeof PublicBlogRoute
     }
+    '/_authenticated/admin/dashboard': {
+      id: '/_authenticated/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_public/events/$id/register': {
       id: '/_public/events/$id/register'
       path: '/register'
@@ -489,6 +543,29 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
 
 interface PublicBlogRouteChildren {
   PublicBlogIdRoute: typeof PublicBlogIdRoute
@@ -570,6 +647,7 @@ const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
@@ -578,13 +656,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
