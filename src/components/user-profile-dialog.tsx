@@ -7,7 +7,10 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth-context"
-import { User, Mail, Phone, Shield } from "lucide-react"
+import { useRouter } from "@/lib/next-shims"
+import { User, Mail, Phone, Shield, LayoutDashboard } from "lucide-react"
+
+const STAFF_ROLES = ["super_admin", "admin", "editor", "moderator"]
 
 interface UserProfileDialogProps {
     open: boolean
@@ -16,8 +19,11 @@ interface UserProfileDialogProps {
 
 export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps) {
     const { user, logout } = useAuth()
+    const router = useRouter()
 
     if (!user) return null
+
+    const isStaff = STAFF_ROLES.includes((user.role ?? "").toString())
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -61,9 +67,22 @@ export function UserProfileDialog({ open, onOpenChange }: UserProfileDialogProps
                         )} */}
                     </div>
 
+                    {isStaff && (
+                        <Button
+                            className="w-full mt-4 bg-primary hover:bg-[#9a181c] text-white"
+                            onClick={() => {
+                                onOpenChange(false)
+                                router.push("/admin/dashboard")
+                            }}
+                        >
+                            <LayoutDashboard className="mr-2 h-4 w-4" />
+                            Open Admin Portal
+                        </Button>
+                    )}
+
                     <Button
                         variant="destructive"
-                        className="w-full mt-4"
+                        className="w-full mt-2"
                         onClick={() => {
                             onOpenChange(false)
                             logout()
