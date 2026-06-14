@@ -50,7 +50,6 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       );
     }
     return (
-      // @ts-expect-error untyped route string is intentional
       <TSLink ref={ref} to={target} {...rest}>
         {children}
       </TSLink>
@@ -82,7 +81,7 @@ export function usePathname(): string {
 }
 
 export function useSearchParams(): URLSearchParams {
-  const search = useLocation({ select: (l) => l.search }) as Record<string, unknown>;
+  const search = useLocation({ select: (l) => l.search }) as unknown as Record<string, unknown>;
   const params = new URLSearchParams();
   if (search && typeof search === "object") {
     for (const [k, v] of Object.entries(search)) {
