@@ -32,11 +32,27 @@ import { Route as PublicCareersRouteImport } from './routes/_public.careers'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
+import { Route as PublicSharedUiVolunteerRouteImport } from './routes/_public.shared-ui.volunteer'
+import { Route as PublicSharedUiTermsRouteImport } from './routes/_public.shared-ui.terms'
+import { Route as PublicSharedUiRegisterRouteImport } from './routes/_public.shared-ui.register'
+import { Route as PublicSharedUiPublicationsRouteImport } from './routes/_public.shared-ui.publications'
+import { Route as PublicSharedUiPrivacyRouteImport } from './routes/_public.shared-ui.privacy'
+import { Route as PublicSharedUiPoliticalPositionRouteImport } from './routes/_public.shared-ui.political-position'
+import { Route as PublicSharedUiPartyPositionRouteImport } from './routes/_public.shared-ui.party-position'
+import { Route as PublicSharedUiLocalGroupRouteImport } from './routes/_public.shared-ui.local-group'
+import { Route as PublicSharedUiListingsRouteImport } from './routes/_public.shared-ui.listings'
+import { Route as PublicSharedUiFaqRouteImport } from './routes/_public.shared-ui.faq'
+import { Route as PublicSharedUiEventsRouteImport } from './routes/_public.shared-ui.events'
+import { Route as PublicSharedUiDonateRouteImport } from './routes/_public.shared-ui.donate'
+import { Route as PublicSharedUiContactRouteImport } from './routes/_public.shared-ui.contact'
+import { Route as PublicSharedUiCareersRouteImport } from './routes/_public.shared-ui.careers'
 import { Route as PublicSharedUiBlogRouteImport } from './routes/_public.shared-ui.blog'
 import { Route as PublicSharedUiAboutRouteImport } from './routes/_public.shared-ui.about'
 import { Route as PublicEventsIdRouteImport } from './routes/_public.events.$id'
 import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated.admin.dashboard'
+import { Route as PublicSharedUiEventsIdRouteImport } from './routes/_public.shared-ui.events.$id'
+import { Route as PublicSharedUiBlogIdRouteImport } from './routes/_public.shared-ui.blog.$id'
 import { Route as PublicEventsIdRegisterRouteImport } from './routes/_public.events.$id.register'
 import { Route as AuthenticatedAdminUiVolunteerRouteImport } from './routes/_authenticated.admin.ui.volunteer'
 import { Route as AuthenticatedAdminUiUsersRouteImport } from './routes/_authenticated.admin.ui.users'
@@ -52,6 +68,7 @@ import { Route as AuthenticatedAdminUiBlogsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminUiAuditTrailsRouteImport } from './routes/_authenticated.admin.ui.audit-trails'
 import { Route as AuthenticatedAdminUiAspirantsRouteImport } from './routes/_authenticated.admin.ui.aspirants'
 import { Route as AuthenticatedAdminUiAdminUsersRouteImport } from './routes/_authenticated.admin.ui.admin-users'
+import { Route as PublicSharedUiEventsIdRegisterRouteImport } from './routes/_public.shared-ui.events.$id.register'
 import { Route as AuthenticatedAdminUiJobsJobIdApplicationsRouteImport } from './routes/_authenticated.admin.ui.jobs.$jobId.applications'
 
 const OtpRoute = OtpRouteImport.update({
@@ -167,6 +184,80 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const PublicSharedUiVolunteerRoute = PublicSharedUiVolunteerRouteImport.update({
+  id: '/shared-ui/volunteer',
+  path: '/shared-ui/volunteer',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiTermsRoute = PublicSharedUiTermsRouteImport.update({
+  id: '/shared-ui/terms',
+  path: '/shared-ui/terms',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiRegisterRoute = PublicSharedUiRegisterRouteImport.update({
+  id: '/shared-ui/register',
+  path: '/shared-ui/register',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiPublicationsRoute =
+  PublicSharedUiPublicationsRouteImport.update({
+    id: '/shared-ui/publications',
+    path: '/shared-ui/publications',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicSharedUiPrivacyRoute = PublicSharedUiPrivacyRouteImport.update({
+  id: '/shared-ui/privacy',
+  path: '/shared-ui/privacy',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiPoliticalPositionRoute =
+  PublicSharedUiPoliticalPositionRouteImport.update({
+    id: '/shared-ui/political-position',
+    path: '/shared-ui/political-position',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicSharedUiPartyPositionRoute =
+  PublicSharedUiPartyPositionRouteImport.update({
+    id: '/shared-ui/party-position',
+    path: '/shared-ui/party-position',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicSharedUiLocalGroupRoute =
+  PublicSharedUiLocalGroupRouteImport.update({
+    id: '/shared-ui/local-group',
+    path: '/shared-ui/local-group',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicSharedUiListingsRoute = PublicSharedUiListingsRouteImport.update({
+  id: '/shared-ui/listings',
+  path: '/shared-ui/listings',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiFaqRoute = PublicSharedUiFaqRouteImport.update({
+  id: '/shared-ui/faq',
+  path: '/shared-ui/faq',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiEventsRoute = PublicSharedUiEventsRouteImport.update({
+  id: '/shared-ui/events',
+  path: '/shared-ui/events',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiDonateRoute = PublicSharedUiDonateRouteImport.update({
+  id: '/shared-ui/donate',
+  path: '/shared-ui/donate',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiContactRoute = PublicSharedUiContactRouteImport.update({
+  id: '/shared-ui/contact',
+  path: '/shared-ui/contact',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSharedUiCareersRoute = PublicSharedUiCareersRouteImport.update({
+  id: '/shared-ui/careers',
+  path: '/shared-ui/careers',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicSharedUiBlogRoute = PublicSharedUiBlogRouteImport.update({
   id: '/shared-ui/blog',
   path: '/shared-ui/blog',
@@ -193,6 +284,16 @@ const AuthenticatedAdminDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const PublicSharedUiEventsIdRoute = PublicSharedUiEventsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PublicSharedUiEventsRoute,
+} as any)
+const PublicSharedUiBlogIdRoute = PublicSharedUiBlogIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => PublicSharedUiBlogRoute,
+} as any)
 const PublicEventsIdRegisterRoute = PublicEventsIdRegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -282,6 +383,12 @@ const AuthenticatedAdminUiAdminUsersRoute =
     path: '/ui/admin-users',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const PublicSharedUiEventsIdRegisterRoute =
+  PublicSharedUiEventsIdRegisterRouteImport.update({
+    id: '/register',
+    path: '/register',
+    getParentRoute: () => PublicSharedUiEventsIdRoute,
+  } as any)
 const AuthenticatedAdminUiJobsJobIdApplicationsRoute =
   AuthenticatedAdminUiJobsJobIdApplicationsRouteImport.update({
     id: '/$jobId/applications',
@@ -315,7 +422,21 @@ export interface FileRoutesByFullPath {
   '/blog/$id': typeof PublicBlogIdRoute
   '/events/$id': typeof PublicEventsIdRouteWithChildren
   '/shared-ui/about': typeof PublicSharedUiAboutRoute
-  '/shared-ui/blog': typeof PublicSharedUiBlogRoute
+  '/shared-ui/blog': typeof PublicSharedUiBlogRouteWithChildren
+  '/shared-ui/careers': typeof PublicSharedUiCareersRoute
+  '/shared-ui/contact': typeof PublicSharedUiContactRoute
+  '/shared-ui/donate': typeof PublicSharedUiDonateRoute
+  '/shared-ui/events': typeof PublicSharedUiEventsRouteWithChildren
+  '/shared-ui/faq': typeof PublicSharedUiFaqRoute
+  '/shared-ui/listings': typeof PublicSharedUiListingsRoute
+  '/shared-ui/local-group': typeof PublicSharedUiLocalGroupRoute
+  '/shared-ui/party-position': typeof PublicSharedUiPartyPositionRoute
+  '/shared-ui/political-position': typeof PublicSharedUiPoliticalPositionRoute
+  '/shared-ui/privacy': typeof PublicSharedUiPrivacyRoute
+  '/shared-ui/publications': typeof PublicSharedUiPublicationsRoute
+  '/shared-ui/register': typeof PublicSharedUiRegisterRoute
+  '/shared-ui/terms': typeof PublicSharedUiTermsRoute
+  '/shared-ui/volunteer': typeof PublicSharedUiVolunteerRoute
   '/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
   '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
@@ -331,6 +452,9 @@ export interface FileRoutesByFullPath {
   '/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
+  '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
+  '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
 export interface FileRoutesByTo {
@@ -359,7 +483,21 @@ export interface FileRoutesByTo {
   '/blog/$id': typeof PublicBlogIdRoute
   '/events/$id': typeof PublicEventsIdRouteWithChildren
   '/shared-ui/about': typeof PublicSharedUiAboutRoute
-  '/shared-ui/blog': typeof PublicSharedUiBlogRoute
+  '/shared-ui/blog': typeof PublicSharedUiBlogRouteWithChildren
+  '/shared-ui/careers': typeof PublicSharedUiCareersRoute
+  '/shared-ui/contact': typeof PublicSharedUiContactRoute
+  '/shared-ui/donate': typeof PublicSharedUiDonateRoute
+  '/shared-ui/events': typeof PublicSharedUiEventsRouteWithChildren
+  '/shared-ui/faq': typeof PublicSharedUiFaqRoute
+  '/shared-ui/listings': typeof PublicSharedUiListingsRoute
+  '/shared-ui/local-group': typeof PublicSharedUiLocalGroupRoute
+  '/shared-ui/party-position': typeof PublicSharedUiPartyPositionRoute
+  '/shared-ui/political-position': typeof PublicSharedUiPoliticalPositionRoute
+  '/shared-ui/privacy': typeof PublicSharedUiPrivacyRoute
+  '/shared-ui/publications': typeof PublicSharedUiPublicationsRoute
+  '/shared-ui/register': typeof PublicSharedUiRegisterRoute
+  '/shared-ui/terms': typeof PublicSharedUiTermsRoute
+  '/shared-ui/volunteer': typeof PublicSharedUiVolunteerRoute
   '/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
   '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
@@ -375,6 +513,9 @@ export interface FileRoutesByTo {
   '/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
+  '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
+  '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
 export interface FileRoutesById {
@@ -406,7 +547,21 @@ export interface FileRoutesById {
   '/_public/blog/$id': typeof PublicBlogIdRoute
   '/_public/events/$id': typeof PublicEventsIdRouteWithChildren
   '/_public/shared-ui/about': typeof PublicSharedUiAboutRoute
-  '/_public/shared-ui/blog': typeof PublicSharedUiBlogRoute
+  '/_public/shared-ui/blog': typeof PublicSharedUiBlogRouteWithChildren
+  '/_public/shared-ui/careers': typeof PublicSharedUiCareersRoute
+  '/_public/shared-ui/contact': typeof PublicSharedUiContactRoute
+  '/_public/shared-ui/donate': typeof PublicSharedUiDonateRoute
+  '/_public/shared-ui/events': typeof PublicSharedUiEventsRouteWithChildren
+  '/_public/shared-ui/faq': typeof PublicSharedUiFaqRoute
+  '/_public/shared-ui/listings': typeof PublicSharedUiListingsRoute
+  '/_public/shared-ui/local-group': typeof PublicSharedUiLocalGroupRoute
+  '/_public/shared-ui/party-position': typeof PublicSharedUiPartyPositionRoute
+  '/_public/shared-ui/political-position': typeof PublicSharedUiPoliticalPositionRoute
+  '/_public/shared-ui/privacy': typeof PublicSharedUiPrivacyRoute
+  '/_public/shared-ui/publications': typeof PublicSharedUiPublicationsRoute
+  '/_public/shared-ui/register': typeof PublicSharedUiRegisterRoute
+  '/_public/shared-ui/terms': typeof PublicSharedUiTermsRoute
+  '/_public/shared-ui/volunteer': typeof PublicSharedUiVolunteerRoute
   '/_authenticated/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
   '/_authenticated/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/_authenticated/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
@@ -422,6 +577,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/_authenticated/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/_public/events/$id/register': typeof PublicEventsIdRegisterRoute
+  '/_public/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
+  '/_public/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/_public/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/_authenticated/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
 export interface FileRouteTypes {
@@ -453,6 +611,20 @@ export interface FileRouteTypes {
     | '/events/$id'
     | '/shared-ui/about'
     | '/shared-ui/blog'
+    | '/shared-ui/careers'
+    | '/shared-ui/contact'
+    | '/shared-ui/donate'
+    | '/shared-ui/events'
+    | '/shared-ui/faq'
+    | '/shared-ui/listings'
+    | '/shared-ui/local-group'
+    | '/shared-ui/party-position'
+    | '/shared-ui/political-position'
+    | '/shared-ui/privacy'
+    | '/shared-ui/publications'
+    | '/shared-ui/register'
+    | '/shared-ui/terms'
+    | '/shared-ui/volunteer'
     | '/admin/ui/admin-users'
     | '/admin/ui/aspirants'
     | '/admin/ui/audit-trails'
@@ -468,6 +640,9 @@ export interface FileRouteTypes {
     | '/admin/ui/users'
     | '/admin/ui/volunteer'
     | '/events/$id/register'
+    | '/shared-ui/blog/$id'
+    | '/shared-ui/events/$id'
+    | '/shared-ui/events/$id/register'
     | '/admin/ui/jobs/$jobId/applications'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -497,6 +672,20 @@ export interface FileRouteTypes {
     | '/events/$id'
     | '/shared-ui/about'
     | '/shared-ui/blog'
+    | '/shared-ui/careers'
+    | '/shared-ui/contact'
+    | '/shared-ui/donate'
+    | '/shared-ui/events'
+    | '/shared-ui/faq'
+    | '/shared-ui/listings'
+    | '/shared-ui/local-group'
+    | '/shared-ui/party-position'
+    | '/shared-ui/political-position'
+    | '/shared-ui/privacy'
+    | '/shared-ui/publications'
+    | '/shared-ui/register'
+    | '/shared-ui/terms'
+    | '/shared-ui/volunteer'
     | '/admin/ui/admin-users'
     | '/admin/ui/aspirants'
     | '/admin/ui/audit-trails'
@@ -512,6 +701,9 @@ export interface FileRouteTypes {
     | '/admin/ui/users'
     | '/admin/ui/volunteer'
     | '/events/$id/register'
+    | '/shared-ui/blog/$id'
+    | '/shared-ui/events/$id'
+    | '/shared-ui/events/$id/register'
     | '/admin/ui/jobs/$jobId/applications'
   id:
     | '__root__'
@@ -543,6 +735,20 @@ export interface FileRouteTypes {
     | '/_public/events/$id'
     | '/_public/shared-ui/about'
     | '/_public/shared-ui/blog'
+    | '/_public/shared-ui/careers'
+    | '/_public/shared-ui/contact'
+    | '/_public/shared-ui/donate'
+    | '/_public/shared-ui/events'
+    | '/_public/shared-ui/faq'
+    | '/_public/shared-ui/listings'
+    | '/_public/shared-ui/local-group'
+    | '/_public/shared-ui/party-position'
+    | '/_public/shared-ui/political-position'
+    | '/_public/shared-ui/privacy'
+    | '/_public/shared-ui/publications'
+    | '/_public/shared-ui/register'
+    | '/_public/shared-ui/terms'
+    | '/_public/shared-ui/volunteer'
     | '/_authenticated/admin/ui/admin-users'
     | '/_authenticated/admin/ui/aspirants'
     | '/_authenticated/admin/ui/audit-trails'
@@ -558,6 +764,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ui/users'
     | '/_authenticated/admin/ui/volunteer'
     | '/_public/events/$id/register'
+    | '/_public/shared-ui/blog/$id'
+    | '/_public/shared-ui/events/$id'
+    | '/_public/shared-ui/events/$id/register'
     | '/_authenticated/admin/ui/jobs/$jobId/applications'
   fileRoutesById: FileRoutesById
 }
@@ -732,6 +941,104 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_public/shared-ui/volunteer': {
+      id: '/_public/shared-ui/volunteer'
+      path: '/shared-ui/volunteer'
+      fullPath: '/shared-ui/volunteer'
+      preLoaderRoute: typeof PublicSharedUiVolunteerRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/terms': {
+      id: '/_public/shared-ui/terms'
+      path: '/shared-ui/terms'
+      fullPath: '/shared-ui/terms'
+      preLoaderRoute: typeof PublicSharedUiTermsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/register': {
+      id: '/_public/shared-ui/register'
+      path: '/shared-ui/register'
+      fullPath: '/shared-ui/register'
+      preLoaderRoute: typeof PublicSharedUiRegisterRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/publications': {
+      id: '/_public/shared-ui/publications'
+      path: '/shared-ui/publications'
+      fullPath: '/shared-ui/publications'
+      preLoaderRoute: typeof PublicSharedUiPublicationsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/privacy': {
+      id: '/_public/shared-ui/privacy'
+      path: '/shared-ui/privacy'
+      fullPath: '/shared-ui/privacy'
+      preLoaderRoute: typeof PublicSharedUiPrivacyRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/political-position': {
+      id: '/_public/shared-ui/political-position'
+      path: '/shared-ui/political-position'
+      fullPath: '/shared-ui/political-position'
+      preLoaderRoute: typeof PublicSharedUiPoliticalPositionRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/party-position': {
+      id: '/_public/shared-ui/party-position'
+      path: '/shared-ui/party-position'
+      fullPath: '/shared-ui/party-position'
+      preLoaderRoute: typeof PublicSharedUiPartyPositionRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/local-group': {
+      id: '/_public/shared-ui/local-group'
+      path: '/shared-ui/local-group'
+      fullPath: '/shared-ui/local-group'
+      preLoaderRoute: typeof PublicSharedUiLocalGroupRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/listings': {
+      id: '/_public/shared-ui/listings'
+      path: '/shared-ui/listings'
+      fullPath: '/shared-ui/listings'
+      preLoaderRoute: typeof PublicSharedUiListingsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/faq': {
+      id: '/_public/shared-ui/faq'
+      path: '/shared-ui/faq'
+      fullPath: '/shared-ui/faq'
+      preLoaderRoute: typeof PublicSharedUiFaqRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/events': {
+      id: '/_public/shared-ui/events'
+      path: '/shared-ui/events'
+      fullPath: '/shared-ui/events'
+      preLoaderRoute: typeof PublicSharedUiEventsRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/donate': {
+      id: '/_public/shared-ui/donate'
+      path: '/shared-ui/donate'
+      fullPath: '/shared-ui/donate'
+      preLoaderRoute: typeof PublicSharedUiDonateRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/contact': {
+      id: '/_public/shared-ui/contact'
+      path: '/shared-ui/contact'
+      fullPath: '/shared-ui/contact'
+      preLoaderRoute: typeof PublicSharedUiContactRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/shared-ui/careers': {
+      id: '/_public/shared-ui/careers'
+      path: '/shared-ui/careers'
+      fullPath: '/shared-ui/careers'
+      preLoaderRoute: typeof PublicSharedUiCareersRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/shared-ui/blog': {
       id: '/_public/shared-ui/blog'
       path: '/shared-ui/blog'
@@ -766,6 +1073,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_public/shared-ui/events/$id': {
+      id: '/_public/shared-ui/events/$id'
+      path: '/$id'
+      fullPath: '/shared-ui/events/$id'
+      preLoaderRoute: typeof PublicSharedUiEventsIdRouteImport
+      parentRoute: typeof PublicSharedUiEventsRoute
+    }
+    '/_public/shared-ui/blog/$id': {
+      id: '/_public/shared-ui/blog/$id'
+      path: '/$id'
+      fullPath: '/shared-ui/blog/$id'
+      preLoaderRoute: typeof PublicSharedUiBlogIdRouteImport
+      parentRoute: typeof PublicSharedUiBlogRoute
     }
     '/_public/events/$id/register': {
       id: '/_public/events/$id/register'
@@ -871,6 +1192,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/ui/admin-users'
       preLoaderRoute: typeof AuthenticatedAdminUiAdminUsersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_public/shared-ui/events/$id/register': {
+      id: '/_public/shared-ui/events/$id/register'
+      path: '/register'
+      fullPath: '/shared-ui/events/$id/register'
+      preLoaderRoute: typeof PublicSharedUiEventsIdRegisterRouteImport
+      parentRoute: typeof PublicSharedUiEventsIdRoute
     }
     '/_authenticated/admin/ui/jobs/$jobId/applications': {
       id: '/_authenticated/admin/ui/jobs/$jobId/applications'
@@ -984,6 +1312,42 @@ const PublicEventsRouteWithChildren = PublicEventsRoute._addFileChildren(
   PublicEventsRouteChildren,
 )
 
+interface PublicSharedUiBlogRouteChildren {
+  PublicSharedUiBlogIdRoute: typeof PublicSharedUiBlogIdRoute
+}
+
+const PublicSharedUiBlogRouteChildren: PublicSharedUiBlogRouteChildren = {
+  PublicSharedUiBlogIdRoute: PublicSharedUiBlogIdRoute,
+}
+
+const PublicSharedUiBlogRouteWithChildren =
+  PublicSharedUiBlogRoute._addFileChildren(PublicSharedUiBlogRouteChildren)
+
+interface PublicSharedUiEventsIdRouteChildren {
+  PublicSharedUiEventsIdRegisterRoute: typeof PublicSharedUiEventsIdRegisterRoute
+}
+
+const PublicSharedUiEventsIdRouteChildren: PublicSharedUiEventsIdRouteChildren =
+  {
+    PublicSharedUiEventsIdRegisterRoute: PublicSharedUiEventsIdRegisterRoute,
+  }
+
+const PublicSharedUiEventsIdRouteWithChildren =
+  PublicSharedUiEventsIdRoute._addFileChildren(
+    PublicSharedUiEventsIdRouteChildren,
+  )
+
+interface PublicSharedUiEventsRouteChildren {
+  PublicSharedUiEventsIdRoute: typeof PublicSharedUiEventsIdRouteWithChildren
+}
+
+const PublicSharedUiEventsRouteChildren: PublicSharedUiEventsRouteChildren = {
+  PublicSharedUiEventsIdRoute: PublicSharedUiEventsIdRouteWithChildren,
+}
+
+const PublicSharedUiEventsRouteWithChildren =
+  PublicSharedUiEventsRoute._addFileChildren(PublicSharedUiEventsRouteChildren)
+
 interface PublicRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
   PublicBlogRoute: typeof PublicBlogRouteWithChildren
@@ -1003,7 +1367,21 @@ interface PublicRouteChildren {
   PublicVolunteerRoute: typeof PublicVolunteerRoute
   PublicIndexRoute: typeof PublicIndexRoute
   PublicSharedUiAboutRoute: typeof PublicSharedUiAboutRoute
-  PublicSharedUiBlogRoute: typeof PublicSharedUiBlogRoute
+  PublicSharedUiBlogRoute: typeof PublicSharedUiBlogRouteWithChildren
+  PublicSharedUiCareersRoute: typeof PublicSharedUiCareersRoute
+  PublicSharedUiContactRoute: typeof PublicSharedUiContactRoute
+  PublicSharedUiDonateRoute: typeof PublicSharedUiDonateRoute
+  PublicSharedUiEventsRoute: typeof PublicSharedUiEventsRouteWithChildren
+  PublicSharedUiFaqRoute: typeof PublicSharedUiFaqRoute
+  PublicSharedUiListingsRoute: typeof PublicSharedUiListingsRoute
+  PublicSharedUiLocalGroupRoute: typeof PublicSharedUiLocalGroupRoute
+  PublicSharedUiPartyPositionRoute: typeof PublicSharedUiPartyPositionRoute
+  PublicSharedUiPoliticalPositionRoute: typeof PublicSharedUiPoliticalPositionRoute
+  PublicSharedUiPrivacyRoute: typeof PublicSharedUiPrivacyRoute
+  PublicSharedUiPublicationsRoute: typeof PublicSharedUiPublicationsRoute
+  PublicSharedUiRegisterRoute: typeof PublicSharedUiRegisterRoute
+  PublicSharedUiTermsRoute: typeof PublicSharedUiTermsRoute
+  PublicSharedUiVolunteerRoute: typeof PublicSharedUiVolunteerRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
@@ -1025,7 +1403,21 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicVolunteerRoute: PublicVolunteerRoute,
   PublicIndexRoute: PublicIndexRoute,
   PublicSharedUiAboutRoute: PublicSharedUiAboutRoute,
-  PublicSharedUiBlogRoute: PublicSharedUiBlogRoute,
+  PublicSharedUiBlogRoute: PublicSharedUiBlogRouteWithChildren,
+  PublicSharedUiCareersRoute: PublicSharedUiCareersRoute,
+  PublicSharedUiContactRoute: PublicSharedUiContactRoute,
+  PublicSharedUiDonateRoute: PublicSharedUiDonateRoute,
+  PublicSharedUiEventsRoute: PublicSharedUiEventsRouteWithChildren,
+  PublicSharedUiFaqRoute: PublicSharedUiFaqRoute,
+  PublicSharedUiListingsRoute: PublicSharedUiListingsRoute,
+  PublicSharedUiLocalGroupRoute: PublicSharedUiLocalGroupRoute,
+  PublicSharedUiPartyPositionRoute: PublicSharedUiPartyPositionRoute,
+  PublicSharedUiPoliticalPositionRoute: PublicSharedUiPoliticalPositionRoute,
+  PublicSharedUiPrivacyRoute: PublicSharedUiPrivacyRoute,
+  PublicSharedUiPublicationsRoute: PublicSharedUiPublicationsRoute,
+  PublicSharedUiRegisterRoute: PublicSharedUiRegisterRoute,
+  PublicSharedUiTermsRoute: PublicSharedUiTermsRoute,
+  PublicSharedUiVolunteerRoute: PublicSharedUiVolunteerRoute,
 }
 
 const PublicRouteWithChildren =
@@ -1041,13 +1433,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
