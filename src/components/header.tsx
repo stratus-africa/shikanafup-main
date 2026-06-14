@@ -200,7 +200,8 @@ export function Header() {
               ) : (
                 <Button
                   onClick={() => router.push("/login")}
-                  className="bg-primary text-white hover:bg-primary/90 transition-colors"
+                  className="text-white hover:opacity-90 transition-opacity"
+                  style={{ backgroundColor: "#162443" }}
                 >
                   Login
                 </Button>
