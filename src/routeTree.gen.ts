@@ -37,6 +37,9 @@ import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated.admin.dashboard'
 import { Route as PublicEventsIdRegisterRouteImport } from './routes/_public.events.$id.register'
 import { Route as AuthenticatedAdminUiVolunteerRouteImport } from './routes/_authenticated.admin.ui.volunteer'
+import { Route as AuthenticatedAdminUiUsersRouteImport } from './routes/_authenticated.admin.ui.users'
+import { Route as AuthenticatedAdminUiSettingsRouteImport } from './routes/_authenticated.admin.ui.settings'
+import { Route as AuthenticatedAdminUiRolesRouteImport } from './routes/_authenticated.admin.ui.roles'
 import { Route as AuthenticatedAdminUiMerchandiseRouteImport } from './routes/_authenticated.admin.ui.merchandise'
 import { Route as AuthenticatedAdminUiMembersRouteImport } from './routes/_authenticated.admin.ui.members'
 import { Route as AuthenticatedAdminUiLocalGroupsRouteImport } from './routes/_authenticated.admin.ui.local-groups'
@@ -188,6 +191,24 @@ const AuthenticatedAdminUiVolunteerRoute =
     path: '/ui/volunteer',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminUiUsersRoute =
+  AuthenticatedAdminUiUsersRouteImport.update({
+    id: '/ui/users',
+    path: '/ui/users',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiSettingsRoute =
+  AuthenticatedAdminUiSettingsRouteImport.update({
+    id: '/ui/settings',
+    path: '/ui/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiRolesRoute =
+  AuthenticatedAdminUiRolesRouteImport.update({
+    id: '/ui/roles',
+    path: '/ui/roles',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminUiMerchandiseRoute =
   AuthenticatedAdminUiMerchandiseRouteImport.update({
     id: '/ui/merchandise',
@@ -284,6 +305,9 @@ export interface FileRoutesByFullPath {
   '/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/admin/ui/roles': typeof AuthenticatedAdminUiRolesRoute
+  '/admin/ui/settings': typeof AuthenticatedAdminUiSettingsRoute
+  '/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
@@ -322,6 +346,9 @@ export interface FileRoutesByTo {
   '/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/admin/ui/roles': typeof AuthenticatedAdminUiRolesRoute
+  '/admin/ui/settings': typeof AuthenticatedAdminUiSettingsRoute
+  '/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
@@ -363,6 +390,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/_authenticated/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/_authenticated/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/_authenticated/admin/ui/roles': typeof AuthenticatedAdminUiRolesRoute
+  '/_authenticated/admin/ui/settings': typeof AuthenticatedAdminUiSettingsRoute
+  '/_authenticated/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
   '/_authenticated/admin/ui/volunteer': typeof AuthenticatedAdminUiVolunteerRoute
   '/_public/events/$id/register': typeof PublicEventsIdRegisterRoute
 }
@@ -403,6 +433,9 @@ export interface FileRouteTypes {
     | '/admin/ui/local-groups'
     | '/admin/ui/members'
     | '/admin/ui/merchandise'
+    | '/admin/ui/roles'
+    | '/admin/ui/settings'
+    | '/admin/ui/users'
     | '/admin/ui/volunteer'
     | '/events/$id/register'
   fileRoutesByTo: FileRoutesByTo
@@ -441,6 +474,9 @@ export interface FileRouteTypes {
     | '/admin/ui/local-groups'
     | '/admin/ui/members'
     | '/admin/ui/merchandise'
+    | '/admin/ui/roles'
+    | '/admin/ui/settings'
+    | '/admin/ui/users'
     | '/admin/ui/volunteer'
     | '/events/$id/register'
   id:
@@ -481,6 +517,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ui/local-groups'
     | '/_authenticated/admin/ui/members'
     | '/_authenticated/admin/ui/merchandise'
+    | '/_authenticated/admin/ui/roles'
+    | '/_authenticated/admin/ui/settings'
+    | '/_authenticated/admin/ui/users'
     | '/_authenticated/admin/ui/volunteer'
     | '/_public/events/$id/register'
   fileRoutesById: FileRoutesById
@@ -691,6 +730,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUiVolunteerRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ui/users': {
+      id: '/_authenticated/admin/ui/users'
+      path: '/ui/users'
+      fullPath: '/admin/ui/users'
+      preLoaderRoute: typeof AuthenticatedAdminUiUsersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/settings': {
+      id: '/_authenticated/admin/ui/settings'
+      path: '/ui/settings'
+      fullPath: '/admin/ui/settings'
+      preLoaderRoute: typeof AuthenticatedAdminUiSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/roles': {
+      id: '/_authenticated/admin/ui/roles'
+      path: '/ui/roles'
+      fullPath: '/admin/ui/roles'
+      preLoaderRoute: typeof AuthenticatedAdminUiRolesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ui/merchandise': {
       id: '/_authenticated/admin/ui/merchandise'
       path: '/ui/merchandise'
@@ -776,6 +836,9 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminUiLocalGroupsRoute: typeof AuthenticatedAdminUiLocalGroupsRoute
   AuthenticatedAdminUiMembersRoute: typeof AuthenticatedAdminUiMembersRoute
   AuthenticatedAdminUiMerchandiseRoute: typeof AuthenticatedAdminUiMerchandiseRoute
+  AuthenticatedAdminUiRolesRoute: typeof AuthenticatedAdminUiRolesRoute
+  AuthenticatedAdminUiSettingsRoute: typeof AuthenticatedAdminUiSettingsRoute
+  AuthenticatedAdminUiUsersRoute: typeof AuthenticatedAdminUiUsersRoute
   AuthenticatedAdminUiVolunteerRoute: typeof AuthenticatedAdminUiVolunteerRoute
 }
 
@@ -791,6 +854,9 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminUiLocalGroupsRoute: AuthenticatedAdminUiLocalGroupsRoute,
   AuthenticatedAdminUiMembersRoute: AuthenticatedAdminUiMembersRoute,
   AuthenticatedAdminUiMerchandiseRoute: AuthenticatedAdminUiMerchandiseRoute,
+  AuthenticatedAdminUiRolesRoute: AuthenticatedAdminUiRolesRoute,
+  AuthenticatedAdminUiSettingsRoute: AuthenticatedAdminUiSettingsRoute,
+  AuthenticatedAdminUiUsersRoute: AuthenticatedAdminUiUsersRoute,
   AuthenticatedAdminUiVolunteerRoute: AuthenticatedAdminUiVolunteerRoute,
 }
 
@@ -898,13 +964,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
