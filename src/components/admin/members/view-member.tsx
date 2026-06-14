@@ -13,13 +13,13 @@ export type Member = {
   last_name: string
   member_code: string
   county: string
-  constituency: string
-  ward: string
+  constituency?: string
+  ward?: string
   email: string
   phone: string
-  dob: string
-  gender: string
-  specialInterest: string
+  dob?: string
+  gender?: string
+  specialInterest?: string
 //   joinedAt: string
   status: "ACTIVE" | "INACTIVE"
 
