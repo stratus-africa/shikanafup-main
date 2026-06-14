@@ -94,28 +94,21 @@ export function LoginForm({
               </h1>
 
               <p className="text-sm text-muted-foreground">
-                Enter your email/phone number and password to continue
+                Enter your email and password to continue
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Username *
+                Email *
               </label>
               <Input
-                type="text"
+                type="email"
                 name="username"
                 value={username}
-                onChange={(e) => {
-                  let val = e.target.value
-                  // If it starts with a number and specifically starts with 0, prepend 254
-                  if (/^\d/.test(val) && val.startsWith("0")) {
-                    val = "254" + val.substring(1)
-                  }
-                  setUsername(val)
-                }}
+                onChange={(e) => setUsername(e.target.value)}
                 className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                placeholder="email or phone number (254...)"
+                placeholder="you@example.com"
               />
             </div>
 
