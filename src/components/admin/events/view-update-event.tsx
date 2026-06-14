@@ -16,7 +16,7 @@ import { ArrowUpDown, ChevronLeft, ChevronRight, Search, MoreHorizontal, Eye, Pe
 import api from "@/lib/axios"
 import AddNewEvent from "./add-event"
 import { toast } from "react-hot-toast"
-import { VolunteerTable } from "../../volunteer/components/volunteer-table"
+import { VolunteerTable } from "../volunteer/volunteer-table"
 import {
   AlertDialog,
   AlertDialogAction,
