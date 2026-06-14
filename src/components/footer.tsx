@@ -16,7 +16,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-primary text-white">
+    <footer className="text-white" style={{ backgroundColor: "#162443" }}>
       <div className="max-w-7xl mx-auto px-4 py-14">
 
         {/* Main Footer Content */}
