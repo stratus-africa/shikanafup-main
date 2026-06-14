@@ -92,7 +92,7 @@ export function useSearchParams(): URLSearchParams {
 }
 
 export function useParams<T extends Record<string, string> = Record<string, string>>(): T {
-  return useTSParams({ strict: false }) as T;
+  return (useTSParams as unknown as (opts: { strict: false }) => T)({ strict: false });
 }
 
 export function redirect(path: string): never {
