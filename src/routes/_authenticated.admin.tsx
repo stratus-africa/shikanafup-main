@@ -5,15 +5,18 @@ import { adminNavMain, adminUser } from "@/lib/admin-nav";
 import { getMyAdminContext } from "@/lib/admin/auth.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  ssr: false,
   beforeLoad: async () => {
     try {
       const ctx = await getMyAdminContext();
-      if (!ctx.isStaff) {
-        throw redirect({ to: "/" });
-      }
+      if (!ctx.isStaff) throw redirect({ to: "/" });
       return { adminCtx: ctx };
     } catch (e: any) {
       if (e?.isRedirect) throw e;
+      const msg = String(e?.message ?? "");
+      if (msg.toLowerCase().includes("unauthorized") || msg.toLowerCase().includes("no authorization")) {
+        throw redirect({ to: "/login" });
+      }
       throw redirect({ to: "/" });
     }
   },
