@@ -56,7 +56,7 @@ export function AddDonationDialog({ onSuccess }: AddDonationDialogProps) {
     const { toast } = useToast()
 
     const form = useForm<DonationFormValues>({
-        resolver: zodResolver(donationSchema),
+        resolver: zodResolver(donationSchema) as any,
         defaultValues: {
             type: "individual",
             amount: "",
