@@ -8,7 +8,7 @@ export const listAspirants = createServerFn({ method: "GET" })
     const { supabase } = context as any;
     const { data, error } = await supabase
       .from("aspirants")
-      .select("*, profile:profiles(*), position:political_positions(*)")
+      .select("*, profile:profiles!aspirants_profile_id_fkey(*), reviewer:profiles!aspirants_reviewed_by_fkey(id,full_name,email), position:political_positions(*)")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];
