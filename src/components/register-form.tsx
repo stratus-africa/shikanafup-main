@@ -167,10 +167,10 @@ const POSTAL_OFFICES = [
   "Zombe – 90213",
 ]
 
+import { KENYA_COUNTIES, getConstituencies, getWards } from "@/lib/kenya/locations"
+
 export function RegisterForm() {
-  const [counties, setCountiesData] = useState<any[]>([])
-  const [subCountys, setSubCountiesData] = useState<any[]>([])
-  const [wards, setWardsData] = useState<any[]>([])
+  const counties = KENYA_COUNTIES
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle")
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
@@ -213,56 +213,20 @@ export function RegisterForm() {
 
   const registrationFee = MEMBERSHIP_TYPES.find((type) => type.value === membershipType)?.fee || 0
 
-  useEffect(() => {
-    async function fetchCounties() {
-      try {
-        const response = await api.get("/api/locations/counties")
-        setCountiesData(response.data.data)
-      } catch (e) {
-        console.error("Failed to fetch counties:", e)
-      }
-    }
-    fetchCounties()
-  }, [])
+  const subCountys = county ? getConstituencies(county) : []
+  const wards = county && constituency ? getWards(county, constituency) : []
 
   const handleCountyChange = (countyName: string) => {
-    const selectedCounty = counties.find((c) => c.name === countyName)
-    if (selectedCounty) {
-      setCounty(selectedCounty.name)
-      fetchSubCounties(selectedCounty.id)
-      setConstituency("")
-      setWard("")
-    }
-  }
-
-  const fetchSubCounties = async (countyId: number) => {
-    try {
-      const response = await api.get(`/api/locations/counties/${countyId}/subcounties`)
-      setSubCountiesData(response.data.data)
-    } catch (e) {
-      setSubCountiesData([])
-      console.error("Failed to fetch sub-counties:", e)
-    }
+    setCounty(countyName)
+    setConstituency("")
+    setWard("")
   }
 
   const handleSubcountyChange = (subcountyName: string) => {
-    const selectedSubcounty = subCountys.find((c) => c.name === subcountyName)
-    if (selectedSubcounty) {
-      setConstituency(selectedSubcounty.name)
-      fetchWards(selectedSubcounty.id)
-      setWard("")
-    }
+    setConstituency(subcountyName)
+    setWard("")
   }
 
-  const fetchWards = async (subcountyId: number) => {
-    try {
-      const response = await api.get(`/api/locations/subcounties/${subcountyId}/wards`)
-      setWardsData(response.data.data)
-    } catch (e) {
-      setWardsData([])
-      console.error("Failed to fetch wards:", e)
-    }
-  }
 
   const calculateAge = (birthDate: string) => {
     if (!birthDate) return 0
