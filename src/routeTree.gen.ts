@@ -52,6 +52,7 @@ import { Route as PublicSharedUiAboutRouteImport } from './routes/_public.shared
 import { Route as PublicEventsIdRouteImport } from './routes/_public.events.$id'
 import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated.admin.dashboard'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as PublicSharedUiEventsIdRouteImport } from './routes/_public.shared-ui.events.$id'
 import { Route as PublicSharedUiBlogIdRouteImport } from './routes/_public.shared-ui.blog.$id'
 import { Route as PublicEventsIdRegisterRouteImport } from './routes/_public.events.$id.register'
@@ -290,6 +291,12 @@ const AuthenticatedAdminDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PublicSharedUiEventsIdRoute = PublicSharedUiEventsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -461,6 +468,7 @@ export interface FileRoutesByFullPath {
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
   '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
@@ -523,6 +531,7 @@ export interface FileRoutesByTo {
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
   '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
@@ -588,6 +597,7 @@ export interface FileRoutesById {
   '/_public/events/$id/register': typeof PublicEventsIdRegisterRoute
   '/_public/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/_public/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/_public/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/_authenticated/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
@@ -652,6 +662,7 @@ export interface FileRouteTypes {
     | '/events/$id/register'
     | '/shared-ui/blog/$id'
     | '/shared-ui/events/$id'
+    | '/lovable/email/queue/process'
     | '/shared-ui/events/$id/register'
     | '/admin/ui/jobs/$jobId/applications'
   fileRoutesByTo: FileRoutesByTo
@@ -714,6 +725,7 @@ export interface FileRouteTypes {
     | '/events/$id/register'
     | '/shared-ui/blog/$id'
     | '/shared-ui/events/$id'
+    | '/lovable/email/queue/process'
     | '/shared-ui/events/$id/register'
     | '/admin/ui/jobs/$jobId/applications'
   id:
@@ -778,6 +790,7 @@ export interface FileRouteTypes {
     | '/_public/events/$id/register'
     | '/_public/shared-ui/blog/$id'
     | '/_public/shared-ui/events/$id'
+    | '/lovable/email/queue/process'
     | '/_public/shared-ui/events/$id/register'
     | '/_authenticated/admin/ui/jobs/$jobId/applications'
   fileRoutesById: FileRoutesById
@@ -789,6 +802,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   OtpRoute: typeof OtpRoute
+  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1093,6 +1107,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/shared-ui/events/$id': {
       id: '/_public/shared-ui/events/$id'
@@ -1450,6 +1471,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   OtpRoute: OtpRoute,
+  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
