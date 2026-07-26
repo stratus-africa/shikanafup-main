@@ -87,16 +87,24 @@ export function MembersTable() {
     onError: (e: any) => toast.error(e.message ?? "Delete failed"),
   });
 
+  const nameOf = (r: any) =>
+    r.profile?.full_name ||
+    [r.application?.first_name, r.application?.last_name].filter(Boolean).join(" ") ||
+    null;
+  const emailOf = (r: any) => r.profile?.email ?? r.application?.email ?? null;
+
+
   const rows = (data as any[]).filter((r) => {
     const q = search.toLowerCase();
     if (!q) return true;
     return (
       r.member_no?.toLowerCase().includes(q) ||
-      r.profile?.full_name?.toLowerCase().includes(q) ||
-      r.profile?.email?.toLowerCase().includes(q) ||
+      nameOf(r)?.toLowerCase().includes(q) ||
+      emailOf(r)?.toLowerCase().includes(q) ||
       r.status?.toLowerCase().includes(q)
     );
   });
+
 
   if (error) {
     return (
@@ -153,10 +161,11 @@ export function MembersTable() {
                   <TableCell className="font-mono text-xs">
                     {m.member_no ?? "—"}
                   </TableCell>
-                  <TableCell>{m.profile?.full_name ?? "—"}</TableCell>
+                  <TableCell>{nameOf(m) ?? "—"}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {m.profile?.email ?? "—"}
+                    {emailOf(m) ?? "—"}
                   </TableCell>
+
                   <TableCell>
                     <Badge variant="outline">{m.status}</Badge>
                   </TableCell>

@@ -8,7 +8,9 @@ export const listMembers = createServerFn({ method: "GET" })
     const { supabase } = context as any;
     const { data, error } = await supabase
       .from("members")
-      .select("*, profile:profiles(*), local_group:local_groups(id,name)")
+      .select(
+        "*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(first_name,last_name,email,phone,county,membership_type)",
+      )
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];
@@ -21,12 +23,15 @@ export const getMember = createServerFn({ method: "GET" })
     const { supabase } = context as any;
     const { data: row, error } = await supabase
       .from("members")
-      .select("*, profile:profiles(*), local_group:local_groups(id,name)")
+      .select(
+        "*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(*)",
+      )
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
     return row;
   });
+
 
 const memberUpdate = z.object({
   id: z.string().uuid(),

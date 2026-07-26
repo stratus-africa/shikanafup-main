@@ -24,6 +24,17 @@ export const updateApplicationStatus = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context as any;
+
+    if (data.status === "approved") {
+      const { data: member, error: approveErr } = await supabase.rpc(
+        "approve_membership_application",
+        { _application_id: data.id },
+      );
+      if (approveErr) throw new Error(approveErr.message);
+      await writeAudit(supabase, userId, "approve", "membership_applications", data.id, { member_id: member?.id });
+      return { status: "approved", member };
+    }
+
     const { data: row, error } = await supabase
       .from("membership_applications")
       .update({ status: data.status })
@@ -34,6 +45,7 @@ export const updateApplicationStatus = createServerFn({ method: "POST" })
     await writeAudit(supabase, userId, "update", "membership_applications", data.id, { status: data.status });
     return row;
   });
+
 
 export const deleteApplication = createServerFn({ method: "POST" })
   .middleware([requireStaff])
