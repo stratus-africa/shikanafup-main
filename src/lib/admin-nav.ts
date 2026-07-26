@@ -9,6 +9,7 @@ export const adminUser: User = {
 export const adminNavMain: NavItem[] = [
   { title: "Dashboard", url: "/admin/dashboard", icon: "dashboard" },
   { title: "Members", url: "/admin/ui/members", icon: "users" },
+  { title: "Applications", url: "/admin/ui/applications", icon: "file-text" },
   { title: "Admin Users", url: "/admin/ui/admin-users", icon: "user-cog" },
   { title: "Donations", url: "/admin/ui/donations", icon: "hand-heart" },
   { title: "Events", url: "/admin/ui/events", icon: "calendar" },
