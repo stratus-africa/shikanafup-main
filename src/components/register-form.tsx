@@ -2,7 +2,7 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import { CheckCircle } from "lucide-react"
-import api from "@/lib/axios"
+import { supabase } from "@/integrations/supabase/client"
 import toast, { Toaster } from "react-hot-toast"
 import { Link } from "@/lib/next-shims"
 import { CancelMembership } from "./cancel-membership"
@@ -282,54 +282,52 @@ export function RegisterForm() {
     setErrorMessage(null)
 
     try {
-      const response = await api.post("/api/members/register/member", {
+      const { error } = await supabase.from("membership_applications").insert({
         first_name: firstName,
         last_name: lastName,
         email,
-        dob,
-        gender,
         phone,
-        idNo,
-        doc_type: docType,
-        Constituency: constituency,
-        ward,
-        county,
-        religion,
-        ethnicity,
-        postalAddress,
-        postalCode,
-        isPWD,
-        ncpwdNumber,
-        pollingStation,
-        streetVillage,
-        membershipStatus,
-        membershipNumber,
-        localLeader,
-        verificationCode,
-        politicalDeclaration,
-        termsConsent,
-        verificationMethod,
-        membershipType,
-        specialInterest: specialInterest,
-        paymentMethod: isPaymentRequired ? paymentMethod : null,
-        paymentPhoneNumber: isPaymentRequired ? paymentPhoneNumber : null,
-        amount: registrationFee,
+        dob: dob || null,
+        gender: gender || null,
+        id_no: idNo || null,
+        doc_type: docType || null,
+        county: county || null,
+        constituency: constituency || null,
+        ward: ward || null,
+        religion: religion || null,
+        ethnicity: ethnicity || null,
+        postal_address: postalAddress || null,
+        postal_code: postalCode || null,
+        is_pwd: isPWD || null,
+        ncpwd_number: ncpwdNumber || null,
+        polling_station: pollingStation || null,
+        street_village: streetVillage || null,
+        membership_type: membershipType || null,
+        special_interest: specialInterest,
+        local_leader: localLeader || null,
+        payment_method: isPaymentRequired ? paymentMethod : null,
+        payment_phone: isPaymentRequired ? paymentPhoneNumber : null,
+        amount: registrationFee || null,
+        status: "pending",
+        payload: {
+          membershipStatus,
+          membershipNumber,
+          verificationCode,
+          verificationMethod,
+          politicalDeclaration,
+          termsConsent,
+        },
       })
 
-      if (response.data?.statusCode === 201) {
-        setPaymentStatus("success")
-        toast.success(response.data?.message || "Registration successful!")
-        // Reset form after success
-        resetForm()
-      } else {
-        setPaymentStatus("failed")
-        setErrorMessage(response.data?.message || "Registration failed")
-        toast.error(response.data?.message || "Registration failed")
-      }
-    } catch (error) {
+      if (error) throw error
+      setPaymentStatus("success")
+      toast.success("Registration submitted! We'll be in touch soon.")
+      resetForm()
+    } catch (error: any) {
       setPaymentStatus("failed")
-      setErrorMessage("Something went wrong. Please try again.")
-      toast.error("Something went wrong. Please try again.")
+      const msg = error?.message || "Something went wrong. Please try again."
+      setErrorMessage(msg)
+      toast.error(msg)
     } finally {
       setSubmitted(false)
     }
