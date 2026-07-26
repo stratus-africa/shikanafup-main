@@ -69,6 +69,7 @@ import { Route as AuthenticatedAdminUiDonationsRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminUiBlogsRouteImport } from './routes/_authenticated.admin.ui.blogs'
 import { Route as AuthenticatedAdminUiAuditTrailsRouteImport } from './routes/_authenticated.admin.ui.audit-trails'
 import { Route as AuthenticatedAdminUiAspirantsRouteImport } from './routes/_authenticated.admin.ui.aspirants'
+import { Route as AuthenticatedAdminUiApplicationsRouteImport } from './routes/_authenticated.admin.ui.applications'
 import { Route as AuthenticatedAdminUiAdminUsersRouteImport } from './routes/_authenticated.admin.ui.admin-users'
 import { Route as PublicSharedUiEventsIdRegisterRouteImport } from './routes/_public.shared-ui.events.$id.register'
 import { Route as AuthenticatedAdminUiJobsJobIdApplicationsRouteImport } from './routes/_authenticated.admin.ui.jobs.$jobId.applications'
@@ -390,6 +391,12 @@ const AuthenticatedAdminUiAspirantsRoute =
     path: '/ui/aspirants',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminUiApplicationsRoute =
+  AuthenticatedAdminUiApplicationsRouteImport.update({
+    id: '/ui/applications',
+    path: '/ui/applications',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminUiAdminUsersRoute =
   AuthenticatedAdminUiAdminUsersRouteImport.update({
     id: '/ui/admin-users',
@@ -452,6 +459,7 @@ export interface FileRoutesByFullPath {
   '/shared-ui/terms': typeof PublicSharedUiTermsRoute
   '/shared-ui/volunteer': typeof PublicSharedUiVolunteerRoute
   '/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
+  '/admin/ui/applications': typeof AuthenticatedAdminUiApplicationsRoute
   '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
   '/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
@@ -515,6 +523,7 @@ export interface FileRoutesByTo {
   '/shared-ui/terms': typeof PublicSharedUiTermsRoute
   '/shared-ui/volunteer': typeof PublicSharedUiVolunteerRoute
   '/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
+  '/admin/ui/applications': typeof AuthenticatedAdminUiApplicationsRoute
   '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
   '/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
@@ -581,6 +590,7 @@ export interface FileRoutesById {
   '/_public/shared-ui/terms': typeof PublicSharedUiTermsRoute
   '/_public/shared-ui/volunteer': typeof PublicSharedUiVolunteerRoute
   '/_authenticated/admin/ui/admin-users': typeof AuthenticatedAdminUiAdminUsersRoute
+  '/_authenticated/admin/ui/applications': typeof AuthenticatedAdminUiApplicationsRoute
   '/_authenticated/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/_authenticated/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
   '/_authenticated/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
@@ -646,6 +656,7 @@ export interface FileRouteTypes {
     | '/shared-ui/terms'
     | '/shared-ui/volunteer'
     | '/admin/ui/admin-users'
+    | '/admin/ui/applications'
     | '/admin/ui/aspirants'
     | '/admin/ui/audit-trails'
     | '/admin/ui/blogs'
@@ -709,6 +720,7 @@ export interface FileRouteTypes {
     | '/shared-ui/terms'
     | '/shared-ui/volunteer'
     | '/admin/ui/admin-users'
+    | '/admin/ui/applications'
     | '/admin/ui/aspirants'
     | '/admin/ui/audit-trails'
     | '/admin/ui/blogs'
@@ -774,6 +786,7 @@ export interface FileRouteTypes {
     | '/_public/shared-ui/terms'
     | '/_public/shared-ui/volunteer'
     | '/_authenticated/admin/ui/admin-users'
+    | '/_authenticated/admin/ui/applications'
     | '/_authenticated/admin/ui/aspirants'
     | '/_authenticated/admin/ui/audit-trails'
     | '/_authenticated/admin/ui/blogs'
@@ -1227,6 +1240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUiAspirantsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ui/applications': {
+      id: '/_authenticated/admin/ui/applications'
+      path: '/ui/applications'
+      fullPath: '/admin/ui/applications'
+      preLoaderRoute: typeof AuthenticatedAdminUiApplicationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ui/admin-users': {
       id: '/_authenticated/admin/ui/admin-users'
       path: '/ui/admin-users'
@@ -1269,6 +1289,7 @@ const AuthenticatedAdminUiJobsRouteWithChildren =
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminUiAdminUsersRoute: typeof AuthenticatedAdminUiAdminUsersRoute
+  AuthenticatedAdminUiApplicationsRoute: typeof AuthenticatedAdminUiApplicationsRoute
   AuthenticatedAdminUiAspirantsRoute: typeof AuthenticatedAdminUiAspirantsRoute
   AuthenticatedAdminUiAuditTrailsRoute: typeof AuthenticatedAdminUiAuditTrailsRoute
   AuthenticatedAdminUiBlogsRoute: typeof AuthenticatedAdminUiBlogsRoute
@@ -1287,6 +1308,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminUiAdminUsersRoute: AuthenticatedAdminUiAdminUsersRoute,
+  AuthenticatedAdminUiApplicationsRoute: AuthenticatedAdminUiApplicationsRoute,
   AuthenticatedAdminUiAspirantsRoute: AuthenticatedAdminUiAspirantsRoute,
   AuthenticatedAdminUiAuditTrailsRoute: AuthenticatedAdminUiAuditTrailsRoute,
   AuthenticatedAdminUiBlogsRoute: AuthenticatedAdminUiBlogsRoute,
