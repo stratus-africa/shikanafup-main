@@ -667,42 +667,52 @@ export type Database = {
       }
       members: {
         Row: {
+          application_id: string | null
           created_at: string
           expires_at: string | null
           id: string
           joined_at: string | null
           local_group_id: string | null
           member_no: string | null
-          profile_id: string
+          profile_id: string | null
           status: Database["public"]["Enums"]["member_status"]
           tier: string | null
           updated_at: string
         }
         Insert: {
+          application_id?: string | null
           created_at?: string
           expires_at?: string | null
           id?: string
           joined_at?: string | null
           local_group_id?: string | null
           member_no?: string | null
-          profile_id: string
+          profile_id?: string | null
           status?: Database["public"]["Enums"]["member_status"]
           tier?: string | null
           updated_at?: string
         }
         Update: {
+          application_id?: string | null
           created_at?: string
           expires_at?: string | null
           id?: string
           joined_at?: string | null
           local_group_id?: string | null
           member_no?: string | null
-          profile_id?: string
+          profile_id?: string | null
           status?: Database["public"]["Enums"]["member_status"]
           tier?: string | null
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "members_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: true
+            referencedRelation: "membership_applications"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "members_local_group_id_fkey"
             columns: ["local_group_id"]
@@ -1137,6 +1147,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      approve_membership_application: {
+        Args: { _application_id: string }
+        Returns: {
+          application_id: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          joined_at: string | null
+          local_group_id: string | null
+          member_no: string | null
+          profile_id: string | null
+          status: Database["public"]["Enums"]["member_status"]
+          tier: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "members"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -1145,6 +1177,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      generate_member_no: { Args: never; Returns: string }
       has_any_role: {
         Args: {
           _roles: Database["public"]["Enums"]["app_role"][]
