@@ -88,10 +88,11 @@ export function MembersTable() {
   });
 
   const nameOf = (r: any) =>
-    r.profile?.full_name ??
+    r.profile?.full_name ||
     [r.application?.first_name, r.application?.last_name].filter(Boolean).join(" ") ||
     null;
   const emailOf = (r: any) => r.profile?.email ?? r.application?.email ?? null;
+
 
   const rows = (data as any[]).filter((r) => {
     const q = search.toLowerCase();
