@@ -124,3 +124,93 @@
       "Helvetica Neue", Arial, sans-serif;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* SAP Business One inspired admin chrome                              */
+/* ------------------------------------------------------------------ */
+
+.sap-titlebar {
+  background-image: linear-gradient(180deg, #1d3557 0%, #16304d 55%, #0f2338 100%);
+  color: #fff;
+  border-bottom: 1px solid #0a192f;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.sap-titlebar button,
+.sap-titlebar [data-slot="separator"] {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sap-window {
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  background: var(--color-card);
+  box-shadow: 0 1px 2px rgba(15, 35, 56, 0.08);
+  overflow: hidden;
+}
+
+.sap-grid {
+  overflow-x: auto;
+}
+
+.sap-grid table {
+  font-size: 0.78rem;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.sap-grid thead tr {
+  background-image: linear-gradient(180deg, #eef2f7 0%, #dfe6ee 100%);
+}
+
+.dark .sap-grid thead tr {
+  background-image: linear-gradient(180deg, #23304a 0%, #1a2438 100%);
+}
+
+.sap-grid th {
+  height: auto;
+  padding: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #0f2338;
+  border-right: 1px solid rgba(15, 35, 56, 0.12);
+  border-bottom: 1px solid rgba(15, 35, 56, 0.22);
+  white-space: nowrap;
+}
+
+.dark .sap-grid th {
+  color: #e6edf6;
+  border-right-color: rgba(255, 255, 255, 0.08);
+  border-bottom-color: rgba(255, 255, 255, 0.14);
+}
+
+.sap-grid th:last-child,
+.sap-grid td:last-child {
+  border-right: none;
+}
+
+.sap-grid th:last-child {
+  padding: 0.4rem 0.5rem;
+}
+
+.sap-grid td {
+  padding: 0.3rem 0.5rem;
+  border-right: 1px solid rgba(15, 35, 56, 0.07);
+  border-bottom: 1px solid rgba(15, 35, 56, 0.07);
+  vertical-align: middle;
+}
+
+.dark .sap-grid td {
+  border-right-color: rgba(255, 255, 255, 0.06);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.sap-grid tbody tr:nth-child(even) {
+  background-color: rgba(15, 35, 56, 0.025);
+}
+
+.sap-grid tbody tr:hover {
+  background-color: rgba(29, 53, 87, 0.08);
+}
