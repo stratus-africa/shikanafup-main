@@ -70,6 +70,7 @@ export function MembersTable() {
   const [editing, setEditing] = useState<any | null>(null);
   const [confirmDel, setConfirmDel] = useState<any | null>(null);
   const [viewing, setViewing] = useState<any | null>(null);
+  const [viewOpen, setViewOpen] = useState(false);
 
   const { data = [], isLoading, error } = useQuery({
     queryKey: KEY,
@@ -203,7 +204,7 @@ export function MembersTable() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onSelect={() => setViewing(m.application ?? null)}>
+                        <DropdownMenuItem onSelect={() => { setViewing(m.application ?? null); setViewOpen(true); }}>
                           <Eye className="mr-2 h-4 w-4" /> View applicant details
                         </DropdownMenuItem>
                         <DropdownMenuItem onSelect={() => setEditing(m)}>
@@ -228,8 +229,8 @@ export function MembersTable() {
 
       <ApplicantDetailsDialog
         application={viewing}
-        open={viewing !== null}
-        onOpenChange={(o) => !o && setViewing(null)}
+        open={viewOpen}
+        onOpenChange={setViewOpen}
       />
 
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
