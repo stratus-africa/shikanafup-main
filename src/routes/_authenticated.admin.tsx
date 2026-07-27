@@ -34,7 +34,7 @@ function AdminShell() {
       }
     >
       <AppSidebar variant="inset" navItems={adminNavMain} user={adminUser} />
-      <SidebarInset>
+      <SidebarInset className="bg-muted/40">
         <Outlet />
       </SidebarInset>
     </SidebarProvider>
