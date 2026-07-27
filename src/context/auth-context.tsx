@@ -1,6 +1,8 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
 import { useRouter } from "@/lib/next-shims"
+import { supabase } from "@/integrations/supabase/client"
+import type { Session } from "@supabase/supabase-js"
 
 interface User {
     id: string
@@ -23,16 +25,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-const parseJwtPayload = (token: string): { exp?: number } | null => {
-    try {
-        const payload = token.split(".")[1]
-        if (!payload) return null
-        const base64 = payload.replace(/-/g, "+").replace(/_/g, "/")
-        const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=")
-        const json = atob(padded)
-        return JSON.parse(json)
-    } catch (error) {
-        return null
+const toUser = (session: Session | null): User | null => {
+    if (!session?.user) return null
+    const meta = (session.user.user_metadata ?? {}) as Record<string, any>
+    return {
+        id: session.user.id,
+        email: session.user.email ?? "",
+        username: session.user.email ?? session.user.id,
+        first_name: meta.first_name,
+        last_name: meta.last_name,
+        phone: meta.phone ?? session.user.phone ?? undefined,
+        ...meta,
     }
 }
 
@@ -42,66 +45,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
 
+    // Kept for API compatibility: the Supabase session is the source of truth,
+    // so an explicit login() call only primes state ahead of the auth event.
     const login = useCallback((userData: User, authToken: string) => {
         setUser(userData)
         setToken(authToken)
-        sessionStorage.setItem("user", JSON.stringify(userData))
-        sessionStorage.setItem("token", authToken)
     }, [])
 
-    const logout = useCallback(() => {
+    const logout = useCallback(async () => {
+        await supabase.auth.signOut()
         setUser(null)
         setToken(null)
-        sessionStorage.removeItem("user")
-        sessionStorage.removeItem("token")
         router.push("/login")
     }, [router])
 
     useEffect(() => {
-        // Check storage on mount
-        const storedUser = sessionStorage.getItem("user")
-        const storedToken = sessionStorage.getItem("token")
+        let active = true
 
-        if (storedUser && storedToken) {
-            try {
-                const payload = parseJwtPayload(storedToken)
-                if (payload?.exp && Date.now() >= payload.exp * 1000) {
-                    sessionStorage.removeItem("user")
-                    sessionStorage.removeItem("token")
-                    setIsLoading(false)
-                    return
-                }
-                setUser(JSON.parse(storedUser))
-                setToken(storedToken)
-            } catch (e) {
-                console.error("Failed to parse user data", e)
-                sessionStorage.removeItem("user")
-                sessionStorage.removeItem("token")
-            }
+        const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+            if (!active) return
+            setUser(toUser(session))
+            setToken(session?.access_token ?? null)
+            setIsLoading(false)
+        })
+
+        supabase.auth.getSession().then(({ data }) => {
+            if (!active) return
+            setUser(toUser(data.session))
+            setToken(data.session?.access_token ?? null)
+            setIsLoading(false)
+        })
+
+        return () => {
+            active = false
+            sub.subscription.unsubscribe()
         }
-        setIsLoading(false)
     }, [])
-
-    useEffect(() => {
-        if (!token) return
-
-        const payload = parseJwtPayload(token)
-        if (!payload?.exp) return
-
-        const expiresAtMs = payload.exp * 1000
-        const msUntilExpiry = expiresAtMs - Date.now()
-
-        if (msUntilExpiry <= 0) {
-            logout()
-            return
-        }
-
-        const timeoutId = window.setTimeout(() => {
-            logout()
-        }, msUntilExpiry)
-
-        return () => window.clearTimeout(timeoutId)
-    }, [token, logout])
 
     useEffect(() => {
         const handler = () => logout()
@@ -116,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         </AuthContext.Provider>
     )
 }
+
 
 export function useAuth() {
     const context = useContext(AuthContext)
