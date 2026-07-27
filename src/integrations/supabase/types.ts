@@ -755,7 +755,10 @@ export type Database = {
           polling_station: string | null
           postal_address: string | null
           postal_code: string | null
+          rejection_reason: string | null
           religion: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           special_interest: string[] | null
           status: string
           street_village: string | null
@@ -787,7 +790,10 @@ export type Database = {
           polling_station?: string | null
           postal_address?: string | null
           postal_code?: string | null
+          rejection_reason?: string | null
           religion?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           special_interest?: string[] | null
           status?: string
           street_village?: string | null
@@ -819,7 +825,10 @@ export type Database = {
           polling_station?: string | null
           postal_address?: string | null
           postal_code?: string | null
+          rejection_reason?: string | null
           religion?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           special_interest?: string[] | null
           status?: string
           street_village?: string | null
@@ -1209,6 +1218,50 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      reject_membership_application: {
+        Args: { _application_id: string; _reason?: string }
+        Returns: {
+          amount: number | null
+          constituency: string | null
+          county: string | null
+          created_at: string
+          dob: string | null
+          doc_type: string | null
+          email: string
+          ethnicity: string | null
+          first_name: string
+          gender: string | null
+          id: string
+          id_no: string | null
+          is_pwd: string | null
+          last_name: string
+          local_leader: string | null
+          membership_type: string | null
+          ncpwd_number: string | null
+          payload: Json | null
+          payment_method: string | null
+          payment_phone: string | null
+          phone: string
+          polling_station: string | null
+          postal_address: string | null
+          postal_code: string | null
+          rejection_reason: string | null
+          religion: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          special_interest: string[] | null
+          status: string
+          street_village: string | null
+          updated_at: string
+          ward: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "membership_applications"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {
