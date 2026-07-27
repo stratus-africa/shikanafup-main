@@ -41,7 +41,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Pencil, Trash2, MoreHorizontal, Eye } from "lucide-react";
+import { ApplicantDetailsDialog } from "@/components/admin/members/applicant-details-dialog";
 import { DataToolbar } from "@/components/admin/_shared/data-toolbar";
 import {
   listMembers,
@@ -61,6 +69,8 @@ export function MembersTable() {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<any | null>(null);
   const [confirmDel, setConfirmDel] = useState<any | null>(null);
+  const [viewing, setViewing] = useState<any | null>(null);
+  const [viewOpen, setViewOpen] = useState(false);
 
   const { data = [], isLoading, error } = useQuery({
     queryKey: KEY,
@@ -92,6 +102,16 @@ export function MembersTable() {
     [r.application?.first_name, r.application?.last_name].filter(Boolean).join(" ") ||
     null;
   const emailOf = (r: any) => r.profile?.email ?? r.application?.email ?? null;
+
+  // Membership standing derived from the linked application + member status
+  const standingOf = (r: any): { label: string; variant: "default" | "destructive" | "outline" | "secondary" } => {
+    if (r.application?.status === "rejected") return { label: "Rejected", variant: "destructive" };
+    if (r.application?.status === "pending") return { label: "Pending approval", variant: "outline" };
+    if (r.status === "active") return { label: "Active", variant: "default" };
+    if (r.status === "suspended") return { label: "Suspended", variant: "destructive" };
+    if (r.status === "expired") return { label: "Inactive", variant: "secondary" };
+    return { label: "Pending", variant: "outline" };
+  };
 
 
   const rows = (data as any[]).filter((r) => {
@@ -167,7 +187,7 @@ export function MembersTable() {
                   </TableCell>
 
                   <TableCell>
-                    <Badge variant="outline">{m.status}</Badge>
+                    <Badge variant={standingOf(m).variant}>{standingOf(m).label}</Badge>
                   </TableCell>
                   <TableCell>{m.tier ?? "—"}</TableCell>
                   <TableCell>{m.local_group?.name ?? "—"}</TableCell>
@@ -177,20 +197,28 @@ export function MembersTable() {
                       : "—"}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => setEditing(m)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => setConfirmDel(m)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost" aria-label="Actions">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onSelect={() => { setViewing(m.application ?? null); setViewOpen(true); }}>
+                          <Eye className="mr-2 h-4 w-4" /> View applicant details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setEditing(m)}>
+                          <Pencil className="mr-2 h-4 w-4" /> Edit member
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onSelect={() => setConfirmDel(m)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))
@@ -198,6 +226,12 @@ export function MembersTable() {
           </TableBody>
         </Table>
       </div>
+
+      <ApplicantDetailsDialog
+        application={viewing}
+        open={viewOpen}
+        onOpenChange={setViewOpen}
+      />
 
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <DialogContent>

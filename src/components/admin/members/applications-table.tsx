@@ -13,7 +13,15 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { Check, X, Trash2, History } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Check, X, Trash2, History, MoreHorizontal, Eye } from "lucide-react";
+import { ApplicantDetailsDialog } from "@/components/admin/members/applicant-details-dialog";
 import { DataToolbar } from "@/components/admin/_shared/data-toolbar";
 import {
   listApplications,
@@ -78,6 +86,7 @@ export function ApplicationsTable() {
   const [rejectTarget, setRejectTarget] = useState<any>(null);
   const [reason, setReason] = useState("");
   const [auditId, setAuditId] = useState<string | null>(null);
+  const [viewing, setViewing] = useState<any | null>(null);
 
   const { data = [], isLoading, error } = useQuery({
     queryKey: KEY,
@@ -190,27 +199,41 @@ export function ApplicationsTable() {
                     {new Date(a.created_at).toLocaleDateString()}
                   </TableCell>
                   <TableCell className="text-right">
-                    {a.status !== "approved" && (
-                      <Button size="icon" variant="ghost" title="Approve"
-                        disabled={statusMut.isPending}
-                        onClick={() => statusMut.mutate({ id: a.id, status: "approved" })}>
-                        <Check className="h-4 w-4" />
-                      </Button>
-                    )}
-                    {a.status !== "rejected" && (
-                      <Button size="icon" variant="ghost" title="Reject"
-                        onClick={() => { setRejectTarget(a); setReason(""); }}>
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                    <Button size="icon" variant="ghost" title="Audit trail"
-                      onClick={() => setAuditId(a.id)}>
-                      <History className="h-4 w-4" />
-                    </Button>
-                    <Button size="icon" variant="ghost" title="Delete"
-                      onClick={() => delMut.mutate(a.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost" aria-label="Actions">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onSelect={() => setViewing(a)}>
+                          <Eye className="mr-2 h-4 w-4" /> View applicant details
+                        </DropdownMenuItem>
+                        {a.status !== "approved" && (
+                          <DropdownMenuItem
+                            disabled={statusMut.isPending}
+                            onSelect={() => statusMut.mutate({ id: a.id, status: "approved" })}
+                          >
+                            <Check className="mr-2 h-4 w-4" /> Approve
+                          </DropdownMenuItem>
+                        )}
+                        {a.status !== "rejected" && (
+                          <DropdownMenuItem onSelect={() => { setRejectTarget(a); setReason(""); }}>
+                            <X className="mr-2 h-4 w-4" /> Reject
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem onSelect={() => setAuditId(a.id)}>
+                          <History className="mr-2 h-4 w-4" /> Audit trail
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onSelect={() => delMut.mutate(a.id)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))
@@ -249,6 +272,12 @@ export function ApplicationsTable() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ApplicantDetailsDialog
+        application={viewing}
+        open={!!viewing}
+        onOpenChange={(o) => !o && setViewing(null)}
+      />
 
       <AuditDialog id={auditId} open={!!auditId} onOpenChange={(v) => !v && setAuditId(null)} />
     </div>
