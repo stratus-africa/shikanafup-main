@@ -37,7 +37,7 @@ export function ApplicantDetailsDialog({
   const a = application;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="sm:max-w-5xl">
         <DialogHeader>
           <DialogTitle>
             Applicant details
@@ -67,7 +67,7 @@ export function ApplicantDetailsDialog({
           </p>
         ) : (
           <ScrollArea className="max-h-[65vh] pr-4">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Field label="First name" value={a.first_name} />
               <Field label="Last name" value={a.last_name} />
               <Field label="Email" value={a.email} />
