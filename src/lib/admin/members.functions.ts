@@ -9,11 +9,12 @@ export const listMembers = createServerFn({ method: "GET" })
     const { data, error } = await supabase
       .from("members")
       .select(
-        "*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(first_name,last_name,email,phone,county,membership_type)",
+        "*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(first_name,last_name,email,phone,county,membership_type,status)",
       )
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
-    return data ?? [];
+    // Rejected applications must never surface as members
+    return (data ?? []).filter((m: any) => m.application?.status !== "rejected");
   });
 
 export const getMember = createServerFn({ method: "GET" })
