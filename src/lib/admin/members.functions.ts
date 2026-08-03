@@ -61,13 +61,35 @@ export const updateMember = createServerFn({ method: "POST" })
     return row;
   });
 
+// Hard delete: removes the member row AND its originating membership
+// application so the record is fully purged from the database (no soft delete).
 export const deleteMember = createServerFn({ method: "POST" })
   .middleware([requireAdmin])
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context as any;
+
+    const { data: existing, error: readErr } = await supabase
+      .from("members")
+      .select("id, application_id")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (readErr) throw new Error(readErr.message);
+
     const { error } = await supabase.from("members").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
-    await writeAudit(supabase, userId, "delete", "members", data.id, null);
+
+    if (existing?.application_id) {
+      const { error: appErr } = await supabase
+        .from("membership_applications")
+        .delete()
+        .eq("id", existing.application_id);
+      if (appErr) throw new Error(appErr.message);
+    }
+
+    await writeAudit(supabase, userId, "delete", "members", data.id, {
+      hard_delete: true,
+      application_id: existing?.application_id ?? null,
+    });
     return { ok: true };
   });
