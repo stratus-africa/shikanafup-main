@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "./applicant-details-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -315,10 +316,7 @@ export function ApplicationsTable() {
                   <TableCell>{a.county ?? "—"}</TableCell>
                   <TableCell>{a.membership_type ?? "—"}</TableCell>
                   <TableCell>
-                    <Badge variant={
-                      a.status === "approved" ? "default" :
-                      a.status === "rejected" ? "destructive" : "outline"
-                    }>{a.status}</Badge>
+                    <StatusBadge status={a.status} />
                     {a.status === "rejected" && a.rejection_reason && (
                       <p className="mt-1 max-w-[16rem] text-xs text-muted-foreground">{a.rejection_reason}</p>
                     )}
