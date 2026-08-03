@@ -68,6 +68,7 @@ import { Route as AuthenticatedAdminUiLocalGroupsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminUiJobsRouteImport } from './routes/_authenticated.admin.ui.jobs'
 import { Route as AuthenticatedAdminUiEventsRouteImport } from './routes/_authenticated.admin.ui.events'
 import { Route as AuthenticatedAdminUiDonationsRouteImport } from './routes/_authenticated.admin.ui.donations'
+import { Route as AuthenticatedAdminUiCmsRouteImport } from './routes/_authenticated.admin.ui.cms'
 import { Route as AuthenticatedAdminUiBlogsRouteImport } from './routes/_authenticated.admin.ui.blogs'
 import { Route as AuthenticatedAdminUiAuditTrailsRouteImport } from './routes/_authenticated.admin.ui.audit-trails'
 import { Route as AuthenticatedAdminUiAspirantsRouteImport } from './routes/_authenticated.admin.ui.aspirants'
@@ -386,6 +387,11 @@ const AuthenticatedAdminUiDonationsRoute =
     path: '/ui/donations',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminUiCmsRoute = AuthenticatedAdminUiCmsRouteImport.update({
+  id: '/ui/cms',
+  path: '/ui/cms',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminUiBlogsRoute =
   AuthenticatedAdminUiBlogsRouteImport.update({
     id: '/ui/blogs',
@@ -477,6 +483,7 @@ export interface FileRoutesByFullPath {
   '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
   '/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
+  '/admin/ui/cms': typeof AuthenticatedAdminUiCmsRoute
   '/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
   '/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
   '/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRouteWithChildren
@@ -543,6 +550,7 @@ export interface FileRoutesByTo {
   '/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
   '/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
+  '/admin/ui/cms': typeof AuthenticatedAdminUiCmsRoute
   '/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
   '/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
   '/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRouteWithChildren
@@ -612,6 +620,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ui/aspirants': typeof AuthenticatedAdminUiAspirantsRoute
   '/_authenticated/admin/ui/audit-trails': typeof AuthenticatedAdminUiAuditTrailsRoute
   '/_authenticated/admin/ui/blogs': typeof AuthenticatedAdminUiBlogsRoute
+  '/_authenticated/admin/ui/cms': typeof AuthenticatedAdminUiCmsRoute
   '/_authenticated/admin/ui/donations': typeof AuthenticatedAdminUiDonationsRoute
   '/_authenticated/admin/ui/events': typeof AuthenticatedAdminUiEventsRoute
   '/_authenticated/admin/ui/jobs': typeof AuthenticatedAdminUiJobsRouteWithChildren
@@ -680,6 +689,7 @@ export interface FileRouteTypes {
     | '/admin/ui/aspirants'
     | '/admin/ui/audit-trails'
     | '/admin/ui/blogs'
+    | '/admin/ui/cms'
     | '/admin/ui/donations'
     | '/admin/ui/events'
     | '/admin/ui/jobs'
@@ -746,6 +756,7 @@ export interface FileRouteTypes {
     | '/admin/ui/aspirants'
     | '/admin/ui/audit-trails'
     | '/admin/ui/blogs'
+    | '/admin/ui/cms'
     | '/admin/ui/donations'
     | '/admin/ui/events'
     | '/admin/ui/jobs'
@@ -814,6 +825,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ui/aspirants'
     | '/_authenticated/admin/ui/audit-trails'
     | '/_authenticated/admin/ui/blogs'
+    | '/_authenticated/admin/ui/cms'
     | '/_authenticated/admin/ui/donations'
     | '/_authenticated/admin/ui/events'
     | '/_authenticated/admin/ui/jobs'
@@ -1258,6 +1270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUiDonationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ui/cms': {
+      id: '/_authenticated/admin/ui/cms'
+      path: '/ui/cms'
+      fullPath: '/admin/ui/cms'
+      preLoaderRoute: typeof AuthenticatedAdminUiCmsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ui/blogs': {
       id: '/_authenticated/admin/ui/blogs'
       path: '/ui/blogs'
@@ -1332,6 +1351,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminUiAspirantsRoute: typeof AuthenticatedAdminUiAspirantsRoute
   AuthenticatedAdminUiAuditTrailsRoute: typeof AuthenticatedAdminUiAuditTrailsRoute
   AuthenticatedAdminUiBlogsRoute: typeof AuthenticatedAdminUiBlogsRoute
+  AuthenticatedAdminUiCmsRoute: typeof AuthenticatedAdminUiCmsRoute
   AuthenticatedAdminUiDonationsRoute: typeof AuthenticatedAdminUiDonationsRoute
   AuthenticatedAdminUiEventsRoute: typeof AuthenticatedAdminUiEventsRoute
   AuthenticatedAdminUiJobsRoute: typeof AuthenticatedAdminUiJobsRouteWithChildren
@@ -1352,6 +1372,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminUiAspirantsRoute: AuthenticatedAdminUiAspirantsRoute,
   AuthenticatedAdminUiAuditTrailsRoute: AuthenticatedAdminUiAuditTrailsRoute,
   AuthenticatedAdminUiBlogsRoute: AuthenticatedAdminUiBlogsRoute,
+  AuthenticatedAdminUiCmsRoute: AuthenticatedAdminUiCmsRoute,
   AuthenticatedAdminUiDonationsRoute: AuthenticatedAdminUiDonationsRoute,
   AuthenticatedAdminUiEventsRoute: AuthenticatedAdminUiEventsRoute,
   AuthenticatedAdminUiJobsRoute: AuthenticatedAdminUiJobsRouteWithChildren,

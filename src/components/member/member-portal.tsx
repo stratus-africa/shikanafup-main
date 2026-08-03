@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import toast from "react-hot-toast";
@@ -8,7 +8,9 @@ import {
   listMyApplications,
   applyForPartyPosition,
   applyForVolunteering,
+  updateMyProfile,
 } from "@/lib/member/portal.functions";
+import { ApplicationTimeline } from "@/components/member/application-timeline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -87,8 +89,41 @@ export function MemberPortal() {
   const profile = m.profile ?? {};
   const member = m.member ?? null;
 
+  const saveProfile = useServerFn(updateMyProfile);
+  const [form, setForm] = useState({
+    full_name: "",
+    phone: "",
+    county: "",
+    constituency: "",
+    ward: "",
+  });
+  useEffect(() => {
+    if (!membership.data) return;
+    setForm({
+      full_name: profile.full_name ?? [app.first_name, app.last_name].filter(Boolean).join(" ") ?? "",
+      phone: profile.phone ?? app.phone ?? "",
+      county: profile.county ?? app.county ?? "",
+      constituency: profile.constituency ?? app.constituency ?? "",
+      ward: profile.ward ?? app.ward ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [membership.data]);
+
+  const profileMutation = useMutation({
+    mutationFn: () => saveProfile({ data: form }),
+    onSuccess: () => {
+      toast.success("Profile updated");
+      qc.invalidateQueries({ queryKey: ["my-membership"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not update profile"),
+  });
+
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-10">
+    <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-10">
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight">My Membership</h1>
         <p className="text-muted-foreground">
@@ -138,7 +173,43 @@ export function MemberPortal() {
               )}
             </CardContent>
           </Card>
+
+          <Card className="mt-6">
+            <CardHeader><CardTitle>Update my contact details</CardTitle></CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-2">
+                <Label>Full name</Label>
+                <Input value={form.full_name} onChange={set("full_name")} />
+              </div>
+              <div className="grid gap-2">
+                <Label>Mobile number</Label>
+                <Input value={form.phone} onChange={set("phone")} placeholder="07xx xxx xxx" />
+              </div>
+              <div className="grid gap-2">
+                <Label>County</Label>
+                <Input value={form.county} onChange={set("county")} />
+              </div>
+              <div className="grid gap-2">
+                <Label>Constituency</Label>
+                <Input value={form.constituency} onChange={set("constituency")} />
+              </div>
+              <div className="grid gap-2">
+                <Label>Ward</Label>
+                <Input value={form.ward} onChange={set("ward")} />
+              </div>
+              <div className="flex items-end">
+                <Button
+                  className="w-full"
+                  disabled={profileMutation.isPending}
+                  onClick={() => profileMutation.mutate()}
+                >
+                  {profileMutation.isPending ? "Saving…" : "Save changes"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
+
 
         <TabsContent value="apply" className="mt-4 grid gap-6 lg:grid-cols-2">
           <Card>
@@ -207,16 +278,24 @@ export function MemberPortal() {
                 <p className="text-sm text-muted-foreground">No applications yet.</p>
               )}
               {(mine.data?.party ?? []).map((a: any) => (
-                <div key={a.id} className="flex items-center justify-between rounded-md border p-3">
-                  <div>
-                    <p className="font-medium">{a.position?.title ?? "Position"}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(a.created_at).toLocaleDateString()}
-                    </p>
+                <div key={a.id} className="rounded-md border p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{a.position?.title ?? "Position"}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(a.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Badge className="shrink-0" variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>
+                      {a.status}
+                    </Badge>
                   </div>
-                  <Badge variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>
-                    {a.status}
-                  </Badge>
+                  <ApplicationTimeline
+                    status={a.status}
+                    createdAt={a.created_at}
+                    reviewedAt={a.reviewed_at}
+                    notes={a.notes}
+                  />
                 </div>
               ))}
             </CardContent>
@@ -229,18 +308,27 @@ export function MemberPortal() {
                 <p className="text-sm text-muted-foreground">No applications yet.</p>
               )}
               {(mine.data?.volunteer ?? []).map((a: any) => (
-                <div key={a.id} className="flex items-center justify-between rounded-md border p-3">
-                  <div>
-                    <p className="font-medium">{(a.areas_of_interest ?? []).join(", ") || "Volunteer"}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(a.created_at).toLocaleDateString()}
-                    </p>
+                <div key={a.id} className="rounded-md border p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{(a.areas_of_interest ?? []).join(", ") || "Volunteer"}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(a.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Badge className="shrink-0" variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>
+                      {a.status}
+                    </Badge>
                   </div>
-                  <Badge variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>
-                    {a.status}
-                  </Badge>
+                  <ApplicationTimeline
+                    status={a.status}
+                    createdAt={a.created_at}
+                    reviewedAt={a.reviewed_at}
+                    notes={a.notes}
+                  />
                 </div>
               ))}
+
             </CardContent>
           </Card>
         </TabsContent>

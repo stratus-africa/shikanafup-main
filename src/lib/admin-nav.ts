@@ -15,6 +15,7 @@ export const adminNavMain: NavItem[] = [
   { title: "Events", url: "/admin/ui/events", icon: "calendar" },
   { title: "Local Groups", url: "/admin/ui/local-groups", icon: "users" },
   { title: "Blogs", url: "/admin/ui/blogs", icon: "file-text" },
+  { title: "CMS", url: "/admin/ui/cms", icon: "file-text" },
   { title: "Jobs", url: "/admin/ui/jobs", icon: "briefcase" },
   { title: "Volunteers", url: "/admin/ui/volunteer", icon: "briefcase" },
   { title: "Aspirants", url: "/admin/ui/aspirants", icon: "briefcase" },

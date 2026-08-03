@@ -149,12 +149,12 @@ export const listMyApplications = createServerFn({ method: "GET" })
     const [party, volunteer] = await Promise.all([
       supabase
         .from("party_position_applications")
-        .select("id,status,created_at,notes,position:party_positions(title)")
+        .select("id,status,created_at,updated_at,reviewed_at,notes,position:party_positions(title)")
         .eq("profile_id", userId)
         .order("created_at", { ascending: false }),
       supabase
         .from("volunteers")
-        .select("id,status,created_at,availability,skills,areas_of_interest")
+        .select("id,status,created_at,updated_at,reviewed_at,notes,availability,skills,areas_of_interest")
         .eq("profile_id", userId)
         .order("created_at", { ascending: false }),
     ]);
