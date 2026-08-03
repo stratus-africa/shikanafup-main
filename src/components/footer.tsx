@@ -11,9 +11,11 @@ import {
   Mailbox,
   ExternalLink,
 } from "lucide-react"
+import { useSiteSettings } from "@/hooks/use-site-settings"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const { get } = useSiteSettings()
 
   return (
     <footer className="text-white" style={{ backgroundColor: "#162443" }}>
@@ -89,34 +91,33 @@ export function Footer() {
               <li className="flex items-start gap-2">
                 <Mail size={16} className="mt-1" />
                 <div>
-                  <a href="mailto:info@shikana.co.ke" className="hover:text-white block">
-                    info@shikana.co.ke
+                  <a href={`mailto:${get("site.contact_email")}`} className="hover:text-white block">
+                    {get("site.contact_email")}
                   </a>
-                  <a href="mailto:shikana@gmail.co.ke" className="hover:text-white block">
-                    shikana@gmail.co.ke
+                  <a href={`mailto:${get("site.contact_email_alt")}`} className="hover:text-white block">
+                    {get("site.contact_email_alt")}
                   </a>
                 </div>
               </li>
 
               <li className="flex items-center gap-2">
                 <Phone size={16} />
-                <a href="tel:+254706357064" className="hover:text-white">
-                  0738 030 398
+                <a href={`tel:${get("site.contact_phone").replace(/\s+/g, "")}`} className="hover:text-white">
+                  {get("site.contact_phone")}
                 </a>
               </li>
 
               <li className="flex items-start gap-2">
                 <Mailbox size={16} className="mt-1" />
                 <div>
-                  <p>P.O BOX 18234 – 00100</p>
-                  <p>Nairobi, Kenya</p>
+                  <p>{get("site.postal_address")}</p>
                 </div>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin size={22} className="mt-1 text-white" />
                 <div className="text-sm leading-relaxed">
-                  <p className="font-semibold text-white">Kikinga House, Kiambu Road</p>
-                  <p>Opposite Kiambu Referrals Hospital, Kiambu County</p>
+                  <p className="font-semibold text-white">{get("site.physical_address")}</p>
+                  <p>{get("site.physical_address_line2")}</p>
                 </div>
               </li>
               <li className="flex items-start gap-2">
@@ -145,19 +146,19 @@ export function Footer() {
         {/* Social Media Row */}
         <div className="mt-4 pt-8">
           <div className="flex flex-wrap justify-between gap-8 md:gap-12">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
+            <a href={get("site.facebook_url")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
               <Facebook size={24} className="text-white group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-md">Facebook</span>
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
+            <a href={get("site.twitter_url")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
               <Twitter size={24} className="text-white group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-md">Twitter / X</span>
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
+            <a href={get("site.instagram_url")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
               <Instagram size={24} className="text-white group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-md">Instagram</span>
             </a>
-            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
+            <a href={get("site.youtube_url")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white/80 hover:text-white transition-colors group">
               <Youtube size={24} className="text-white group-hover:scale-110 transition-transform" />
               <span className="font-semibold text-md">YouTube</span>
             </a>
@@ -166,7 +167,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/20 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/70">
-          <p>&copy; {currentYear} Shikana Frontliners for Unity Party. All rights reserved.</p>
+          <p>&copy; {currentYear} {get("site.site_name")}. All rights reserved.</p>
         </div>
       </div>
     </footer>
