@@ -77,13 +77,18 @@ const emailOf = (r: any) => r.profile?.email ?? r.application?.email ?? null;
 // Membership standing derived from the linked application + member status
 const standingOf = (
   r: any,
-): { label: string; variant: "default" | "destructive" | "outline" | "secondary" } => {
+): { label: string; variant: "default" | "destructive" | "outline" | "secondary"; className?: string } => {
+  const green =
+    "border-green-600/30 bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300";
+  const amber =
+    "border-amber-600/30 bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300";
   if (r.application?.status === "rejected") return { label: "Rejected", variant: "destructive" };
-  if (r.application?.status === "pending") return { label: "Pending approval", variant: "outline" };
-  if (r.status === "active") return { label: "Active", variant: "default" };
+  if (r.application?.status === "pending")
+    return { label: "Pending approval", variant: "outline", className: amber };
+  if (r.status === "active") return { label: "Active", variant: "outline", className: green };
   if (r.status === "suspended") return { label: "Suspended", variant: "destructive" };
   if (r.status === "expired") return { label: "Inactive", variant: "secondary" };
-  return { label: "Pending", variant: "outline" };
+  return { label: "Pending", variant: "outline", className: amber };
 };
 
 export function MembersTable() {
@@ -324,7 +329,7 @@ export function MembersTable() {
                     {emailOf(m) ?? "—"}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={standingOf(m).variant}>{standingOf(m).label}</Badge>
+                    <Badge variant={standingOf(m).variant} className={standingOf(m).className}>{standingOf(m).label}</Badge>
                   </TableCell>
                   <TableCell>{m.tier ?? "—"}</TableCell>
                   <TableCell>{m.local_group?.name ?? "—"}</TableCell>
