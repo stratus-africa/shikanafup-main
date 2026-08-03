@@ -11,6 +11,7 @@ import { InfiniteSlider } from "./motion-primitives/infinite-slider"
 import { useAuth } from "@/context/auth-context"
 import { UserProfileDialog } from "./user-profile-dialog"
 import { SearchDialog } from "./search-dialog"
+import { useSiteSettings } from "@/hooks/use-site-settings"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -20,6 +21,7 @@ export function Header() {
   const pathname = usePathname()
   const router = useRouter()
   const { user } = useAuth()
+  const { get } = useSiteSettings()
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -77,10 +79,10 @@ export function Header() {
       {/*Top Info Bar*/}
       <div className="bg-secondary text-primary-foreground py-1">
         <InfiniteSlider gap={80} reverse>
-          <p className="text-sm font-medium">Shikana Frontliners for Unity Party</p>
+          <p className="text-sm font-medium">{get("site.site_name")}</p>
           <p className="text-sm font-medium">“Truth, Always, Conquers” - “Veritas, Lux et Lex, Vincit”</p>
-          <p className="text-sm flex items-center gap-2"><Phone size={16} />0738 030 398</p>
-          <p className="text-sm flex items-center gap-2"><Mail size={16} />info@shikana.co.ke</p>
+          <p className="text-sm flex items-center gap-2"><Phone size={16} />{get("site.contact_phone")}</p>
+          <p className="text-sm flex items-center gap-2"><Mail size={16} />{get("site.contact_email")}</p>
           <div className="flex gap-4">
             <Facebook size={16} />
             <Twitter size={16} />
@@ -102,16 +104,16 @@ export function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-secondary">
               <img
-                src="/SFU-LOGO.png"
-                alt="SFUP Logo"
+                src={get("site.logo_url")}
+                alt={`${get("site.site_name")} logo`}
                 className="h-18 w-18 object-contain"
               />
               <div className="hidden sm:flex flex-col leading-tight">
                 <span className="font-bold text-secondary text-md">
-                  Shikana Frontliners for Unity Party
+                  {get("site.site_name")}
                 </span>
                 <span className="text-sm text-primary">
-                  --- Truth, Always, Conquers ---
+                  {get("site.tagline")}
                 </span>
 
               </div>
