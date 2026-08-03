@@ -160,3 +160,22 @@ export const submitAnonymousDonation = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return row;
   });
+
+// ===== Site settings (logo, contacts) used by the public site chrome =====
+export const publicGetSiteSettings = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const supabase = await sb();
+    const { data, error } = await supabase
+      .from("settings")
+      .select("key, value")
+      .like("key", "site.%");
+    if (error) throw new Error(error.message);
+    const out: Record<string, string> = {};
+    for (const row of data ?? []) {
+      const v = (row as any).value;
+      const s = typeof v === "string" ? v : v == null ? "" : String(v);
+      if (s.trim()) out[(row as any).key] = s;
+    }
+    return out;
+  },
+);
