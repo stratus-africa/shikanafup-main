@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import toast from "react-hot-toast";
@@ -8,7 +8,9 @@ import {
   listMyApplications,
   applyForPartyPosition,
   applyForVolunteering,
+  updateMyProfile,
 } from "@/lib/member/portal.functions";
+import { ApplicationTimeline } from "@/components/member/application-timeline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
