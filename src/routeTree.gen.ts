@@ -32,6 +32,7 @@ import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicCareersRouteImport } from './routes/_public.careers'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
+import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated.portal'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as PublicSharedUiVolunteerRouteImport } from './routes/_public.shared-ui.volunteer'
 import { Route as PublicSharedUiTermsRouteImport } from './routes/_public.shared-ui.terms'
@@ -187,6 +188,11 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => PublicRoute,
+} as any)
+const AuthenticatedPortalRoute = AuthenticatedPortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
@@ -430,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/portal': typeof AuthenticatedPortalRoute
   '/about': typeof PublicAboutRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
@@ -495,6 +502,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/portal': typeof AuthenticatedPortalRoute
   '/about': typeof PublicAboutRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
@@ -562,6 +570,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/portal': typeof AuthenticatedPortalRoute
   '/_public/about': typeof PublicAboutRoute
   '/_public/blog': typeof PublicBlogRouteWithChildren
   '/_public/careers': typeof PublicCareersRoute
@@ -630,6 +639,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/otp'
     | '/admin'
+    | '/portal'
     | '/about'
     | '/blog'
     | '/careers'
@@ -695,6 +705,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/otp'
     | '/admin'
+    | '/portal'
     | '/about'
     | '/blog'
     | '/careers'
@@ -761,6 +772,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/otp'
     | '/_authenticated/admin'
+    | '/_authenticated/portal'
     | '/_public/about'
     | '/_public/blog'
     | '/_public/careers'
@@ -993,6 +1005,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/about'
       preLoaderRoute: typeof PublicAboutRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/_authenticated/portal': {
+      id: '/_authenticated/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof AuthenticatedPortalRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
@@ -1351,10 +1370,12 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedPortalRoute: typeof AuthenticatedPortalRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedPortalRoute: AuthenticatedPortalRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
