@@ -257,8 +257,8 @@ export function RegisterForm() {
     ward &&
     membershipType &&
     politicalDeclaration &&
-    termsConsent &&
-    specialInterest.length > 0
+    termsConsent
+
 
   const isPaymentRequired = isPaidMembership
   const isPaymentComplete = !isPaidMembership || (paymentMethod && paymentPhoneNumber.trim().length >= 9)
@@ -900,7 +900,7 @@ export function RegisterForm() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Special Interest Group *</label>
+                    <label className="block text-sm font-medium text-foreground mb-2">Special Interest Group (optional)</label>
                     <Popover>
                       <PopoverTrigger asChild>
                         <button

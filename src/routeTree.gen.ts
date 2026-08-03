@@ -32,6 +32,7 @@ import { Route as PublicContactRouteImport } from './routes/_public.contact'
 import { Route as PublicCareersRouteImport } from './routes/_public.careers'
 import { Route as PublicBlogRouteImport } from './routes/_public.blog'
 import { Route as PublicAboutRouteImport } from './routes/_public.about'
+import { Route as AuthenticatedPortalRouteImport } from './routes/_authenticated.portal'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as PublicSharedUiVolunteerRouteImport } from './routes/_public.shared-ui.volunteer'
 import { Route as PublicSharedUiTermsRouteImport } from './routes/_public.shared-ui.terms'
@@ -60,6 +61,7 @@ import { Route as AuthenticatedAdminUiVolunteerRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminUiUsersRouteImport } from './routes/_authenticated.admin.ui.users'
 import { Route as AuthenticatedAdminUiSettingsRouteImport } from './routes/_authenticated.admin.ui.settings'
 import { Route as AuthenticatedAdminUiRolesRouteImport } from './routes/_authenticated.admin.ui.roles'
+import { Route as AuthenticatedAdminUiReportsRouteImport } from './routes/_authenticated.admin.ui.reports'
 import { Route as AuthenticatedAdminUiMerchandiseRouteImport } from './routes/_authenticated.admin.ui.merchandise'
 import { Route as AuthenticatedAdminUiMembersRouteImport } from './routes/_authenticated.admin.ui.members'
 import { Route as AuthenticatedAdminUiLocalGroupsRouteImport } from './routes/_authenticated.admin.ui.local-groups'
@@ -186,6 +188,11 @@ const PublicAboutRoute = PublicAboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => PublicRoute,
+} as any)
+const AuthenticatedPortalRoute = AuthenticatedPortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
@@ -337,6 +344,12 @@ const AuthenticatedAdminUiRolesRoute =
     path: '/ui/roles',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminUiReportsRoute =
+  AuthenticatedAdminUiReportsRouteImport.update({
+    id: '/ui/reports',
+    path: '/ui/reports',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminUiMerchandiseRoute =
   AuthenticatedAdminUiMerchandiseRouteImport.update({
     id: '/ui/merchandise',
@@ -423,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/portal': typeof AuthenticatedPortalRoute
   '/about': typeof PublicAboutRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
@@ -469,6 +483,7 @@ export interface FileRoutesByFullPath {
   '/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/admin/ui/reports': typeof AuthenticatedAdminUiReportsRoute
   '/admin/ui/roles': typeof AuthenticatedAdminUiRolesRoute
   '/admin/ui/settings': typeof AuthenticatedAdminUiSettingsRoute
   '/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
@@ -487,6 +502,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/portal': typeof AuthenticatedPortalRoute
   '/about': typeof PublicAboutRoute
   '/blog': typeof PublicBlogRouteWithChildren
   '/careers': typeof PublicCareersRoute
@@ -533,6 +549,7 @@ export interface FileRoutesByTo {
   '/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/admin/ui/reports': typeof AuthenticatedAdminUiReportsRoute
   '/admin/ui/roles': typeof AuthenticatedAdminUiRolesRoute
   '/admin/ui/settings': typeof AuthenticatedAdminUiSettingsRoute
   '/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
@@ -553,6 +570,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/otp': typeof OtpRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/portal': typeof AuthenticatedPortalRoute
   '/_public/about': typeof PublicAboutRoute
   '/_public/blog': typeof PublicBlogRouteWithChildren
   '/_public/careers': typeof PublicCareersRoute
@@ -600,6 +618,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ui/local-groups': typeof AuthenticatedAdminUiLocalGroupsRoute
   '/_authenticated/admin/ui/members': typeof AuthenticatedAdminUiMembersRoute
   '/_authenticated/admin/ui/merchandise': typeof AuthenticatedAdminUiMerchandiseRoute
+  '/_authenticated/admin/ui/reports': typeof AuthenticatedAdminUiReportsRoute
   '/_authenticated/admin/ui/roles': typeof AuthenticatedAdminUiRolesRoute
   '/_authenticated/admin/ui/settings': typeof AuthenticatedAdminUiSettingsRoute
   '/_authenticated/admin/ui/users': typeof AuthenticatedAdminUiUsersRoute
@@ -620,6 +639,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/otp'
     | '/admin'
+    | '/portal'
     | '/about'
     | '/blog'
     | '/careers'
@@ -666,6 +686,7 @@ export interface FileRouteTypes {
     | '/admin/ui/local-groups'
     | '/admin/ui/members'
     | '/admin/ui/merchandise'
+    | '/admin/ui/reports'
     | '/admin/ui/roles'
     | '/admin/ui/settings'
     | '/admin/ui/users'
@@ -684,6 +705,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/otp'
     | '/admin'
+    | '/portal'
     | '/about'
     | '/blog'
     | '/careers'
@@ -730,6 +752,7 @@ export interface FileRouteTypes {
     | '/admin/ui/local-groups'
     | '/admin/ui/members'
     | '/admin/ui/merchandise'
+    | '/admin/ui/reports'
     | '/admin/ui/roles'
     | '/admin/ui/settings'
     | '/admin/ui/users'
@@ -749,6 +772,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/otp'
     | '/_authenticated/admin'
+    | '/_authenticated/portal'
     | '/_public/about'
     | '/_public/blog'
     | '/_public/careers'
@@ -796,6 +820,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ui/local-groups'
     | '/_authenticated/admin/ui/members'
     | '/_authenticated/admin/ui/merchandise'
+    | '/_authenticated/admin/ui/reports'
     | '/_authenticated/admin/ui/roles'
     | '/_authenticated/admin/ui/settings'
     | '/_authenticated/admin/ui/users'
@@ -980,6 +1005,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/about'
       preLoaderRoute: typeof PublicAboutRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/_authenticated/portal': {
+      id: '/_authenticated/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof AuthenticatedPortalRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
@@ -1177,6 +1209,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUiRolesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ui/reports': {
+      id: '/_authenticated/admin/ui/reports'
+      path: '/ui/reports'
+      fullPath: '/admin/ui/reports'
+      preLoaderRoute: typeof AuthenticatedAdminUiReportsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ui/merchandise': {
       id: '/_authenticated/admin/ui/merchandise'
       path: '/ui/merchandise'
@@ -1299,6 +1338,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminUiLocalGroupsRoute: typeof AuthenticatedAdminUiLocalGroupsRoute
   AuthenticatedAdminUiMembersRoute: typeof AuthenticatedAdminUiMembersRoute
   AuthenticatedAdminUiMerchandiseRoute: typeof AuthenticatedAdminUiMerchandiseRoute
+  AuthenticatedAdminUiReportsRoute: typeof AuthenticatedAdminUiReportsRoute
   AuthenticatedAdminUiRolesRoute: typeof AuthenticatedAdminUiRolesRoute
   AuthenticatedAdminUiSettingsRoute: typeof AuthenticatedAdminUiSettingsRoute
   AuthenticatedAdminUiUsersRoute: typeof AuthenticatedAdminUiUsersRoute
@@ -1318,6 +1358,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminUiLocalGroupsRoute: AuthenticatedAdminUiLocalGroupsRoute,
   AuthenticatedAdminUiMembersRoute: AuthenticatedAdminUiMembersRoute,
   AuthenticatedAdminUiMerchandiseRoute: AuthenticatedAdminUiMerchandiseRoute,
+  AuthenticatedAdminUiReportsRoute: AuthenticatedAdminUiReportsRoute,
   AuthenticatedAdminUiRolesRoute: AuthenticatedAdminUiRolesRoute,
   AuthenticatedAdminUiSettingsRoute: AuthenticatedAdminUiSettingsRoute,
   AuthenticatedAdminUiUsersRoute: AuthenticatedAdminUiUsersRoute,
@@ -1329,10 +1370,12 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedPortalRoute: typeof AuthenticatedPortalRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedPortalRoute: AuthenticatedPortalRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

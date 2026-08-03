@@ -5,6 +5,8 @@ import { useRouter } from "@/lib/next-shims"
 import { useState } from "react"
 import { Spinner } from "./ui/spinner"
 import { supabase } from "@/integrations/supabase/client"
+import { lovable } from "@/integrations/lovable"
+import { signInWithIdentifier } from "@/lib/auth/login.functions"
 import { useAuth } from "@/context/auth-context"
 import { Eye, EyeOff } from "lucide-react"
 import toast, { Toaster } from 'react-hot-toast'
@@ -19,53 +21,77 @@ export function LoginForm({
   const { login } = useAuth()
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
   const isValid = username.trim() !== "" && password.trim() !== ""
 
+  const routeAfterLogin = async (userId: string, email: string) => {
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+
+    const roleList = (roles ?? []).map((r: any) => r.role as string)
+    const isStaff = roleList.some((r) =>
+      ["super_admin", "admin", "editor", "moderator"].includes(r),
+    )
+
+    login(
+      { id: userId, username: email, email, role: roleList[0] ?? "member" },
+      "",
+    )
+    toast.success("Login successful")
+    router.push(isStaff ? "/admin/dashboard" : "/portal")
+  }
+
+  const handleGoogle = async () => {
+    setIsGoogleLoading(true)
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      })
+      if ((result as any).error) {
+        toast.error((result as any).error.message ?? "Google sign-in failed")
+        return
+      }
+      if ((result as any).redirected) return
+      const { data } = await supabase.auth.getUser()
+      if (data.user) await routeAfterLogin(data.user.id, data.user.email ?? "")
+    } catch (err: any) {
+      toast.error(err?.message || "Google sign-in failed")
+    } finally {
+      setIsGoogleLoading(false)
+    }
+  }
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const email = username.trim()
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const result: any = await signInWithIdentifier({
+        data: { identifier: username.trim(), password },
       })
 
-      if (error || !data.session || !data.user) {
+      if (result?.error || !result?.access_token) {
+        toast.error(result?.error || "Login failed")
+        return
+      }
+
+      const { data, error } = await supabase.auth.setSession({
+        access_token: result.access_token,
+        refresh_token: result.refresh_token,
+      })
+
+      if (error || !data.user) {
         toast.error(error?.message || "Login failed")
         return
       }
 
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", data.user.id)
-
-      const roleList = (roles ?? []).map((r: any) => r.role as string)
-      const isStaff = roleList.some((r) =>
-        ["super_admin", "admin", "editor", "moderator"].includes(r),
-      )
-
-      const userObj = {
-        id: data.user.id,
-        username: data.user.email ?? "",
-        email: data.user.email ?? "",
-        role: roleList[0] ?? "member",
-      }
-
-      login(userObj, data.session.access_token)
-      toast.success("Login successful")
-
-      if (isStaff) {
-        router.push("/admin/dashboard")
-      } else {
-        router.push("/")
-      }
+      await routeAfterLogin(data.user.id, data.user.email ?? "")
     } catch (err: any) {
       toast.error(err?.message || "An unexpected error occurred")
     } finally {
@@ -83,7 +109,7 @@ export function LoginForm({
             {...props}
           >
 
-            <div className="text-center  space-y-3">
+            <div className="text-center  space-y-3">
               <img
                 src="/SFU-LOGO.png"
                 alt="Shikana Frontliners for Unity Party"
@@ -94,23 +120,24 @@ export function LoginForm({
               </h1>
 
               <p className="text-sm text-muted-foreground">
-                Enter your email and password to continue
+                Enter your email or phone number and password to continue
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Email *
+                Email or Phone *
               </label>
               <Input
-                type="email"
+                type="text"
                 name="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                placeholder="you@example.com"
+                placeholder="you@example.com or 0712345678"
               />
             </div>
+
 
 
             {/* Password */}
@@ -155,6 +182,41 @@ export function LoginForm({
             >
               {isLoading ? <Spinner /> : "Login"}
             </Button>
+
+            <div className="relative text-center">
+              <span className="bg-card px-2 text-xs text-muted-foreground relative z-10">
+                OR
+              </span>
+              <div className="absolute inset-x-0 top-1/2 h-px bg-border" />
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleGoogle}
+              disabled={isGoogleLoading}
+              className="w-full h-10 flex items-center justify-center gap-2"
+            >
+              {isGoogleLoading ? <Spinner /> : (
+                <>
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.57c2.08-1.92 3.27-4.74 3.27-8.09Z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.76c-.99.66-2.26 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z" />
+                    <path fill="#FBBC05" d="M5.84 14.11a6.6 6.6 0 0 1 0-4.22V7.05H2.18a11 11 0 0 0 0 9.9l3.66-2.84Z" />
+                    <path fill="#EA4335" d="M12 4.75c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 1.46 14.97.5 12 .5A11 11 0 0 0 2.18 7.05l3.66 2.84c.87-2.6 3.3-4.14 6.16-4.14Z" />
+                  </svg>
+                  Continue with Google
+                </>
+              )}
+            </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              New member?{" "}
+              <a href="/register" className="underline underline-offset-4">
+                Register here
+              </a>
+            </p>
+
           </form>
         </CardContent>
       </Card>

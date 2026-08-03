@@ -19,5 +19,7 @@ export const adminNavMain: NavItem[] = [
   { title: "Volunteers", url: "/admin/ui/volunteer", icon: "briefcase" },
   { title: "Aspirants", url: "/admin/ui/aspirants", icon: "briefcase" },
   { title: "Merchandise", url: "/admin/ui/merchandise", icon: "shopping-bag" },
+  { title: "Reports", url: "/admin/ui/reports", icon: "scroll-text" },
   { title: "Audit Trail", url: "/admin/ui/audit-trails", icon: "scroll-text" },
+
 ];

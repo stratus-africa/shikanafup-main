@@ -879,6 +879,70 @@ export type Database = {
         }
         Relationships: []
       }
+      party_position_applications: {
+        Row: {
+          created_at: string
+          experience: string | null
+          id: string
+          motivation: string | null
+          notes: string | null
+          position_id: string
+          profile_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["aspirant_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          experience?: string | null
+          id?: string
+          motivation?: string | null
+          notes?: string | null
+          position_id: string
+          profile_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["aspirant_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          experience?: string | null
+          id?: string
+          motivation?: string | null
+          notes?: string | null
+          position_id?: string
+          profile_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["aspirant_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "party_position_applications_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "party_positions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "party_position_applications_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "party_position_applications_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       party_positions: {
         Row: {
           created_at: string
