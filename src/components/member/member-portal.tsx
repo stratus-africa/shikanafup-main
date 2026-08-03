@@ -89,8 +89,41 @@ export function MemberPortal() {
   const profile = m.profile ?? {};
   const member = m.member ?? null;
 
+  const saveProfile = useServerFn(updateMyProfile);
+  const [form, setForm] = useState({
+    full_name: "",
+    phone: "",
+    county: "",
+    constituency: "",
+    ward: "",
+  });
+  useEffect(() => {
+    if (!membership.data) return;
+    setForm({
+      full_name: profile.full_name ?? [app.first_name, app.last_name].filter(Boolean).join(" ") ?? "",
+      phone: profile.phone ?? app.phone ?? "",
+      county: profile.county ?? app.county ?? "",
+      constituency: profile.constituency ?? app.constituency ?? "",
+      ward: profile.ward ?? app.ward ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [membership.data]);
+
+  const profileMutation = useMutation({
+    mutationFn: () => saveProfile({ data: form }),
+    onSuccess: () => {
+      toast.success("Profile updated");
+      qc.invalidateQueries({ queryKey: ["my-membership"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not update profile"),
+  });
+
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-10">
+    <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-10">
+
       <div>
         <h1 className="text-3xl font-bold tracking-tight">My Membership</h1>
         <p className="text-muted-foreground">
