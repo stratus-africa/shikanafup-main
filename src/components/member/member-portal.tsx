@@ -173,7 +173,43 @@ export function MemberPortal() {
               )}
             </CardContent>
           </Card>
+
+          <Card className="mt-6">
+            <CardHeader><CardTitle>Update my contact details</CardTitle></CardHeader>
+            <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-2">
+                <Label>Full name</Label>
+                <Input value={form.full_name} onChange={set("full_name")} />
+              </div>
+              <div className="grid gap-2">
+                <Label>Mobile number</Label>
+                <Input value={form.phone} onChange={set("phone")} placeholder="07xx xxx xxx" />
+              </div>
+              <div className="grid gap-2">
+                <Label>County</Label>
+                <Input value={form.county} onChange={set("county")} />
+              </div>
+              <div className="grid gap-2">
+                <Label>Constituency</Label>
+                <Input value={form.constituency} onChange={set("constituency")} />
+              </div>
+              <div className="grid gap-2">
+                <Label>Ward</Label>
+                <Input value={form.ward} onChange={set("ward")} />
+              </div>
+              <div className="flex items-end">
+                <Button
+                  className="w-full"
+                  disabled={profileMutation.isPending}
+                  onClick={() => profileMutation.mutate()}
+                >
+                  {profileMutation.isPending ? "Saving…" : "Save changes"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
+
 
         <TabsContent value="apply" className="mt-4 grid gap-6 lg:grid-cols-2">
           <Card>
