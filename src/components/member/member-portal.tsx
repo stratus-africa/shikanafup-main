@@ -278,16 +278,24 @@ export function MemberPortal() {
                 <p className="text-sm text-muted-foreground">No applications yet.</p>
               )}
               {(mine.data?.party ?? []).map((a: any) => (
-                <div key={a.id} className="flex items-center justify-between rounded-md border p-3">
-                  <div>
-                    <p className="font-medium">{a.position?.title ?? "Position"}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(a.created_at).toLocaleDateString()}
-                    </p>
+                <div key={a.id} className="rounded-md border p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{a.position?.title ?? "Position"}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(a.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Badge className="shrink-0" variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>
+                      {a.status}
+                    </Badge>
                   </div>
-                  <Badge variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>
-                    {a.status}
-                  </Badge>
+                  <ApplicationTimeline
+                    status={a.status}
+                    createdAt={a.created_at}
+                    reviewedAt={a.reviewed_at}
+                    notes={a.notes}
+                  />
                 </div>
               ))}
             </CardContent>
@@ -300,18 +308,27 @@ export function MemberPortal() {
                 <p className="text-sm text-muted-foreground">No applications yet.</p>
               )}
               {(mine.data?.volunteer ?? []).map((a: any) => (
-                <div key={a.id} className="flex items-center justify-between rounded-md border p-3">
-                  <div>
-                    <p className="font-medium">{(a.areas_of_interest ?? []).join(", ") || "Volunteer"}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(a.created_at).toLocaleDateString()}
-                    </p>
+                <div key={a.id} className="rounded-md border p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{(a.areas_of_interest ?? []).join(", ") || "Volunteer"}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(a.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Badge className="shrink-0" variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>
+                      {a.status}
+                    </Badge>
                   </div>
-                  <Badge variant={a.status === "approved" ? "default" : a.status === "rejected" ? "destructive" : "secondary"}>
-                    {a.status}
-                  </Badge>
+                  <ApplicationTimeline
+                    status={a.status}
+                    createdAt={a.created_at}
+                    reviewedAt={a.reviewed_at}
+                    notes={a.notes}
+                  />
                 </div>
               ))}
+
             </CardContent>
           </Card>
         </TabsContent>
