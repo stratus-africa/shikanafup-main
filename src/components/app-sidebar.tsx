@@ -14,6 +14,7 @@ import {
   HandHeart,
   FolderMinus,
   LayoutDashboard,
+  Settings,
 } from "lucide-react"
 import { Roles } from "@/lib/roles"
 
@@ -40,12 +41,14 @@ const iconMap = {
   "scroll-text": ScrollText,
   folder: FolderOpen,
   "hand-heart": HandHeart,
+  settings: Settings,
 }
 
 export interface NavItem {
   title: string
   url: string
   icon: keyof typeof iconMap
+  group?: string
 }
 
 export interface DocumentItem {
