@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { seoHead, seoLoader } from "@/lib/seo";
 import { LocalGroupHero } from "@/components/local-group-hero";
 import { LocalGroupForm } from "@/components/local-group-form";
 
 export const Route = createFileRoute("/_public/shared-ui/local-group")({
-  loader: seoLoader("local-group"),
-  head: seoHead("local-group"),
+  head: () => ({
+    meta: [
+      { title: "Find a Local Group — SFUP" },
+      { name: "description", content: "Find an SFUP group near you." },
+    ],
+  }),
   component: LocalGroupPage,
 });
 

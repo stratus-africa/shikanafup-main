@@ -16,7 +16,6 @@ import {
   deletePublication,
 } from "@/lib/admin/publications.functions";
 import { listSettings, upsertSetting } from "@/lib/admin/settings.functions";
-import { PagesPanel } from "@/components/admin/cms/pages-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -467,16 +466,12 @@ export function CmsManager() {
           Manage the content that appears on the public website.
         </p>
       </div>
-      <Tabs defaultValue="pages">
+      <Tabs defaultValue="content">
         <TabsList>
-          <TabsTrigger value="pages">Pages & SEO</TabsTrigger>
           <TabsTrigger value="content">Website content</TabsTrigger>
           <TabsTrigger value="faqs">FAQs</TabsTrigger>
           <TabsTrigger value="publications">Publications</TabsTrigger>
         </TabsList>
-        <TabsContent value="pages" className="mt-4">
-          <PagesPanel />
-        </TabsContent>
         <TabsContent value="content" className="mt-4">
           <SiteContentPanel />
         </TabsContent>

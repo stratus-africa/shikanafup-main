@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { seoHead, seoLoader } from "@/lib/seo";
 import { PartyPositionHero } from "@/components/party-position-hero";
 import PartyPositionForm from "@/components/party-position-form";
 
 export const Route = createFileRoute("/_public/shared-ui/party-position")({
-  loader: seoLoader("party-position"),
-  head: seoHead("party-position"),
+  head: () => ({
+    meta: [
+      { title: "Party Position — SFUP" },
+      { name: "description", content: "Apply for an SFUP party position." },
+    ],
+  }),
   component: PartyPositionPage,
 });
 

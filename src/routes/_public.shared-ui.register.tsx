@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { seoHead, seoLoader } from "@/lib/seo";
 import { RegisterHero } from "@/components/register-hero";
 import { RegisterForm } from "@/components/register-form";
 
 export const Route = createFileRoute("/_public/shared-ui/register")({
-  loader: seoLoader("register"),
-  head: seoHead("register"),
+  head: () => ({
+    meta: [
+      { title: "Become a Member — SFUP" },
+      { name: "description", content: "Register as an SFUP member." },
+    ],
+  }),
   component: RegisterPage,
 });
 

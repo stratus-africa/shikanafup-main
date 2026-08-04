@@ -1,127 +1,307 @@
-import { useEffect, useState } from "react";
-import { Link, usePathname } from "@/lib/next-shims";
-import { Menu, X, Search, ChevronDown, ArrowUpRight } from "lucide-react";
-import { useSiteSettings } from "@/hooks/use-site-settings";
-import { SearchDialog } from "./search-dialog";
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/shared-ui/about" },
-  { label: "Manifesto", href: "/shared-ui/publications" },
-  { label: "Leadership", href: "/shared-ui/about#team" },
-  { label: "News", href: "/shared-ui/blog" },
-  { label: "Events", href: "/shared-ui/events" },
-  { label: "Contact", href: "/shared-ui/contact" },
-];
+import { useState } from "react"
+import { Link } from "@/lib/next-shims"
+import { usePathname, useRouter } from "@/lib/next-shims"
+import {
+  Menu, X, Facebook, Twitter, Instagram, Youtube,
+  Phone, Mail, Search
+} from "lucide-react"
+import { Button } from "./ui/button"
+import { InfiniteSlider } from "./motion-primitives/infinite-slider"
+import { useAuth } from "@/context/auth-context"
+import { UserProfileDialog } from "./user-profile-dialog"
+import { SearchDialog } from "./search-dialog"
+import { useSiteSettings } from "@/hooks/use-site-settings"
 
 export function Header() {
-  const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
-  const { get } = useSiteSettings();
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
+  const [showProfileDialog, setShowProfileDialog] = useState(false)
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const pathname = usePathname()
+  const router = useRouter()
+  const { user } = useAuth()
+  const { get } = useSiteSettings()
+
+  const navItems = [
+    { label: "Home", href: "/" },
+    {
+      label: "About",
+      children: [
+        { label: "What We Stand For", href: "/shared-ui/about#mission-vision" },
+        { label: "Leadership", href: "/shared-ui/about#team" },
+        { label: "Our Journey", href: "/shared-ui/about#timeline" },
+      ],
+    },
+    { label: "Events", href: "/shared-ui/events" },
+    {
+      label: "Media",
+      children: [
+        { label: "News & Blogs", href: "/shared-ui/blog" },
+        { label: "Publications", href: "/shared-ui/publications" },
+      ],
+    },
+
+    {
+      label: "Support Us",
+      children: [
+        { label: "Donate", href: "/shared-ui/donate" },
+        { label: "Shop", href: "/shared-ui/listings" },
+      ],
+    },
+
+    {
+      label: "Get Involved",
+      children: [
+        { label: "Become a Member", href: "/shared-ui/register" },
+        { label: "Become An Aspirant", href: "/shared-ui/political-position" },
+        { label: "Internal Party Positions", href: "/shared-ui/party-position" },
+        { label: "Find a Local Branch", href: "/shared-ui/local-group" },
+        { label: "Volunteers", href: "/shared-ui/volunteer" },
+        { label: "Careers", href: "/shared-ui/careers" },
+
+      ],
+    },
+
+    {
+      label: "Help Center",
+      children: [
+        { label: "Contact Us", href: "/shared-ui/contact" },
+        { label: "FAQs", href: "/shared-ui/faq" },
+      ],
+    },
+  ]
+
+  const isActive = (href: string) => pathname === href
 
   return (
-    <header className="relative z-50">
-      <div className="hidden bg-secondary py-2 text-secondary-foreground sm:block">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 text-[11px] font-semibold uppercase tracking-[0.14em]">
-          <span>Truth, Always, Conquers · Veritas, Lux et Lex, Vincit</span>
-          <a className="transition-opacity hover:opacity-75" href={`mailto:${get("site.contact_email")}`}>
-            {get("site.contact_email")}
-          </a>
-        </div>
+    <header className="w-full">
+      {/*Top Info Bar*/}
+      <div className="bg-secondary text-primary-foreground py-1">
+        <InfiniteSlider gap={80} reverse>
+          <p className="text-sm font-medium">{get("site.site_name")}</p>
+          <p className="text-sm font-medium">“Truth, Always, Conquers” - “Veritas, Lux et Lex, Vincit”</p>
+          <p className="text-sm flex items-center gap-2"><Phone size={16} />{get("site.contact_phone")}</p>
+          <p className="text-sm flex items-center gap-2"><Mail size={16} />{get("site.contact_email")}</p>
+          <div className="flex gap-4">
+            <Facebook size={16} />
+            <Twitter size={16} />
+            <Instagram size={16} />
+            <Youtube size={16} />
+          </div>
+        </InfiniteSlider>
       </div>
+
+      {/* Main Navbar */}
       <nav
-        className={`sticky top-0 border-b transition-all duration-300 ${scrolled ? "border-border/70 bg-background/92 shadow-lg shadow-secondary/5 backdrop-blur-xl" : "border-transparent bg-background/98"}`}
+        className="bg-white border-b border-border sticky top-0 z-50"
+        role="navigation"
         aria-label="Main navigation"
       >
-        <div className="mx-auto flex h-[78px] max-w-7xl items-center justify-between px-4 sm:px-5">
-          <Link
-            href="/"
-            aria-label="SHIKANA home"
-            className="flex items-center gap-3 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <img
-              src={get("site.logo_url")}
-              alt={`${get("site.site_name")} logo`}
-              className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-11" : "h-14"}`}
-            />
-            <span className="hidden max-w-[190px] border-l border-border pl-3 text-xs font-bold uppercase leading-tight tracking-[0.11em] text-secondary lg:block">
-              {get("site.tagline")}
-            </span>
-          </Link>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between h-[72px]">
 
-          <div className="hidden items-center gap-5 xl:gap-7 lg:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`relative py-3 text-sm font-bold transition-colors after:absolute after:bottom-1 after:left-0 after:h-0.5 after:w-full after:origin-left after:bg-primary after:transition-transform ${pathname === item.href ? "text-primary after:scale-x-100" : "text-foreground/80 after:scale-x-0 hover:text-primary hover:after:scale-x-100"}`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-secondary">
+              <img
+                src={get("site.logo_url")}
+                alt={`${get("site.site_name")} logo`}
+                className="h-18 w-18 object-contain"
+              />
+              <div className="hidden sm:flex flex-col leading-tight">
+                <span className="font-bold text-secondary text-md">
+                  {get("site.site_name")}
+                </span>
+                <span className="text-sm text-primary">
+                  {get("site.tagline")}
+                </span>
 
-          <div className="hidden items-center gap-3 lg:flex">
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              className="grid size-10 place-items-center rounded-full text-foreground transition-colors hover:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              aria-label="Search site"
-            >
-              <Search className="size-[18px]" />
-            </button>
-            <Link
-              href="/shared-ui/register"
-              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-            >
-              Join the movement <ArrowUpRight className="size-4" />
+              </div>
             </Link>
-          </div>
-          <button
-            type="button"
-            className="grid size-11 place-items-center rounded-xl text-secondary lg:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <X /> : <Menu />}
-          </button>
-        </div>
-        {open && (
-          <div className="border-t border-border bg-background px-5 py-4 shadow-xl lg:hidden">
-            <div className="mx-auto max-w-7xl">
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-10">
               {navItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="flex min-h-12 items-center justify-between border-b border-border/60 py-2 text-base font-bold text-foreground hover:text-primary"
-                >
-                  {item.label}
-                  <ChevronDown className="size-4 -rotate-90" />
-                </Link>
+                <div key={item.label} className="relative group">
+                  {!item.children ? (
+                    <Link
+                      href={item.href}
+                      className={`text-base font-medium transition-colors pb-1
+            ${isActive(item.href)
+                          ? "text-secondary border-b-2 border-secondary"
+                          : "text-foreground hover:text-secondary"}
+          `}
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <>
+                      {/* Parent button with highlight on hover */}
+                      <button
+                        className="text-base font-medium hover:text-secondary focus:outline-none focus:text-secondary relative"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        {item.label}
+
+                        {/* Optional small underline/highlight when open */}
+                        <span className="absolute left-0 right-0 -bottom-1 h-0.5 bg-secondary scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                      </button>
+
+                      {/* Dropdown card */}
+                      <div
+                        className="
+              absolute left-1/2 transform -translate-x-1/2 top-full mt-4
+              invisible opacity-0 translate-y-3
+              group-hover:visible group-hover:opacity-100 group-hover:translate-y-0
+              transition-all duration-300 ease-out
+              bg-white border border-border rounded-lg shadow-lg w-56
+              z-50
+            "
+                      >
+                        {/* Triangle pointer */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-3 h-3 bg-white rotate-45 border-l border-t border-border"></div>
+
+                        {/* Dropdown links */}
+                        <div className="py-2">
+                          {item.children.map((sub) => (
+                            <Link
+                              key={sub.label}
+                              href={sub.href}
+                              className="block px-4 py-2 text-sm text-foreground hover:bg-secondary/10 focus:bg-secondary/10 focus:outline-none"
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               ))}
-              <Link
-                href="/shared-ui/register"
-                onClick={() => setOpen(false)}
-                className="mt-5 flex min-h-12 items-center justify-center rounded-xl bg-primary px-5 font-bold text-primary-foreground"
-              >
-                Join the movement
-              </Link>
             </div>
+
+
+            {/* Right Actions */}
+            <div className="hidden md:flex items-center gap-5">
+              {/* <Button
+                onClick={() => router.push("/shared-ui/donate")}
+                className="bg-secondary text-white hover:bg-secondary/90 transition-colors"
+              >
+                Donate
+              </Button> */}
+
+              {user ? (
+                <button
+                  onClick={() => setShowProfileDialog(true)}
+                  className="h-9 w-9 rounded-full bg-secondary text-white font-bold flex items-center justify-center focus:ring-2 focus:ring-secondary"
+                  aria-label="User profile"
+                >
+                  {user.first_name?.[0]?.toUpperCase()}
+                </button>
+              ) : (
+              <Button
+                onClick={() => router.push("/login")}
+                className="text-white hover:opacity-90 transition-opacity bg-primary hover:bg-[#9a181c]"
+              >
+                Login
+              </Button>
+              )}
+
+              <button
+                onClick={() => setShowSearch(true)}
+                aria-label="Search site"
+                className="hover:text-secondary transition-colors"
+              >
+                <Search size={18} />
+              </button>
+            </div>
+
+            {/* Mobile Toggle */}
+            <button
+              className="md:hidden focus:outline-none focus:ring-2 focus:ring-secondary"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
+            </button>
           </div>
-        )}
+
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <div className="md:hidden border-t pt-6 pb-4 space-y-5">
+
+              {/* Navigation */}
+              {navItems.map((item) => (
+                <div key={item.label}>
+                  {item.children ? (
+                    <span className="block text-base font-semibold text-foreground">
+                      {item.label}
+                    </span>
+                  ) : (
+                    <Link
+                      href={item.href || "#"}
+                      className="block text-base font-semibold text-foreground hover:text-secondary transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                  {item.children && (
+                    <div className="pl-4 mt-3 space-y-3">
+                      {item.children.map((sub) => (
+                        <Link
+                          key={sub.label}
+                          href={sub.href}
+                          className="block text-sm text-foreground/80"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {/* Mobile Login / Profile */}
+              {user ? (
+                <button
+                  onClick={() => {
+                    setShowProfileDialog(true)
+                    setIsMenuOpen(false)
+                  }}
+                  className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
+                >
+                  My Profile
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    router.push("/login")
+                    setIsMenuOpen(false)
+                  }}
+                  className="w-full bg-primary text-white"
+                >
+                  Login
+                </button>
+              )}
+
+              {/* Mobile Donate CTA */}
+              {/* <Button
+                onClick={() => router.push("/shared-ui/donate")}
+                className="w-full bg-secondary text-white"
+              >
+                Donate
+              </Button> */}
+            </div>
+          )}
+
+        </div>
       </nav>
-      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
+
+      <UserProfileDialog open={showProfileDialog} onOpenChange={setShowProfileDialog} />
+      <SearchDialog open={showSearch} onOpenChange={setShowSearch} />
     </header>
-  );
+  )
 }

@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { seoHead, seoLoader } from "@/lib/seo";
 import { AboutHero } from "@/components/about-hero";
 import { MissionVision } from "@/components/mission-vision";
 import { TeamSection } from "@/components/team-section";
@@ -8,8 +7,12 @@ import { TimelineSection } from "@/components/timeline-section";
 import { ThematicAreas } from "@/components/thematic-areas";
 
 export const Route = createFileRoute("/_public/shared-ui/about")({
-  loader: seoLoader("about"),
-  head: seoHead("about"),
+  head: () => ({
+    meta: [
+      { title: "About SFUP — Shikana Frontliners for Unity Party" },
+      { name: "description", content: "Our mission, vision, values, team and journey." },
+    ],
+  }),
   component: AboutPage,
 });
 

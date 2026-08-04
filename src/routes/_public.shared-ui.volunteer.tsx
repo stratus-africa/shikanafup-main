@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { seoHead, seoLoader } from "@/lib/seo";
 import { VolunteerHero } from "@/components/volunteer-hero";
 import { Volunteer } from "@/components/volunteer";
 
 export const Route = createFileRoute("/_public/shared-ui/volunteer")({
-  loader: seoLoader("volunteer"),
-  head: seoHead("volunteer"),
+  head: () => ({
+    meta: [
+      { title: "Volunteer — SFUP" },
+      { name: "description", content: "Volunteer with SFUP and make an impact." },
+    ],
+  }),
   component: VolunteerPage,
 });
 
