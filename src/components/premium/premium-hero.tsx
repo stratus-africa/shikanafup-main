@@ -34,10 +34,7 @@ export function PremiumHero({
     const interval = setInterval(() => {
       setProgress(Math.min(((Date.now() - start) / SLIDE_DURATION) * 100, 100));
     }, 60);
-    const timeout = setTimeout(
-      () => setCurrent((p) => (p + 1) % SLIDES.length),
-      SLIDE_DURATION,
-    );
+    const timeout = setTimeout(() => setCurrent((p) => (p + 1) % SLIDES.length), SLIDE_DURATION);
     return () => {
       clearInterval(interval);
       clearTimeout(timeout);
@@ -71,9 +68,7 @@ export function PremiumHero({
           <h1 className="text-balance text-4xl font-black leading-[1.05] tracking-tight text-background md:text-6xl lg:text-7xl">
             {title}
           </h1>
-          <p className="mt-6 max-w-2xl text-pretty text-lg text-background/85 md:text-xl">
-            {subtitle}
-          </p>
+          <p className="mt-6 max-w-2xl text-pretty text-lg text-background/85 md:text-xl">{subtitle}</p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link
@@ -84,10 +79,10 @@ export function PremiumHero({
               <ArrowRight className="size-5" aria-hidden="true" />
             </Link>
             <Link
-              href="/shared-ui/donate"
+              href="/shared-ui/publications"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-background/70 px-8 font-bold text-background transition-colors hover:bg-background hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-background"
             >
-              {ctaSecondary}
+              {ctaSecondary || "Read our manifesto"}
               <ArrowRight className="size-5" aria-hidden="true" />
             </Link>
           </div>
