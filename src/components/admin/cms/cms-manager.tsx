@@ -16,6 +16,7 @@ import {
   deletePublication,
 } from "@/lib/admin/publications.functions";
 import { listSettings, upsertSetting } from "@/lib/admin/settings.functions";
+import { PagesPanel } from "@/components/admin/cms/pages-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
