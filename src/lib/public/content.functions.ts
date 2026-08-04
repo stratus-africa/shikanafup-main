@@ -179,3 +179,22 @@ export const publicGetSiteSettings = createServerFn({ method: "GET" }).handler(
     return out;
   },
 );
+
+// All CMS-managed page copy and SEO overrides (keys: page.* and seo.*)
+export const publicGetPageContent = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const supabase = await sb();
+    const { data, error } = await supabase
+      .from("settings")
+      .select("key, value")
+      .or("key.like.page.%,key.like.seo.%");
+    if (error) throw new Error(error.message);
+    const out: Record<string, string> = {};
+    for (const row of data ?? []) {
+      const v = (row as any).value;
+      const s = typeof v === "string" ? v : v == null ? "" : String(v);
+      if (s.trim()) out[(row as any).key] = s;
+    }
+    return out;
+  },
+);
