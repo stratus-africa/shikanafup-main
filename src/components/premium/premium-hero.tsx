@@ -6,8 +6,8 @@ import { useReducedMotion } from "motion/react";
 const SLIDE_DURATION = 7000;
 
 const SLIDES = [
-  { image: "/Sfu-login-bg.avif", alt: "Supporters at a SHIKANA unity rally" },
   { image: "/unity-img.jpg", alt: "Members marching together for a united Kenya" },
+  { image: "/sfu-image.jfif", alt: "SHIKANA members at a community town hall" },
   { image: "/nairobiPicture.jpg", alt: "Nairobi skyline at dusk" },
 ];
 
