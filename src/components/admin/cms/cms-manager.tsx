@@ -466,12 +466,16 @@ export function CmsManager() {
           Manage the content that appears on the public website.
         </p>
       </div>
-      <Tabs defaultValue="content">
+      <Tabs defaultValue="pages">
         <TabsList>
+          <TabsTrigger value="pages">Pages & SEO</TabsTrigger>
           <TabsTrigger value="content">Website content</TabsTrigger>
           <TabsTrigger value="faqs">FAQs</TabsTrigger>
           <TabsTrigger value="publications">Publications</TabsTrigger>
         </TabsList>
+        <TabsContent value="pages" className="mt-4">
+          <PagesPanel />
+        </TabsContent>
         <TabsContent value="content" className="mt-4">
           <SiteContentPanel />
         </TabsContent>
