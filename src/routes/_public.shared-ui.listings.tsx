@@ -1,14 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { seoHead, seoLoader } from "@/lib/seo";
 import { ListingHero } from "@/components/listing-hero";
 import ProductsGrid from "@/components/listing-grid";
 
 export const Route = createFileRoute("/_public/shared-ui/listings")({
-  head: () => ({
-    meta: [
-      { title: "Listings — SFUP" },
-      { name: "description", content: "SFUP merchandise and listings." },
-    ],
-  }),
+  loader: seoLoader("listings"),
+  head: seoHead("listings"),
   component: ListingsPage,
 });
 

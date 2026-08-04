@@ -1,15 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { seoHead, seoLoader } from "@/lib/seo";
 import { DonateHero } from "@/components/donate-hero";
 import { DonationOptions } from "@/components/donation-options";
 import { ImpactStory } from "@/components/impact-story";
 
 export const Route = createFileRoute("/_public/shared-ui/donate")({
-  head: () => ({
-    meta: [
-      { title: "Donate — SFUP" },
-      { name: "description", content: "Support the SFUP mission with your donation." },
-    ],
-  }),
+  loader: seoLoader("donate"),
+  head: seoHead("donate"),
   component: DonatePage,
 });
 

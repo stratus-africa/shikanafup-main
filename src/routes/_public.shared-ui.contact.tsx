@@ -1,14 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { seoHead, seoLoader } from "@/lib/seo";
 import { ContactHero } from "@/components/contact-hero";
 import { ContactForm } from "@/components/contact-form";
 
 export const Route = createFileRoute("/_public/shared-ui/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact — SFUP" },
-      { name: "description", content: "Get in touch with SFUP." },
-    ],
-  }),
+  loader: seoLoader("contact"),
+  head: seoHead("contact"),
   component: ContactPage,
 });
 
