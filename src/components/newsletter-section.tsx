@@ -4,8 +4,10 @@ import { useState } from "react"
 import { Mail, CheckCircle } from "lucide-react"
 import { TextShimmer } from "./motion-primitives/text-shimmer"
 import { Link } from "@/lib/next-shims"
+import { usePageContent } from "@/hooks/use-page-content"
 
 export function NewsletterSection() {
+  const { c } = usePageContent()
   const [email, setEmail] = useState("")
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -34,11 +36,11 @@ export function NewsletterSection() {
         </div>
 
         <h2 className="text-primary text-4xl md:text-5xl font-bold mb-3 text-foreground">
-          Stay Connected
+          {c("site.home.newsletter_heading")}
         </h2>
 
         <p className="text-lg text-muted-foreground mb-2">
-          Get updates, announcements, and exclusive content from Shikana Frontliners.
+          {c("site.home.newsletter_subtext")}
         </p>
 
         <p className="text-sm text-muted-foreground mb-6">

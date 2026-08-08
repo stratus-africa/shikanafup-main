@@ -1,14 +1,16 @@
 
 import { Herotext } from "./hero-text"
 import { Image } from "@/lib/next-shims"
+import { usePageContent } from "@/hooks/use-page-content"
 
 export function AboutHero() {
+  const { c } = usePageContent()
   return (
     <section className="relative w-full min-h-96 bg-primary overflow-hidden flex items-center justify-center py-20">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src="/about-img.jpeg"
+          src={c("site.about.hero_image")}
           alt="About Shikana"
           fill
           className="object-cover"
@@ -21,10 +23,8 @@ export function AboutHero() {
 
       {/* Content */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
-        <Herotext title="About Us" />
-        <p className="text-xl md:text-2xl md:mt-3 text-white/90 mb-8 max-w-4xl mx-auto text-balance">
-          Rooted in the vision of our founding members and guided by the unwavering commitment of the party leadership, we are committed to building a stronger, united nation through leadership defined by integrity, transparency, and accountability
-        </p>
+        <Herotext title={c("site.about.hero_title")} />
+        <p className="text-xl md:text-2xl md:mt-3 text-white/90 mb-8 max-w-4xl mx-auto text-balance">{c("site.about.hero_subtitle")}</p>
       </div>
     </section>
   )

@@ -75,6 +75,9 @@ import { Route as AuthenticatedAdminUiAspirantsRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminUiApplicationsRouteImport } from './routes/_authenticated.admin.ui.applications'
 import { Route as AuthenticatedAdminUiAdminUsersRouteImport } from './routes/_authenticated.admin.ui.admin-users'
 import { Route as PublicSharedUiEventsIdRegisterRouteImport } from './routes/_public.shared-ui.events.$id.register'
+import { Route as AuthenticatedAdminUiPagesHomeRouteImport } from './routes/_authenticated.admin.ui.pages.home'
+import { Route as AuthenticatedAdminUiPagesContactRouteImport } from './routes/_authenticated.admin.ui.pages.contact'
+import { Route as AuthenticatedAdminUiPagesAboutRouteImport } from './routes/_authenticated.admin.ui.pages.about'
 import { Route as AuthenticatedAdminUiJobsJobIdApplicationsRouteImport } from './routes/_authenticated.admin.ui.jobs.$jobId.applications'
 
 const OtpRoute = OtpRouteImport.update({
@@ -428,6 +431,24 @@ const PublicSharedUiEventsIdRegisterRoute =
     path: '/register',
     getParentRoute: () => PublicSharedUiEventsIdRoute,
   } as any)
+const AuthenticatedAdminUiPagesHomeRoute =
+  AuthenticatedAdminUiPagesHomeRouteImport.update({
+    id: '/ui/pages/home',
+    path: '/ui/pages/home',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiPagesContactRoute =
+  AuthenticatedAdminUiPagesContactRouteImport.update({
+    id: '/ui/pages/contact',
+    path: '/ui/pages/contact',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUiPagesAboutRoute =
+  AuthenticatedAdminUiPagesAboutRouteImport.update({
+    id: '/ui/pages/about',
+    path: '/ui/pages/about',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminUiJobsJobIdApplicationsRoute =
   AuthenticatedAdminUiJobsJobIdApplicationsRouteImport.update({
     id: '/$jobId/applications',
@@ -499,6 +520,9 @@ export interface FileRoutesByFullPath {
   '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
+  '/admin/ui/pages/contact': typeof AuthenticatedAdminUiPagesContactRoute
+  '/admin/ui/pages/home': typeof AuthenticatedAdminUiPagesHomeRoute
   '/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
@@ -566,6 +590,9 @@ export interface FileRoutesByTo {
   '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
+  '/admin/ui/pages/contact': typeof AuthenticatedAdminUiPagesContactRoute
+  '/admin/ui/pages/home': typeof AuthenticatedAdminUiPagesHomeRoute
   '/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
@@ -636,6 +663,9 @@ export interface FileRoutesById {
   '/_public/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/_public/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/_authenticated/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
+  '/_authenticated/admin/ui/pages/contact': typeof AuthenticatedAdminUiPagesContactRoute
+  '/_authenticated/admin/ui/pages/home': typeof AuthenticatedAdminUiPagesHomeRoute
   '/_public/shared-ui/events/$id/register': typeof PublicSharedUiEventsIdRegisterRoute
   '/_authenticated/admin/ui/jobs/$jobId/applications': typeof AuthenticatedAdminUiJobsJobIdApplicationsRoute
 }
@@ -705,6 +735,9 @@ export interface FileRouteTypes {
     | '/shared-ui/blog/$id'
     | '/shared-ui/events/$id'
     | '/lovable/email/queue/process'
+    | '/admin/ui/pages/about'
+    | '/admin/ui/pages/contact'
+    | '/admin/ui/pages/home'
     | '/shared-ui/events/$id/register'
     | '/admin/ui/jobs/$jobId/applications'
   fileRoutesByTo: FileRoutesByTo
@@ -772,6 +805,9 @@ export interface FileRouteTypes {
     | '/shared-ui/blog/$id'
     | '/shared-ui/events/$id'
     | '/lovable/email/queue/process'
+    | '/admin/ui/pages/about'
+    | '/admin/ui/pages/contact'
+    | '/admin/ui/pages/home'
     | '/shared-ui/events/$id/register'
     | '/admin/ui/jobs/$jobId/applications'
   id:
@@ -841,6 +877,9 @@ export interface FileRouteTypes {
     | '/_public/shared-ui/blog/$id'
     | '/_public/shared-ui/events/$id'
     | '/lovable/email/queue/process'
+    | '/_authenticated/admin/ui/pages/about'
+    | '/_authenticated/admin/ui/pages/contact'
+    | '/_authenticated/admin/ui/pages/home'
     | '/_public/shared-ui/events/$id/register'
     | '/_authenticated/admin/ui/jobs/$jobId/applications'
   fileRoutesById: FileRoutesById
@@ -1319,6 +1358,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicSharedUiEventsIdRegisterRouteImport
       parentRoute: typeof PublicSharedUiEventsIdRoute
     }
+    '/_authenticated/admin/ui/pages/home': {
+      id: '/_authenticated/admin/ui/pages/home'
+      path: '/ui/pages/home'
+      fullPath: '/admin/ui/pages/home'
+      preLoaderRoute: typeof AuthenticatedAdminUiPagesHomeRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/pages/contact': {
+      id: '/_authenticated/admin/ui/pages/contact'
+      path: '/ui/pages/contact'
+      fullPath: '/admin/ui/pages/contact'
+      preLoaderRoute: typeof AuthenticatedAdminUiPagesContactRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ui/pages/about': {
+      id: '/_authenticated/admin/ui/pages/about'
+      path: '/ui/pages/about'
+      fullPath: '/admin/ui/pages/about'
+      preLoaderRoute: typeof AuthenticatedAdminUiPagesAboutRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ui/jobs/$jobId/applications': {
       id: '/_authenticated/admin/ui/jobs/$jobId/applications'
       path: '/$jobId/applications'
@@ -1363,6 +1423,9 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminUiSettingsRoute: typeof AuthenticatedAdminUiSettingsRoute
   AuthenticatedAdminUiUsersRoute: typeof AuthenticatedAdminUiUsersRoute
   AuthenticatedAdminUiVolunteerRoute: typeof AuthenticatedAdminUiVolunteerRoute
+  AuthenticatedAdminUiPagesAboutRoute: typeof AuthenticatedAdminUiPagesAboutRoute
+  AuthenticatedAdminUiPagesContactRoute: typeof AuthenticatedAdminUiPagesContactRoute
+  AuthenticatedAdminUiPagesHomeRoute: typeof AuthenticatedAdminUiPagesHomeRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
@@ -1384,6 +1447,9 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminUiSettingsRoute: AuthenticatedAdminUiSettingsRoute,
   AuthenticatedAdminUiUsersRoute: AuthenticatedAdminUiUsersRoute,
   AuthenticatedAdminUiVolunteerRoute: AuthenticatedAdminUiVolunteerRoute,
+  AuthenticatedAdminUiPagesAboutRoute: AuthenticatedAdminUiPagesAboutRoute,
+  AuthenticatedAdminUiPagesContactRoute: AuthenticatedAdminUiPagesContactRoute,
+  AuthenticatedAdminUiPagesHomeRoute: AuthenticatedAdminUiPagesHomeRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
@@ -1562,13 +1628,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

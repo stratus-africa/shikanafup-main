@@ -24,7 +24,10 @@ export const adminNavMain: NavItem[] = [
   { title: "Merchandise", url: "/admin/ui/merchandise", icon: "shopping-bag", group: "Engagement" },
 
   // Website
-  { title: "Pages & Content", url: "/admin/ui/cms", icon: "folder", group: "Website" },
+  { title: "Home Page", url: "/admin/ui/pages/home", icon: "folder", group: "Website" },
+  { title: "About Us", url: "/admin/ui/pages/about", icon: "folder", group: "Website" },
+  { title: "Contact Us", url: "/admin/ui/pages/contact", icon: "folder", group: "Website" },
+  { title: "FAQs & Publications", url: "/admin/ui/cms", icon: "folder", group: "Website" },
   { title: "Blogs", url: "/admin/ui/blogs", icon: "file-text", group: "Website" },
 
   // Administration
