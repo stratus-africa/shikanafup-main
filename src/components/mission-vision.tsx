@@ -1,12 +1,18 @@
-
 import { Target, Eye } from "lucide-react"
+import { usePageContent } from "@/hooks/use-page-content"
 
 export function MissionVision() {
+  const { c } = usePageContent()
+  const bullets = (prefix: string) =>
+    [1, 2, 3].map((n) => c(`${prefix}_point${n}`)).filter(Boolean)
+
   return (
     <section className="w-full py-8 md:py-12 bg-background">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground">What We Stand For</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+            {c("site.about.stand_heading")}
+          </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Vision */}
@@ -15,26 +21,20 @@ export function MissionVision() {
               <div className="bg-primary p-3 rounded-lg">
                 <Eye size={28} className="text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-foreground">Our Vision</h2>
+              <h2 className="text-3xl font-bold text-foreground">
+                {c("site.about.vision_heading")}
+              </h2>
             </div>
             <p className="text-lg text-foreground/80 leading-relaxed">
-              To secure upright, safe and progressive communities by creating for them a prosperous socio-economic
-              environment that guarantees equal opportunities for all Kenyans to reach their personal goals and
-              collective aspirations.
+              {c("site.about.vision_text")}
             </p>
             <ul className="space-y-3 mt-6">
-              <li className="flex items-start gap-3">
-                <span className="text-secondary font-bold mt-1">✓</span>
-                <span className="text-foreground/80">Upright, safe and progressive communities</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-secondary font-bold mt-1">✓</span>
-                <span className="text-foreground/80">Prosperous socio-economic environment</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-secondary font-bold mt-1">✓</span>
-                <span className="text-foreground/80">Equal opportunities for all Kenyans</span>
-              </li>
+              {bullets("site.about.vision").map((b) => (
+                <li key={b} className="flex items-start gap-3">
+                  <span className="text-secondary font-bold mt-1">✓</span>
+                  <span className="text-foreground/80">{b}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -44,27 +44,20 @@ export function MissionVision() {
               <div className="bg-secondary p-3 rounded-lg">
                 <Target size={28} className="text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-foreground">Our Mission</h2>
+              <h2 className="text-3xl font-bold text-foreground">
+                {c("site.about.mission_heading")}
+              </h2>
             </div>
             <p className="text-lg text-foreground/80 leading-relaxed">
-              To continue building a democratic social order that honors the completeness of the law and the absolute
-              consciousness of the Kenyan people while being guided by divinity that shows us the way of life so that
-              everyone can speak the truth in love and act in peace and unity as those who are going to be judged
-              according to their works.
+              {c("site.about.mission_text")}
             </p>
             <ul className="space-y-3 mt-6">
-              <li className="flex items-start gap-3">
-                <span className="text-secondary font-bold mt-1">✓</span>
-                <span className="text-foreground/80">Democratic social order honoring the law</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-secondary font-bold mt-1">✓</span>
-                <span className="text-foreground/80">Guided by divinity and consciousness</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-secondary font-bold mt-1">✓</span>
-                <span className="text-foreground/80">Truth, love, peace and unity in action</span>
-              </li>
+              {bullets("site.about.mission").map((b) => (
+                <li key={b} className="flex items-start gap-3">
+                  <span className="text-secondary font-bold mt-1">✓</span>
+                  <span className="text-foreground/80">{b}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
