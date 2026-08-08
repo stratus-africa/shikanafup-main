@@ -1,27 +1,59 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "@/lib/next-shims"
 import { usePathname, useRouter } from "@/lib/next-shims"
 import {
   Menu, X, Facebook, Twitter, Instagram, Youtube,
-  Phone, Mail, Search
+  Phone, Mail, Search, User as UserIcon, LayoutDashboard, Shield, LogOut
 } from "lucide-react"
 import { Button } from "./ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 import { InfiniteSlider } from "./motion-primitives/infinite-slider"
 import { useAuth } from "@/context/auth-context"
+import { supabase } from "@/integrations/supabase/client"
 import { UserProfileDialog } from "./user-profile-dialog"
 import { SearchDialog } from "./search-dialog"
 import { useSiteSettings } from "@/hooks/use-site-settings"
+
+const STAFF_ROLES = ["super_admin", "admin", "editor", "moderator"]
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
   const [showProfileDialog, setShowProfileDialog] = useState(false)
+  const [isStaff, setIsStaff] = useState(false)
 
   const pathname = usePathname()
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const { get } = useSiteSettings()
+
+  useEffect(() => {
+    let active = true
+    if (!user?.id) {
+      setIsStaff(false)
+      return
+    }
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .then(({ data }) => {
+        if (!active) return
+        setIsStaff((data ?? []).some((r: any) => STAFF_ROLES.includes(r.role)))
+      })
+    return () => {
+      active = false
+    }
+  }, [user?.id])
+
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -192,13 +224,43 @@ export function Header() {
               </Button> */}
 
               {user ? (
-                <button
-                  onClick={() => setShowProfileDialog(true)}
-                  className="h-9 w-9 rounded-full bg-secondary text-white font-bold flex items-center justify-center focus:ring-2 focus:ring-secondary"
-                  aria-label="User profile"
-                >
-                  {user.first_name?.[0]?.toUpperCase()}
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="h-9 w-9 rounded-full bg-secondary text-white font-bold flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-secondary"
+                      aria-label="Account menu"
+                    >
+                      {(user.first_name?.[0] ?? user.email?.[0])?.toUpperCase()}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-60">
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-foreground">
+                          {[user.first_name, user.last_name].filter(Boolean).join(" ") || "My account"}
+                        </span>
+                        <span className="text-xs text-muted-foreground truncate">{user.email}</span>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setShowProfileDialog(true)}>
+                      <UserIcon className="mr-2 h-4 w-4" /> My Profile
+                    </DropdownMenuItem>
+                    {isStaff ? (
+                      <DropdownMenuItem onClick={() => router.push("/admin/dashboard")}>
+                        <Shield className="mr-2 h-4 w-4" /> Admin View
+                      </DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem onClick={() => router.push("/portal")}>
+                        <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => logout()} className="text-destructive focus:text-destructive">
+                      <LogOut className="mr-2 h-4 w-4" /> Log Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
               <Button
                 onClick={() => router.push("/login")}
@@ -207,6 +269,7 @@ export function Header() {
                 Login
               </Button>
               )}
+
 
               <button
                 onClick={() => setShowSearch(true)}
@@ -266,16 +329,37 @@ export function Header() {
 
               {/* Mobile Login / Profile */}
               {user ? (
-                <button
-                  onClick={() => {
-                    setShowProfileDialog(true)
-                    setIsMenuOpen(false)
-                  }}
-                  className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
-                >
-                  My Profile
-                </button>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => {
+                      setShowProfileDialog(true)
+                      setIsMenuOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
+                  >
+                    My Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push(isStaff ? "/admin/dashboard" : "/portal")
+                      setIsMenuOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
+                  >
+                    {isStaff ? "Admin View" : "Dashboard"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      logout()
+                      setIsMenuOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-md bg-destructive/10 text-destructive font-medium"
+                  >
+                    Log Out
+                  </button>
+                </div>
               ) : (
+
                 <button
                   onClick={() => {
                     router.push("/login")
