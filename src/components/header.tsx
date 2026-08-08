@@ -224,13 +224,43 @@ export function Header() {
               </Button> */}
 
               {user ? (
-                <button
-                  onClick={() => setShowProfileDialog(true)}
-                  className="h-9 w-9 rounded-full bg-secondary text-white font-bold flex items-center justify-center focus:ring-2 focus:ring-secondary"
-                  aria-label="User profile"
-                >
-                  {user.first_name?.[0]?.toUpperCase()}
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="h-9 w-9 rounded-full bg-secondary text-white font-bold flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-secondary"
+                      aria-label="Account menu"
+                    >
+                      {(user.first_name?.[0] ?? user.email?.[0])?.toUpperCase()}
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-60">
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-foreground">
+                          {[user.first_name, user.last_name].filter(Boolean).join(" ") || "My account"}
+                        </span>
+                        <span className="text-xs text-muted-foreground truncate">{user.email}</span>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setShowProfileDialog(true)}>
+                      <UserIcon className="mr-2 h-4 w-4" /> My Profile
+                    </DropdownMenuItem>
+                    {isStaff ? (
+                      <DropdownMenuItem onClick={() => router.push("/admin/dashboard")}>
+                        <Shield className="mr-2 h-4 w-4" /> Admin View
+                      </DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem onClick={() => router.push("/portal")}>
+                        <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => logout()} className="text-destructive focus:text-destructive">
+                      <LogOut className="mr-2 h-4 w-4" /> Log Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
               <Button
                 onClick={() => router.push("/login")}
@@ -239,6 +269,7 @@ export function Header() {
                 Login
               </Button>
               )}
+
 
               <button
                 onClick={() => setShowSearch(true)}
