@@ -1,27 +1,59 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "@/lib/next-shims"
 import { usePathname, useRouter } from "@/lib/next-shims"
 import {
   Menu, X, Facebook, Twitter, Instagram, Youtube,
-  Phone, Mail, Search
+  Phone, Mail, Search, User as UserIcon, LayoutDashboard, Shield, LogOut
 } from "lucide-react"
 import { Button } from "./ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 import { InfiniteSlider } from "./motion-primitives/infinite-slider"
 import { useAuth } from "@/context/auth-context"
+import { supabase } from "@/integrations/supabase/client"
 import { UserProfileDialog } from "./user-profile-dialog"
 import { SearchDialog } from "./search-dialog"
 import { useSiteSettings } from "@/hooks/use-site-settings"
+
+const STAFF_ROLES = ["super_admin", "admin", "editor", "moderator"]
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
   const [showProfileDialog, setShowProfileDialog] = useState(false)
+  const [isStaff, setIsStaff] = useState(false)
 
   const pathname = usePathname()
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const { get } = useSiteSettings()
+
+  useEffect(() => {
+    let active = true
+    if (!user?.id) {
+      setIsStaff(false)
+      return
+    }
+    supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .then(({ data }) => {
+        if (!active) return
+        setIsStaff((data ?? []).some((r: any) => STAFF_ROLES.includes(r.role)))
+      })
+    return () => {
+      active = false
+    }
+  }, [user?.id])
+
 
   const navItems = [
     { label: "Home", href: "/" },
