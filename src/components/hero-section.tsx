@@ -3,31 +3,20 @@ import { useEffect, useState } from "react"
 import { Link } from "@/lib/next-shims"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { Herotext } from "./hero-text"
+import { usePageContent } from "@/hooks/use-page-content"
 
 const SLIDE_DURATION = 6000 // 6 seconds
 
-const slides = [
-  {
-    gif: "/Sfu-login-bg.avif",
-    title: "Choose the Party that Chooses You",
-    description:
-      "Join a movement driven by the people, for the people - united in purpose, rising for progress, and building the future we all deserve.",
-  },
-  {
-    gif: "/sfu-image.jfif",
-    title: "No One should be Left Behind",
-    description:
-      "Every Voice Counts, Every Choice Matters, Every Kenyan Must Move Forward and win Kenya’s future!",
-  },
-  {
-    gif: "/unity-img.jpg",
-    title: "We rise. we decide. We vote",
-    description:
-      "One Kenya. One Squad. A bold vision for tomorrow, powered by unity, driven by purpose, and built through progressive actions.",
-  },
-]
+
 
 export function HeroSection() {
+  const { c } = usePageContent()
+  const slides = [1, 2, 3].map((n) => ({
+    gif: c(`site.home.hero${n}_image`),
+    title: c(`site.home.hero${n}_title`),
+    description: c(`site.home.hero${n}_description`),
+  }))
+
   const [current, setCurrent] = useState(0)
   const [progress, setProgress] = useState(0)
 
@@ -105,18 +94,18 @@ export function HeroSection() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/shared-ui/register"
+            href={c("site.home.cta_primary_href")}
             className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-[#9a181c] text-white px-8 py-4 rounded-lg font-bold transition-colors"
           >
-            Join the Movement
+            {c("site.home.cta_primary_label")}
             <ArrowRight size={20} />
           </Link>
 
           <Link
-            href="/shared-ui/donate"
+            href={c("site.home.cta_secondary_href")}
             className="inline-flex items-center justify-center gap-2 border-2 border-white text-white hover:bg-primary hover:border-primary px-8 py-4 rounded-lg font-bold transition-colors"
           >
-            Support Us Today
+            {c("site.home.cta_secondary_label")}
             <ArrowRight size={20} />
           </Link>
         </div>
