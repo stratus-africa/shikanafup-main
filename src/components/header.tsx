@@ -329,16 +329,37 @@ export function Header() {
 
               {/* Mobile Login / Profile */}
               {user ? (
-                <button
-                  onClick={() => {
-                    setShowProfileDialog(true)
-                    setIsMenuOpen(false)
-                  }}
-                  className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
-                >
-                  My Profile
-                </button>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => {
+                      setShowProfileDialog(true)
+                      setIsMenuOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
+                  >
+                    My Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      router.push(isStaff ? "/admin/dashboard" : "/portal")
+                      setIsMenuOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
+                  >
+                    {isStaff ? "Admin View" : "Dashboard"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      logout()
+                      setIsMenuOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-md bg-destructive/10 text-destructive font-medium"
+                  >
+                    Log Out
+                  </button>
+                </div>
               ) : (
+
                 <button
                   onClick={() => {
                     router.push("/login")
