@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireStaff, requireAdmin, writeAudit, resolveMemberUserId } from "./_helpers";
+import { requireStaff, requireAdmin, requireSuperAdmin, writeAudit, resolveMemberUserId } from "./_helpers";
 
 export const listMembers = createServerFn({ method: "GET" })
   .middleware([requireStaff])
@@ -8,9 +8,7 @@ export const listMembers = createServerFn({ method: "GET" })
     const { supabase } = context as any;
     const { data, error } = await supabase
       .from("members")
-      .select(
-        "*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(*)",
-      )
+      .select("*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(*)")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
     // Rejected applications must never surface as members
@@ -24,15 +22,12 @@ export const getMember = createServerFn({ method: "GET" })
     const { supabase } = context as any;
     const { data: row, error } = await supabase
       .from("members")
-      .select(
-        "*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(*)",
-      )
+      .select("*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(*)")
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
     return row;
   });
-
 
 const memberUpdate = z.object({
   id: z.string().uuid(),
@@ -50,14 +45,27 @@ export const updateMember = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context as any;
     const { id, ...patch } = data;
-    const { data: row, error } = await supabase
+    const { data: existing, error: existingError } = await supabase
       .from("members")
-      .update(patch)
+      .select(
+        "id, member_no, tier, profile:profiles(full_name,email), application:membership_applications(first_name,last_name,email)",
+      )
       .eq("id", id)
-      .select()
       .maybeSingle();
+    if (existingError) throw new Error(existingError.message);
+    if (!existing) throw new Error("Member not found");
+    const { data: row, error } = await supabase.from("members").update(patch).eq("id", id).select().maybeSingle();
     if (error) throw new Error(error.message);
-    await writeAudit(supabase, userId, "update", "members", id, patch);
+    const target = memberAuditTarget(existing);
+    if (patch.tier !== undefined && patch.tier !== existing.tier) {
+      await writeAudit(supabase, userId, "tier_changed", "member", id, {
+        ...target,
+        previous_tier: existing.tier,
+        new_tier: patch.tier,
+      });
+    } else {
+      await writeAudit(supabase, userId, "update", "members", id, { ...target, ...patch });
+    }
     return row;
   });
 
@@ -100,15 +108,13 @@ export const deleteMember = createServerFn({ method: "POST" })
 
 /** Full member view used by the admin masquerade screen. */
 export const getMemberAccount = createServerFn({ method: "GET" })
-  .middleware([requireStaff])
+  .middleware([requireSuperAdmin])
   .inputValidator(z.object({ id: z.string().uuid() }))
   .handler(async ({ data, context }) => {
     const { supabase } = context as any;
     const { data: member, error } = await supabase
       .from("members")
-      .select(
-        "*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(*)",
-      )
+      .select("*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(*)")
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
@@ -134,38 +140,60 @@ export const getMemberAccount = createServerFn({ method: "GET" })
       party = p.data ?? [];
       volunteer = v.data ?? [];
     }
+    await writeAudit(supabase, context.userId, "masquerade_opened", "member", data.id, {
+      ...memberAuditTarget(member),
+      member_user_id: userId,
+    });
     return { member, userId, applications: { party, volunteer } };
   });
 
 /** Admin sets a new password for the member's login account. */
 export const setMemberPassword = createServerFn({ method: "POST" })
-  .middleware([requireAdmin])
+  .middleware([requireSuperAdmin])
   .inputValidator(
-    z.object({ id: z.string().uuid(), password: z.string().min(8).max(72) }),
+    z.object({
+      id: z.string().uuid(),
+      password: z.string().min(8).max(72),
+      send_reset_email: z.boolean().default(true),
+    }),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId: actorId } = context as any;
     const { userId } = await resolveMemberUserId(supabase, data.id);
-    if (!userId)
-      throw new Error(
-        "This member has no login account yet, so a password cannot be set.",
-      );
-    const { supabaseAdmin } = await import(
-      "@/integrations/supabase/client.server"
-    );
+    if (!userId) throw new Error("This member has no login account yet, so a password cannot be set.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
       password: data.password,
     });
     if (error) throw new Error(error.message);
-    await writeAudit(supabase, actorId, "update", "member_password", data.id, {
-      user_id: userId,
+    const { data: authUser, error: authUserError } = await supabaseAdmin.auth.admin.getUserById(userId);
+    if (authUserError) throw new Error(authUserError.message);
+    const email = authUser.user.email;
+    let resetEmailSent = false;
+    let resetEmailError: string | null = null;
+    if (data.send_reset_email) {
+      if (!email) {
+        resetEmailError = "This member has no email address for a reset link.";
+      } else {
+        const { error: resetError } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
+          redirectTo: process.env.SUPABASE_PASSWORD_RESET_REDIRECT_TO || undefined,
+        });
+        if (resetError) resetEmailError = resetError.message;
+        else resetEmailSent = true;
+      }
+    }
+    await writeAudit(supabase, actorId, "password_updated", "member", data.id, {
+      member_user_id: userId,
+      reset_email_requested: data.send_reset_email,
+      reset_email_sent: resetEmailSent,
+      reset_email_error: resetEmailError,
     });
-    return { ok: true };
+    return { ok: true, resetEmailSent, resetEmailError };
   });
 
 /** Admin updates the member's profile on their behalf (masquerade). */
 export const updateMemberProfile = createServerFn({ method: "POST" })
-  .middleware([requireAdmin])
+  .middleware([requireSuperAdmin])
   .inputValidator(
     z.object({
       id: z.string().uuid(),
@@ -182,14 +210,9 @@ export const updateMemberProfile = createServerFn({ method: "POST" })
     const { id, ...patch } = data;
     const { userId } = await resolveMemberUserId(supabase, id);
     if (!userId) throw new Error("This member has no linked profile yet.");
-    const { supabaseAdmin } = await import(
-      "@/integrations/supabase/client.server"
-    );
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     if (patch.email) {
-      const { error: authErr } = await supabaseAdmin.auth.admin.updateUserById(
-        userId,
-        { email: patch.email },
-      );
+      const { error: authErr } = await supabaseAdmin.auth.admin.updateUserById(userId, { email: patch.email });
       if (authErr) throw new Error(authErr.message);
     }
     const { data: row, error } = await supabaseAdmin
@@ -199,6 +222,20 @@ export const updateMemberProfile = createServerFn({ method: "POST" })
       .select()
       .maybeSingle();
     if (error) throw new Error(error.message);
-    await writeAudit(supabase, actorId, "update", "member_profile", id, patch);
+    await writeAudit(supabase, actorId, "masquerade_profile_updated", "member", id, {
+      ...memberAuditTarget((await resolveMemberUserId(supabase, id)).member),
+      updated_fields: Object.keys(patch).filter((key) => patch[key as keyof typeof patch] !== undefined),
+    });
     return row;
   });
+
+function memberAuditTarget(member: any) {
+  const profile = member.profile;
+  const application = member.application;
+  return {
+    member_no: member.member_no ?? null,
+    member_name:
+      profile?.full_name ?? [application?.first_name, application?.last_name].filter(Boolean).join(" ") ?? null,
+    member_email: profile?.email ?? application?.email ?? null,
+  };
+}
