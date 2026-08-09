@@ -1,37 +1,33 @@
+import { useState } from "react";
+import { Heart, Loader2, CheckCircle, XCircle, User, Mail, Phone, DollarSign } from "lucide-react";
+import api from "@/lib/axios";
+import toast from "react-hot-toast";
+import { Link } from "@/lib/next-shims";
 
-import { useState } from "react"
-import { Heart, Loader2, CheckCircle, XCircle, User, Mail, Phone, DollarSign } from "lucide-react"
-import api from "@/lib/axios"
-import toast from "react-hot-toast"
-import { Link } from "@/lib/next-shims"
-
-type PaymentMethod = "mpesa" | "airtel"
-type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed"
+type PaymentMethod = "mpesa" | "airtel";
+type PaymentStatus = "idle" | "initiating" | "pending" | "success" | "failed";
 
 export function DonationOptions() {
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
-  const [donationType, setDonationType] = useState<"one-time" | "monthly">("one-time")
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null)
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle")
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [donationType, setDonationType] = useState<"one-time" | "monthly">("one-time");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // 🔹 Personal details
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [isAnonymous, setIsAnonymous] = useState(false)
-  
-  // 🔹 Terms Consent State
-  const [termsConsent, setTermsConsent] = useState(false)
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
-  const presetAmounts = [500, 5000, 10000, 50000, 300000]
+  // 🔹 Terms Consent State
+  const [termsConsent, setTermsConsent] = useState(false);
+
+  const presetAmounts = [500, 5000, 10000, 50000, 300000];
 
   const personalDetailsValid =
-    isAnonymous ||
-    (firstName.trim() !== "" &&
-      lastName.trim() !== "" &&
-      email.trim() !== "")
+    isAnonymous || (firstName.trim() !== "" && lastName.trim() !== "" && email.trim() !== "");
 
   // Updated logic to include termsConsent
   const canSubmit =
@@ -40,13 +36,13 @@ export function DonationOptions() {
     phoneNumber.trim().length >= 9 &&
     personalDetailsValid &&
     termsConsent && // <--- Added this
-    paymentStatus === "idle"
+    paymentStatus === "idle";
 
   async function handlePayment() {
-    if (!canSubmit) return
+    if (!canSubmit) return;
 
-    setPaymentStatus("initiating")
-    setErrorMessage(null)
+    setPaymentStatus("initiating");
+    setErrorMessage(null);
 
     try {
       const payload = {
@@ -58,50 +54,46 @@ export function DonationOptions() {
         ...(isAnonymous
           ? {}
           : {
-            first_name: firstName,
-            last_name: lastName,
-            email: email,
-          }),
-      }
+              first_name: firstName,
+              last_name: lastName,
+              email: email,
+            }),
+      };
 
-      await api.post("/api/donations/electronic", payload)
-      setPaymentStatus("success")
-      toast.success("Thank you for your donation!")
+      await api.post("/api/donations/electronic", payload);
+      setPaymentStatus("success");
+      toast.success("Thank you for your donation!");
 
       // Reset after success
       setTimeout(() => {
-        setPaymentStatus("idle")
-        setSelectedAmount(null)
-        setPhoneNumber("")
-        setFirstName("")
-        setLastName("")
-        setEmail("")
-        setIsAnonymous(false)
-        setTermsConsent(false) // Reset checkbox
-      }, 3000)
-
+        setPaymentStatus("idle");
+        setSelectedAmount(null);
+        setPhoneNumber("");
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setIsAnonymous(false);
+        setTermsConsent(false); // Reset checkbox
+      }, 3000);
     } catch (error) {
-      console.error("Donation failed", error)
-      setPaymentStatus("failed")
-      setErrorMessage("Failed to initiate payment. Please try again.")
-      toast.error("Payment initiation failed")
+      console.error("Donation failed", error);
+      setPaymentStatus("failed");
+      setErrorMessage("Failed to initiate payment. Please try again.");
+      toast.error("Payment initiation failed");
     }
   }
 
   return (
-    <section id="donation-options" className="w-full py-16 md:py-24 bg-background">
-      <div className="max-w-4xl mx-auto px-4">
-
+    <section id="donation-options" className="w-full bg-[#f4f1ed] py-20 md:py-28">
+      <div className="mx-auto max-w-4xl px-5 sm:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">Invest in the Vision</h2>
-          <p className="text-lg text-foreground/70">
-            You will receive a payment prompt on your phone
-          </p>
+        <div className="mb-12 text-center">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-primary">Make a contribution</p>
+          <h2 className="mt-4 text-4xl font-bold text-secondary">Invest in the Vision</h2>
+          <p className="mt-4 text-lg text-foreground/70">You will receive a payment prompt on your phone</p>
         </div>
 
-        <div className="bg-card border rounded-lg p-8">
-
+        <div className="border border-secondary/15 bg-white p-6 shadow-[0_20px_50px_-35px_rgba(10,25,47,.5)] sm:p-9">
           {/* Amount */}
           <div className="mb-8">
             <label className="block text-sm font-medium mb-4">Amount (KES)</label>
@@ -112,10 +104,9 @@ export function DonationOptions() {
                   key={amount}
                   type="button"
                   onClick={() => setSelectedAmount(amount)}
-                  className={`py-3 rounded-lg font-bold ${selectedAmount === amount
-                      ? "bg-secondary text-white"
-                      : "bg-muted hover:bg-secondary/20"
-                    }`}
+                  className={`py-3 rounded-lg font-bold ${
+                    selectedAmount === amount ? "bg-secondary text-white" : "bg-muted hover:bg-secondary/20"
+                  }`}
                 >
                   {amount.toLocaleString()}
                 </button>
@@ -127,8 +118,8 @@ export function DonationOptions() {
               min={1}
               value={selectedAmount ?? ""}
               onChange={(e) => {
-                const value = Number.parseInt(e.target.value)
-                setSelectedAmount(Number.isNaN(value) ? null : value)
+                const value = Number.parseInt(e.target.value);
+                setSelectedAmount(Number.isNaN(value) ? null : value);
               }}
               className="w-full px-4 py-2 border rounded-lg"
               placeholder="Other amount"
@@ -203,22 +194,17 @@ export function DonationOptions() {
 
           {/* Payment Method */}
           <div className="mb-8">
-            <label className="block text-sm font-medium mb-4">
-              Payment Method
-            </label>
+            <label className="block text-sm font-medium mb-4">Payment Method</label>
 
             <div className="flex gap-6">
               {(["mpesa", "airtel"] as PaymentMethod[]).map((method) => {
-                const isSelected = paymentMethod === method
+                const isSelected = paymentMethod === method;
 
                 return (
                   <label
                     key={method}
                     className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition
-                      ${isSelected
-                        ? "border-secondary bg-secondary/10"
-                        : "border-border hover:bg-muted"
-                      }`}
+                      ${isSelected ? "border-secondary bg-secondary/10" : "border-border hover:bg-muted"}`}
                   >
                     <input
                       type="radio"
@@ -228,20 +214,14 @@ export function DonationOptions() {
                     />
 
                     <img
-                      src={
-                        method === "mpesa"
-                          ? "/mpesa_logo.webp"
-                          : "/airtel_logo.svg"
-                      }
+                      src={method === "mpesa" ? "/mpesa_logo.webp" : "/airtel_logo.svg"}
                       className="h-7 w-auto"
                       alt={method}
                     />
 
-                    <span className="font-medium">
-                      {method === "mpesa" ? "M-Pesa" : "Airtel Money"}
-                    </span>
+                    <span className="font-medium">{method === "mpesa" ? "M-Pesa" : "Airtel Money"}</span>
                   </label>
-                )
+                );
               })}
             </div>
           </div>
@@ -296,7 +276,15 @@ export function DonationOptions() {
                 className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
               />
               <span className="text-sm text-foreground cursor-pointer">
-                I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline font-semibold">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline font-semibold">Privacy Policy</Link>. *
+                I agree to the{" "}
+                <Link href="/shared-ui/terms" className="text-secondary hover:underline font-semibold">
+                  Terms & Conditions
+                </Link>{" "}
+                and{" "}
+                <Link href="/shared-ui/privacy" className="text-secondary hover:underline font-semibold">
+                  Privacy Policy
+                </Link>
+                . *
               </span>
             </label>
           </div>
@@ -306,7 +294,7 @@ export function DonationOptions() {
             type="button"
             disabled={!canSubmit || paymentStatus !== "idle"}
             onClick={handlePayment}
-            className="w-full bg-secondary text-white py-4 rounded-lg font-bold text-lg
+            className="w-full bg-primary text-white py-4 font-bold text-lg transition hover:bg-primary/85
               disabled:opacity-50 disabled:cursor-not-allowed
               flex items-center justify-center gap-2"
           >
@@ -322,9 +310,8 @@ export function DonationOptions() {
               </>
             )}
           </button>
-
         </div>
       </div>
     </section>
-  )
+  );
 }
