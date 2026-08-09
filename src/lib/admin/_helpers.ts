@@ -79,7 +79,10 @@ export async function resolveMemberUserId(supabase: any, memberId: string) {
   if (member.profile_id) return { member, userId: member.profile_id as string };
   const email = (member as any).application?.email;
   if (email) {
-    const { data: profile } = await supabase
+    const { supabaseAdmin } = await import(
+      "@/integrations/supabase/client.server"
+    );
+    const { data: profile } = await supabaseAdmin
       .from("profiles")
       .select("id")
       .eq("email", email)
