@@ -1,12 +1,22 @@
-
-import { useEffect, useState } from "react"
-import { Link } from "@/lib/next-shims"
-import { usePathname, useRouter } from "@/lib/next-shims"
+import { useEffect, useState } from "react";
+import { Link } from "@/lib/next-shims";
+import { usePathname, useRouter } from "@/lib/next-shims";
 import {
-  Menu, X, Facebook, Twitter, Instagram, Youtube,
-  Phone, Mail, Search, User as UserIcon, LayoutDashboard, Shield, LogOut
-} from "lucide-react"
-import { Button } from "./ui/button"
+  Menu,
+  X,
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  Phone,
+  Mail,
+  Search,
+  User as UserIcon,
+  LayoutDashboard,
+  Shield,
+  LogOut,
+} from "lucide-react";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,46 +24,45 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import { InfiniteSlider } from "./motion-primitives/infinite-slider"
-import { useAuth } from "@/context/auth-context"
-import { supabase } from "@/integrations/supabase/client"
-import { UserProfileDialog } from "./user-profile-dialog"
-import { SearchDialog } from "./search-dialog"
-import { useSiteSettings } from "@/hooks/use-site-settings"
+} from "./ui/dropdown-menu";
+import { InfiniteSlider } from "./motion-primitives/infinite-slider";
+import { useAuth } from "@/context/auth-context";
+import { supabase } from "@/integrations/supabase/client";
+import { UserProfileDialog } from "./user-profile-dialog";
+import { SearchDialog } from "./search-dialog";
+import { useSiteSettings } from "@/hooks/use-site-settings";
 
-const STAFF_ROLES = ["super_admin", "admin", "editor", "moderator"]
+const STAFF_ROLES = ["super_admin", "admin", "editor", "moderator"];
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [showSearch, setShowSearch] = useState(false)
-  const [showProfileDialog, setShowProfileDialog] = useState(false)
-  const [isStaff, setIsStaff] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [showProfileDialog, setShowProfileDialog] = useState(false);
+  const [isStaff, setIsStaff] = useState(false);
 
-  const pathname = usePathname()
-  const router = useRouter()
-  const { user, logout } = useAuth()
-  const { get } = useSiteSettings()
+  const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuth();
+  const { get } = useSiteSettings();
 
   useEffect(() => {
-    let active = true
+    let active = true;
     if (!user?.id) {
-      setIsStaff(false)
-      return
+      setIsStaff(false);
+      return;
     }
     supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
       .then(({ data }) => {
-        if (!active) return
-        setIsStaff((data ?? []).some((r: any) => STAFF_ROLES.includes(r.role)))
-      })
+        if (!active) return;
+        setIsStaff((data ?? []).some((r: any) => STAFF_ROLES.includes(r.role)));
+      });
     return () => {
-      active = false
-    }
-  }, [user?.id])
-
+      active = false;
+    };
+  }, [user?.id]);
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -91,7 +100,6 @@ export function Header() {
         { label: "Find a Local Branch", href: "/shared-ui/local-group" },
         { label: "Volunteers", href: "/shared-ui/volunteer" },
         { label: "Careers", href: "/shared-ui/careers" },
-
       ],
     },
 
@@ -102,9 +110,9 @@ export function Header() {
         { label: "FAQs", href: "/shared-ui/faq" },
       ],
     },
-  ]
+  ];
 
-  const isActive = (href: string) => pathname === href
+  const isActive = (href: string) => pathname === href;
 
   return (
     <header className="w-full">
@@ -113,8 +121,14 @@ export function Header() {
         <InfiniteSlider gap={80} reverse>
           <p className="text-sm font-medium">{get("site.site_name")}</p>
           <p className="text-sm font-medium">“Truth, Always, Conquers” - “Veritas, Lux et Lex, Vincit”</p>
-          <p className="text-sm flex items-center gap-2"><Phone size={16} />{get("site.contact_phone")}</p>
-          <p className="text-sm flex items-center gap-2"><Mail size={16} />{get("site.contact_email")}</p>
+          <p className="text-sm flex items-center gap-2">
+            <Phone size={16} />
+            {get("site.contact_phone")}
+          </p>
+          <p className="text-sm flex items-center gap-2">
+            <Mail size={16} />
+            {get("site.contact_email")}
+          </p>
           <div className="flex gap-4">
             <Facebook size={16} />
             <Twitter size={16} />
@@ -125,14 +139,9 @@ export function Header() {
       </div>
 
       {/* Main Navbar */}
-      <nav
-        className="bg-white border-b border-border sticky top-0 z-50"
-        role="navigation"
-        aria-label="Main navigation"
-      >
+      <nav className="bg-white border-b border-border sticky top-0 z-50" role="navigation" aria-label="Main navigation">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-[72px]">
-
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-secondary">
               <img
@@ -141,13 +150,8 @@ export function Header() {
                 className="h-18 w-18 object-contain"
               />
               <div className="hidden sm:flex flex-col leading-tight">
-                <span className="font-bold text-secondary text-md">
-                  {get("site.site_name")}
-                </span>
-                <span className="text-sm text-primary">
-                  {get("site.tagline")}
-                </span>
-
+                <span className="font-bold text-secondary text-md">{get("site.site_name")}</span>
+                <span className="text-sm text-primary">{get("site.tagline")}</span>
               </div>
             </Link>
 
@@ -159,9 +163,11 @@ export function Header() {
                     <Link
                       href={item.href}
                       className={`text-base font-medium transition-colors pb-1
-            ${isActive(item.href)
-                          ? "text-secondary border-b-2 border-secondary"
-                          : "text-foreground hover:text-secondary"}
+            ${
+              isActive(item.href)
+                ? "text-secondary border-b-2 border-secondary"
+                : "text-foreground hover:text-secondary"
+            }
           `}
                     >
                       {item.label}
@@ -213,9 +219,14 @@ export function Header() {
               ))}
             </div>
 
-
             {/* Right Actions */}
             <div className="hidden md:flex items-center gap-5">
+              <Button
+                onClick={() => router.push("/shared-ui/register")}
+                className="bg-primary text-white hover:bg-[#9a181c]"
+              >
+                Join Shikana
+              </Button>
               {/* <Button
                 onClick={() => router.push("/shared-ui/donate")}
                 className="bg-secondary text-white hover:bg-secondary/90 transition-colors"
@@ -262,14 +273,13 @@ export function Header() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-              <Button
-                onClick={() => router.push("/login")}
-                className="text-white hover:opacity-90 transition-opacity bg-primary hover:bg-[#9a181c]"
-              >
-                Login
-              </Button>
+                <Button
+                  onClick={() => router.push("/login")}
+                  className="text-white hover:opacity-90 transition-opacity bg-primary hover:bg-[#9a181c]"
+                >
+                  Login
+                </Button>
               )}
-
 
               <button
                 onClick={() => setShowSearch(true)}
@@ -293,14 +303,11 @@ export function Header() {
           {/* Mobile Menu */}
           {isMenuOpen && (
             <div className="md:hidden border-t pt-6 pb-4 space-y-5">
-
               {/* Navigation */}
               {navItems.map((item) => (
                 <div key={item.label}>
                   {item.children ? (
-                    <span className="block text-base font-semibold text-foreground">
-                      {item.label}
-                    </span>
+                    <span className="block text-base font-semibold text-foreground">{item.label}</span>
                   ) : (
                     <Link
                       href={item.href || "#"}
@@ -327,13 +334,23 @@ export function Header() {
                 </div>
               ))}
 
+              <Button
+                onClick={() => {
+                  router.push("/shared-ui/register");
+                  setIsMenuOpen(false);
+                }}
+                className="w-full bg-primary text-white hover:bg-[#9a181c]"
+              >
+                Join Shikana
+              </Button>
+
               {/* Mobile Login / Profile */}
               {user ? (
                 <div className="space-y-2">
                   <button
                     onClick={() => {
-                      setShowProfileDialog(true)
-                      setIsMenuOpen(false)
+                      setShowProfileDialog(true);
+                      setIsMenuOpen(false);
                     }}
                     className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
                   >
@@ -341,8 +358,8 @@ export function Header() {
                   </button>
                   <button
                     onClick={() => {
-                      router.push(isStaff ? "/admin/dashboard" : "/portal")
-                      setIsMenuOpen(false)
+                      router.push(isStaff ? "/admin/dashboard" : "/portal");
+                      setIsMenuOpen(false);
                     }}
                     className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
                   >
@@ -350,8 +367,8 @@ export function Header() {
                   </button>
                   <button
                     onClick={() => {
-                      logout()
-                      setIsMenuOpen(false)
+                      logout();
+                      setIsMenuOpen(false);
                     }}
                     className="w-full text-left px-4 py-3 rounded-md bg-destructive/10 text-destructive font-medium"
                   >
@@ -359,11 +376,10 @@ export function Header() {
                   </button>
                 </div>
               ) : (
-
                 <button
                   onClick={() => {
-                    router.push("/login")
-                    setIsMenuOpen(false)
+                    router.push("/login");
+                    setIsMenuOpen(false);
                   }}
                   className="w-full bg-primary text-white"
                 >
@@ -380,12 +396,11 @@ export function Header() {
               </Button> */}
             </div>
           )}
-
         </div>
       </nav>
 
       <UserProfileDialog open={showProfileDialog} onOpenChange={setShowProfileDialog} />
       <SearchDialog open={showSearch} onOpenChange={setShowSearch} />
     </header>
-  )
+  );
 }
