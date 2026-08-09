@@ -15,7 +15,9 @@ import {
   FolderMinus,
   LayoutDashboard,
   Settings,
+  ArrowLeft,
 } from "lucide-react"
+import { Link } from "@tanstack/react-router"
 import { Roles } from "@/lib/roles"
 
 import { NavMain } from "@/components/nav-main"
