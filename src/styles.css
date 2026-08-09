@@ -186,3 +186,59 @@
   background-color: color-mix(in oklab, var(--color-muted) 50%, transparent);
 }
 
+
+/* ------------------------------------------------------------------ */
+/* Ocean Blue Serenity — admin + member portal theme                    */
+/* ------------------------------------------------------------------ */
+
+.admin-theme {
+  --background: #f2fafd;
+  --foreground: #03045e;
+  --card: #ffffff;
+  --card-foreground: #03045e;
+  --popover: #ffffff;
+  --popover-foreground: #03045e;
+  --primary: #0077b6;
+  --primary-foreground: #ffffff;
+  --secondary: #caf0f8;
+  --secondary-foreground: #023e8a;
+  --muted: #e6f6fb;
+  --muted-foreground: #3b6f8c;
+  --accent: #ade8f4;
+  --accent-foreground: #03045e;
+  --destructive: #b3261e;
+  --destructive-foreground: #ffffff;
+  --border: #bfe6f2;
+  --input: #bfe6f2;
+  --ring: #0096c7;
+  --chart-1: #03045e;
+  --chart-2: #0077b6;
+  --chart-3: #00b4d8;
+  --chart-4: #48cae4;
+  --chart-5: #90e0ef;
+  --sidebar: #03045e;
+  --sidebar-foreground: #caf0f8;
+  --sidebar-primary: #00b4d8;
+  --sidebar-primary-foreground: #03045e;
+  --sidebar-accent: #023e8a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #023e8a;
+  --sidebar-ring: #00b4d8;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Alternating rows for every admin/portal table */
+.admin-theme table tbody tr:nth-child(even),
+.sap-grid table tbody tr:nth-child(even) {
+  background-color: color-mix(in oklab, var(--color-primary) 6%, transparent);
+}
+
+.admin-theme table tbody tr:hover,
+.sap-grid tbody tr:hover {
+  background-color: color-mix(in oklab, var(--color-primary) 12%, transparent);
+}
+
+.admin-theme table thead tr {
+  background-color: color-mix(in oklab, var(--color-primary) 10%, transparent);
+}
