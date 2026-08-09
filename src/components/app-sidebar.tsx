@@ -15,7 +15,9 @@ import {
   FolderMinus,
   LayoutDashboard,
   Settings,
+  ArrowLeft,
 } from "lucide-react"
+import { Link } from "@tanstack/react-router"
 import { Roles } from "@/lib/roles"
 
 import { NavMain } from "@/components/nav-main"
@@ -167,6 +169,16 @@ export function AppSidebar({
       </SidebarContent>
 
       <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Back to Website">
+              <Link to="/">
+                <ArrowLeft className="h-4 w-4" />
+                <span>Back to Website</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
