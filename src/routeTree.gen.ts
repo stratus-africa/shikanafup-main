@@ -78,6 +78,7 @@ import { Route as PublicSharedUiEventsIdRegisterRouteImport } from './routes/_pu
 import { Route as AuthenticatedAdminUiPagesHomeRouteImport } from './routes/_authenticated.admin.ui.pages.home'
 import { Route as AuthenticatedAdminUiPagesContactRouteImport } from './routes/_authenticated.admin.ui.pages.contact'
 import { Route as AuthenticatedAdminUiPagesAboutRouteImport } from './routes/_authenticated.admin.ui.pages.about'
+import { Route as AuthenticatedAdminUiMemberAccountMemberIdRouteImport } from './routes/_authenticated.admin.ui.member-account.$memberId'
 import { Route as AuthenticatedAdminUiJobsJobIdApplicationsRouteImport } from './routes/_authenticated.admin.ui.jobs.$jobId.applications'
 
 const OtpRoute = OtpRouteImport.update({
@@ -449,6 +450,12 @@ const AuthenticatedAdminUiPagesAboutRoute =
     path: '/ui/pages/about',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminUiMemberAccountMemberIdRoute =
+  AuthenticatedAdminUiMemberAccountMemberIdRouteImport.update({
+    id: '/ui/member-account/$memberId',
+    path: '/ui/member-account/$memberId',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminUiJobsJobIdApplicationsRoute =
   AuthenticatedAdminUiJobsJobIdApplicationsRouteImport.update({
     id: '/$jobId/applications',
@@ -520,6 +527,7 @@ export interface FileRoutesByFullPath {
   '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/admin/ui/member-account/$memberId': typeof AuthenticatedAdminUiMemberAccountMemberIdRoute
   '/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
   '/admin/ui/pages/contact': typeof AuthenticatedAdminUiPagesContactRoute
   '/admin/ui/pages/home': typeof AuthenticatedAdminUiPagesHomeRoute
@@ -590,6 +598,7 @@ export interface FileRoutesByTo {
   '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/admin/ui/member-account/$memberId': typeof AuthenticatedAdminUiMemberAccountMemberIdRoute
   '/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
   '/admin/ui/pages/contact': typeof AuthenticatedAdminUiPagesContactRoute
   '/admin/ui/pages/home': typeof AuthenticatedAdminUiPagesHomeRoute
@@ -663,6 +672,7 @@ export interface FileRoutesById {
   '/_public/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/_public/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
+  '/_authenticated/admin/ui/member-account/$memberId': typeof AuthenticatedAdminUiMemberAccountMemberIdRoute
   '/_authenticated/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
   '/_authenticated/admin/ui/pages/contact': typeof AuthenticatedAdminUiPagesContactRoute
   '/_authenticated/admin/ui/pages/home': typeof AuthenticatedAdminUiPagesHomeRoute
@@ -735,6 +745,7 @@ export interface FileRouteTypes {
     | '/shared-ui/blog/$id'
     | '/shared-ui/events/$id'
     | '/lovable/email/queue/process'
+    | '/admin/ui/member-account/$memberId'
     | '/admin/ui/pages/about'
     | '/admin/ui/pages/contact'
     | '/admin/ui/pages/home'
@@ -805,6 +816,7 @@ export interface FileRouteTypes {
     | '/shared-ui/blog/$id'
     | '/shared-ui/events/$id'
     | '/lovable/email/queue/process'
+    | '/admin/ui/member-account/$memberId'
     | '/admin/ui/pages/about'
     | '/admin/ui/pages/contact'
     | '/admin/ui/pages/home'
@@ -877,6 +889,7 @@ export interface FileRouteTypes {
     | '/_public/shared-ui/blog/$id'
     | '/_public/shared-ui/events/$id'
     | '/lovable/email/queue/process'
+    | '/_authenticated/admin/ui/member-account/$memberId'
     | '/_authenticated/admin/ui/pages/about'
     | '/_authenticated/admin/ui/pages/contact'
     | '/_authenticated/admin/ui/pages/home'
@@ -1379,6 +1392,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUiPagesAboutRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ui/member-account/$memberId': {
+      id: '/_authenticated/admin/ui/member-account/$memberId'
+      path: '/ui/member-account/$memberId'
+      fullPath: '/admin/ui/member-account/$memberId'
+      preLoaderRoute: typeof AuthenticatedAdminUiMemberAccountMemberIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ui/jobs/$jobId/applications': {
       id: '/_authenticated/admin/ui/jobs/$jobId/applications'
       path: '/$jobId/applications'
@@ -1423,6 +1443,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminUiSettingsRoute: typeof AuthenticatedAdminUiSettingsRoute
   AuthenticatedAdminUiUsersRoute: typeof AuthenticatedAdminUiUsersRoute
   AuthenticatedAdminUiVolunteerRoute: typeof AuthenticatedAdminUiVolunteerRoute
+  AuthenticatedAdminUiMemberAccountMemberIdRoute: typeof AuthenticatedAdminUiMemberAccountMemberIdRoute
   AuthenticatedAdminUiPagesAboutRoute: typeof AuthenticatedAdminUiPagesAboutRoute
   AuthenticatedAdminUiPagesContactRoute: typeof AuthenticatedAdminUiPagesContactRoute
   AuthenticatedAdminUiPagesHomeRoute: typeof AuthenticatedAdminUiPagesHomeRoute
@@ -1447,6 +1468,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminUiSettingsRoute: AuthenticatedAdminUiSettingsRoute,
   AuthenticatedAdminUiUsersRoute: AuthenticatedAdminUiUsersRoute,
   AuthenticatedAdminUiVolunteerRoute: AuthenticatedAdminUiVolunteerRoute,
+  AuthenticatedAdminUiMemberAccountMemberIdRoute:
+    AuthenticatedAdminUiMemberAccountMemberIdRoute,
   AuthenticatedAdminUiPagesAboutRoute: AuthenticatedAdminUiPagesAboutRoute,
   AuthenticatedAdminUiPagesContactRoute: AuthenticatedAdminUiPagesContactRoute,
   AuthenticatedAdminUiPagesHomeRoute: AuthenticatedAdminUiPagesHomeRoute,
@@ -1628,13 +1651,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

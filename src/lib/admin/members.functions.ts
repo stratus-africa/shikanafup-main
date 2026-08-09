@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireStaff, requireAdmin, writeAudit } from "./_helpers";
+import { requireStaff, requireAdmin, writeAudit, resolveMemberUserId } from "./_helpers";
 
 export const listMembers = createServerFn({ method: "GET" })
   .middleware([requireStaff])
@@ -92,4 +92,113 @@ export const deleteMember = createServerFn({ method: "POST" })
       application_id: existing?.application_id ?? null,
     });
     return { ok: true };
+  });
+
+/* ------------------------------------------------------------------ */
+/* Member account administration                                       */
+/* ------------------------------------------------------------------ */
+
+/** Full member view used by the admin masquerade screen. */
+export const getMemberAccount = createServerFn({ method: "GET" })
+  .middleware([requireStaff])
+  .inputValidator(z.object({ id: z.string().uuid() }))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context as any;
+    const { data: member, error } = await supabase
+      .from("members")
+      .select(
+        "*, profile:profiles(*), local_group:local_groups(id,name), application:membership_applications(*)",
+      )
+      .eq("id", data.id)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!member) throw new Error("Member not found");
+
+    const { userId } = await resolveMemberUserId(supabase, data.id);
+
+    let party: any[] = [];
+    let volunteer: any[] = [];
+    if (userId) {
+      const [p, v] = await Promise.all([
+        supabase
+          .from("party_position_applications")
+          .select("id,status,created_at,updated_at,reviewed_at,notes,position:party_positions(title)")
+          .eq("profile_id", userId)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("volunteers")
+          .select("id,status,created_at,updated_at,reviewed_at,notes,availability,skills,areas_of_interest")
+          .eq("profile_id", userId)
+          .order("created_at", { ascending: false }),
+      ]);
+      party = p.data ?? [];
+      volunteer = v.data ?? [];
+    }
+    return { member, userId, applications: { party, volunteer } };
+  });
+
+/** Admin sets a new password for the member's login account. */
+export const setMemberPassword = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .inputValidator(
+    z.object({ id: z.string().uuid(), password: z.string().min(8).max(72) }),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId: actorId } = context as any;
+    const { userId } = await resolveMemberUserId(supabase, data.id);
+    if (!userId)
+      throw new Error(
+        "This member has no login account yet, so a password cannot be set.",
+      );
+    const { supabaseAdmin } = await import(
+      "@/integrations/supabase/client.server"
+    );
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      password: data.password,
+    });
+    if (error) throw new Error(error.message);
+    await writeAudit(supabase, actorId, "update", "member_password", data.id, {
+      user_id: userId,
+    });
+    return { ok: true };
+  });
+
+/** Admin updates the member's profile on their behalf (masquerade). */
+export const updateMemberProfile = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .inputValidator(
+    z.object({
+      id: z.string().uuid(),
+      full_name: z.string().trim().max(150).optional().nullable(),
+      email: z.string().trim().email().optional().nullable(),
+      phone: z.string().trim().max(30).optional().nullable(),
+      county: z.string().trim().max(80).optional().nullable(),
+      constituency: z.string().trim().max(80).optional().nullable(),
+      ward: z.string().trim().max(80).optional().nullable(),
+    }),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId: actorId } = context as any;
+    const { id, ...patch } = data;
+    const { userId } = await resolveMemberUserId(supabase, id);
+    if (!userId) throw new Error("This member has no linked profile yet.");
+    const { supabaseAdmin } = await import(
+      "@/integrations/supabase/client.server"
+    );
+    if (patch.email) {
+      const { error: authErr } = await supabaseAdmin.auth.admin.updateUserById(
+        userId,
+        { email: patch.email },
+      );
+      if (authErr) throw new Error(authErr.message);
+    }
+    const { data: row, error } = await supabaseAdmin
+      .from("profiles")
+      .update(patch as any)
+      .eq("id", userId)
+      .select()
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    await writeAudit(supabase, actorId, "update", "member_profile", id, patch);
+    return row;
   });
