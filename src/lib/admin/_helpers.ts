@@ -66,3 +66,26 @@ export async function writeAudit(
     console.error("[audit] failed to write log", e);
   }
 }
+
+/** Resolve the auth user linked to a member row (via profile_id or email). */
+export async function resolveMemberUserId(supabase: any, memberId: string) {
+  const { data: member, error } = await supabase
+    .from("members")
+    .select("id, profile_id, application:membership_applications(email)")
+    .eq("id", memberId)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!member) throw new Error("Member not found");
+  if (member.profile_id) return { member, userId: member.profile_id as string };
+  const email = (member as any).application?.email;
+  if (email) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", email)
+      .maybeSingle();
+    if (profile?.id) return { member, userId: profile.id as string };
+  }
+  return { member, userId: null as string | null };
+}
+

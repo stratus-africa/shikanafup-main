@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireStaff, requireAdmin, writeAudit } from "./_helpers";
+import { requireStaff, requireAdmin, writeAudit, resolveMemberUserId } from "./_helpers";
 
 export const listMembers = createServerFn({ method: "GET" })
   .middleware([requireStaff])
@@ -97,28 +97,6 @@ export const deleteMember = createServerFn({ method: "POST" })
 /* ------------------------------------------------------------------ */
 /* Member account administration                                       */
 /* ------------------------------------------------------------------ */
-
-/** Resolve the auth user linked to a member row (via profile_id or email). */
-async function resolveMemberUserId(supabase: any, memberId: string) {
-  const { data: member, error } = await supabase
-    .from("members")
-    .select("id, profile_id, application:membership_applications(email)")
-    .eq("id", memberId)
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  if (!member) throw new Error("Member not found");
-  if (member.profile_id) return { member, userId: member.profile_id as string };
-  const email = (member as any).application?.email;
-  if (email) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("email", email)
-      .maybeSingle();
-    if (profile?.id) return { member, userId: profile.id as string };
-  }
-  return { member, userId: null as string | null };
-}
 
 /** Full member view used by the admin masquerade screen. */
 export const getMemberAccount = createServerFn({ method: "GET" })
