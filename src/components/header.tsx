@@ -15,6 +15,7 @@ import {
   LayoutDashboard,
   Shield,
   LogOut,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -117,7 +118,7 @@ export function Header() {
   return (
     <header className="w-full">
       {/*Top Info Bar*/}
-      <div className="bg-secondary text-primary-foreground py-1">
+      <div className="bg-secondary py-1 text-primary-foreground">
         <InfiniteSlider gap={80} reverse>
           <p className="text-sm font-medium">{get("site.site_name")}</p>
           <p className="text-sm font-medium">“Truth, Always, Conquers” - “Veritas, Lux et Lex, Vincit”</p>
@@ -139,15 +140,19 @@ export function Header() {
       </div>
 
       {/* Main Navbar */}
-      <nav className="bg-white border-b border-border sticky top-0 z-50" role="navigation" aria-label="Main navigation">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-[72px]">
+      <nav
+        className="sticky top-0 z-50 border-b border-secondary/10 bg-white/95 shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)] backdrop-blur"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="flex h-[76px] items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-secondary">
               <img
                 src={get("site.logo_url")}
                 alt={`${get("site.site_name")} logo`}
-                className="h-18 w-18 object-contain"
+                className="h-14 w-14 object-contain"
               />
               <div className="hidden sm:flex flex-col leading-tight">
                 <span className="font-bold text-secondary text-md">{get("site.site_name")}</span>
@@ -156,7 +161,7 @@ export function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-10">
+            <div className="hidden lg:flex items-center gap-8">
               {navItems.map((item) => (
                 <div key={item.label} className="relative group">
                   {!item.children ? (
@@ -220,20 +225,7 @@ export function Header() {
             </div>
 
             {/* Right Actions */}
-            <div className="hidden md:flex items-center gap-5">
-              <Button
-                onClick={() => router.push("/shared-ui/register")}
-                className="bg-primary text-white hover:bg-[#9a181c]"
-              >
-                Join Shikana
-              </Button>
-              {/* <Button
-                onClick={() => router.push("/shared-ui/donate")}
-                className="bg-secondary text-white hover:bg-secondary/90 transition-colors"
-              >
-                Donate
-              </Button> */}
-
+            <div className="hidden lg:flex items-center gap-4">
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -273,12 +265,10 @@ export function Header() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button
-                  onClick={() => router.push("/login")}
-                  className="text-white hover:opacity-90 transition-opacity bg-primary hover:bg-[#9a181c]"
-                >
-                  Login
-                </Button>
+                <AccountCta
+                  onRegister={() => router.push("/shared-ui/register")}
+                  onLogin={() => router.push("/login")}
+                />
               )}
 
               <button
@@ -292,9 +282,11 @@ export function Header() {
 
             {/* Mobile Toggle */}
             <button
-              className="md:hidden focus:outline-none focus:ring-2 focus:ring-secondary"
+              className="lg:hidden focus:outline-none focus:ring-2 focus:ring-secondary"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
@@ -302,7 +294,7 @@ export function Header() {
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden border-t pt-6 pb-4 space-y-5">
+            <div id="mobile-navigation" className="lg:hidden border-t pt-6 pb-4 space-y-5">
               {/* Navigation */}
               {navItems.map((item) => (
                 <div key={item.label}>
@@ -333,16 +325,6 @@ export function Header() {
                   )}
                 </div>
               ))}
-
-              <Button
-                onClick={() => {
-                  router.push("/shared-ui/register");
-                  setIsMenuOpen(false);
-                }}
-                className="w-full bg-primary text-white hover:bg-[#9a181c]"
-              >
-                Join Shikana
-              </Button>
 
               {/* Mobile Login / Profile */}
               {user ? (
@@ -376,15 +358,17 @@ export function Header() {
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={() => {
+                <AccountCta
+                  fullWidth
+                  onRegister={() => {
+                    router.push("/shared-ui/register");
+                    setIsMenuOpen(false);
+                  }}
+                  onLogin={() => {
                     router.push("/login");
                     setIsMenuOpen(false);
                   }}
-                  className="w-full bg-primary text-white"
-                >
-                  Login
-                </button>
+                />
               )}
 
               {/* Mobile Donate CTA */}
@@ -402,5 +386,44 @@ export function Header() {
       <UserProfileDialog open={showProfileDialog} onOpenChange={setShowProfileDialog} />
       <SearchDialog open={showSearch} onOpenChange={setShowSearch} />
     </header>
+  );
+}
+
+function AccountCta({
+  onRegister,
+  onLogin,
+  fullWidth = false,
+}: {
+  onRegister: () => void;
+  onLogin: () => void;
+  fullWidth?: boolean;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className={`${fullWidth ? "w-full" : ""} bg-primary text-white hover:bg-[#9a181c]`}>
+          <UserPlus className="size-4" /> Join or log in
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-64 p-2">
+        <DropdownMenuLabel className="px-2 py-2 text-xs font-bold uppercase tracking-[.14em] text-muted-foreground">
+          Your Shikana account
+        </DropdownMenuLabel>
+        <DropdownMenuItem onClick={onRegister} className="cursor-pointer px-3 py-3">
+          <UserPlus className="mr-3 size-4 text-primary" />
+          <span>
+            <span className="block font-semibold">Join Shikana</span>
+            <span className="block text-xs text-muted-foreground">Become a member</span>
+          </span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={onLogin} className="cursor-pointer px-3 py-3">
+          <UserIcon className="mr-3 size-4 text-secondary" />
+          <span>
+            <span className="block font-semibold">Log in</span>
+            <span className="block text-xs text-muted-foreground">Access your account</span>
+          </span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
