@@ -98,7 +98,7 @@ export function MembersTable() {
   const list = useServerFn(listMembers);
   const update = useServerFn(updateMember);
   const del = useServerFn(deleteMember);
-  const setPwd = useServerFn(setMemberPassword);
+  const setPwdFn = useServerFn(setMemberPassword);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -140,7 +140,7 @@ export function MembersTable() {
   });
 
   const pwdMut = useMutation({
-    mutationFn: (input: { id: string; password: string }) => setPwd({ data: input }),
+    mutationFn: (input: { id: string; password: string }) => setPwdFn({ data: input }),
     onSuccess: () => {
       toast.success("Password updated");
       setPwdFor(null);
