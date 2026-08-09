@@ -2,26 +2,14 @@ import { useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import toast from "react-hot-toast";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -60,33 +48,24 @@ import {
   sortRows,
   useTableState,
 } from "@/components/admin/_shared/table-toolkit";
-import {
-  listMembers,
-  updateMember,
-  deleteMember,
-  setMemberPassword,
-} from "@/lib/admin/members.functions";
+import { listMembers, updateMember, deleteMember, setMemberPassword } from "@/lib/admin/members.functions";
+import { getMyAdminContext } from "@/lib/admin/auth.functions";
 
 const KEY = ["admin", "members"];
 const STATUSES = ["pending", "active", "suspended", "expired"] as const;
 
 const nameOf = (r: any) =>
-  r.profile?.full_name ||
-  [r.application?.first_name, r.application?.last_name].filter(Boolean).join(" ") ||
-  null;
+  r.profile?.full_name || [r.application?.first_name, r.application?.last_name].filter(Boolean).join(" ") || null;
 const emailOf = (r: any) => r.profile?.email ?? r.application?.email ?? null;
 
 // Membership standing derived from the linked application + member status
 const standingOf = (
   r: any,
 ): { label: string; variant: "default" | "destructive" | "outline" | "secondary"; className?: string } => {
-  const green =
-    "border-green-600/30 bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300";
-  const amber =
-    "border-amber-600/30 bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300";
+  const green = "border-green-600/30 bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300";
+  const amber = "border-amber-600/30 bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300";
   if (r.application?.status === "rejected") return { label: "Rejected", variant: "destructive" };
-  if (r.application?.status === "pending")
-    return { label: "Pending approval", variant: "outline", className: amber };
+  if (r.application?.status === "pending") return { label: "Pending approval", variant: "outline", className: amber };
   if (r.status === "active") return { label: "Active", variant: "outline", className: green };
   if (r.status === "suspended") return { label: "Suspended", variant: "destructive" };
   if (r.status === "expired") return { label: "Inactive", variant: "secondary" };
@@ -99,6 +78,7 @@ export function MembersTable() {
   const update = useServerFn(updateMember);
   const del = useServerFn(deleteMember);
   const setPwdFn = useServerFn(setMemberPassword);
+  const getAdminContext = useServerFn(getMyAdminContext);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -111,13 +91,24 @@ export function MembersTable() {
   const [viewOpen, setViewOpen] = useState(false);
   const [pwdFor, setPwdFor] = useState<any | null>(null);
   const [pwd, setPwd] = useState("");
+  const [sendResetEmail, setSendResetEmail] = useState(true);
+  const [pendingTierUpdate, setPendingTierUpdate] = useState<any | null>(null);
 
   const table = useTableState("joined_at", "desc");
 
-  const { data = [], isLoading, error } = useQuery({
+  const {
+    data = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: KEY,
     queryFn: () => list(),
   });
+  const { data: adminContext } = useQuery({
+    queryKey: ["admin", "my-context"],
+    queryFn: () => getAdminContext(),
+  });
+  const isSuperAdmin = (adminContext as any)?.isSuperAdmin === true;
 
   const updateMut = useMutation({
     mutationFn: (input: any) => update({ data: input }),
@@ -140,20 +131,19 @@ export function MembersTable() {
   });
 
   const pwdMut = useMutation({
-    mutationFn: (input: { id: string; password: string }) => setPwdFn({ data: input }),
-    onSuccess: () => {
-      toast.success("Password updated");
+    mutationFn: (input: { id: string; password: string; send_reset_email: boolean }) => setPwdFn({ data: input }),
+    onSuccess: (result: any) => {
+      toast.success(result.resetEmailSent ? "Password updated and reset email sent" : "Password updated");
+      if (result.resetEmailError) toast.error(`Reset email was not sent: ${result.resetEmailError}`);
       setPwdFor(null);
       setPwd("");
+      setSendResetEmail(true);
     },
     onError: (e: any) => toast.error(e.message ?? "Could not set password"),
   });
 
   const tiers = useMemo(
-    () =>
-      Array.from(
-        new Set((data as any[]).map((r) => r.tier).filter(Boolean) as string[]),
-      ).sort(),
+    () => Array.from(new Set((data as any[]).map((r) => r.tier).filter(Boolean) as string[])).sort(),
     [data],
   );
 
@@ -161,14 +151,7 @@ export function MembersTable() {
     const q = search.trim().toLowerCase();
     return (data as any[]).filter((r) => {
       if (q) {
-        const hay = [
-          r.member_no,
-          nameOf(r),
-          emailOf(r),
-          r.application?.phone,
-          r.local_group?.name,
-          standingOf(r).label,
-        ]
+        const hay = [r.member_no, nameOf(r), emailOf(r), r.application?.phone, r.local_group?.name, standingOf(r).label]
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
@@ -206,9 +189,12 @@ export function MembersTable() {
     [filtered, table.sort, table.dir],
   );
 
-  const pageRows = paginate(sorted, Math.min(table.page, Math.max(1, Math.ceil(sorted.length / table.pageSize))), table.pageSize);
-  const hasFilters =
-    !!search || statusFilter !== "all" || tierFilter !== "all" || !!from || !!to;
+  const pageRows = paginate(
+    sorted,
+    Math.min(table.page, Math.max(1, Math.ceil(sorted.length / table.pageSize))),
+    table.pageSize,
+  );
+  const hasFilters = !!search || statusFilter !== "all" || tierFilter !== "all" || !!from || !!to;
 
   const resetFilters = () => {
     setSearch("");
@@ -253,7 +239,9 @@ export function MembersTable() {
             <SelectContent>
               <SelectItem value="all">All statuses</SelectItem>
               {["Active", "Pending approval", "Suspended", "Inactive", "Rejected"].map((s) => (
-                <SelectItem key={s} value={s}>{s}</SelectItem>
+                <SelectItem key={s} value={s}>
+                  {s}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -272,7 +260,9 @@ export function MembersTable() {
             <SelectContent>
               <SelectItem value="all">All tiers</SelectItem>
               {tiers.map((t) => (
-                <SelectItem key={t} value={t}>{t}</SelectItem>
+                <SelectItem key={t} value={t}>
+                  {t}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -326,25 +316,20 @@ export function MembersTable() {
               ))
             ) : pageRows.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={8}
-                  className="py-8 text-center text-sm text-muted-foreground"
-                >
+                <TableCell colSpan={8} className="py-8 text-center text-sm text-muted-foreground">
                   {hasFilters ? "No members match these filters." : "No members yet."}
                 </TableCell>
               </TableRow>
             ) : (
               pageRows.map((m: any) => (
                 <TableRow key={m.id}>
-                  <TableCell className="font-mono text-xs">
-                    {m.member_no ?? "—"}
-                  </TableCell>
+                  <TableCell className="font-mono text-xs">{m.member_no ?? "—"}</TableCell>
                   <TableCell>{nameOf(m) ?? "—"}</TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {emailOf(m) ?? "—"}
-                  </TableCell>
+                  <TableCell className="text-muted-foreground">{emailOf(m) ?? "—"}</TableCell>
                   <TableCell>
-                    <Badge variant={standingOf(m).variant} className={standingOf(m).className}>{standingOf(m).label}</Badge>
+                    <Badge variant={standingOf(m).variant} className={standingOf(m).className}>
+                      {standingOf(m).label}
+                    </Badge>
                   </TableCell>
                   <TableCell>{m.tier ?? "—"}</TableCell>
                   <TableCell>{m.local_group?.name ?? "—"}</TableCell>
@@ -370,17 +355,18 @@ export function MembersTable() {
                         <DropdownMenuItem onSelect={() => setEditing(m)}>
                           <Pencil className="mr-2 h-4 w-4" /> Edit member / tier
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setPwdFor(m)}>
-                          <KeyRound className="mr-2 h-4 w-4" /> Update password
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <Link
-                            to="/admin/ui/member-account/$memberId"
-                            params={{ memberId: m.id }}
-                          >
-                            <UserCog className="mr-2 h-4 w-4" /> Masquerade as member
-                          </Link>
-                        </DropdownMenuItem>
+                        {isSuperAdmin && (
+                          <>
+                            <DropdownMenuItem onSelect={() => setPwdFor(m)}>
+                              <KeyRound className="mr-2 h-4 w-4" /> Update password
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link to="/admin/ui/member-account/$memberId" params={{ memberId: m.id }}>
+                                <UserCog className="mr-2 h-4 w-4" /> Masquerade as member
+                              </Link>
+                            </DropdownMenuItem>
+                          </>
+                        )}
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className="text-destructive focus:text-destructive"
@@ -400,29 +386,30 @@ export function MembersTable() {
 
       <TablePagination total={sorted.length} state={table} />
 
-      <ApplicantDetailsDialog
-        application={viewing}
-        open={viewOpen}
-        onOpenChange={setViewOpen}
-      />
+      <ApplicantDetailsDialog application={viewing} open={viewOpen} onOpenChange={setViewOpen} />
 
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Member</DialogTitle>
-            <DialogDescription>{editing ? nameOf(editing) ?? "" : ""}</DialogDescription>
+            <DialogDescription>{editing ? (nameOf(editing) ?? "") : ""}</DialogDescription>
           </DialogHeader>
           {editing && (
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 const fd = new FormData(e.currentTarget);
-                updateMut.mutate({
+                const updateData = {
                   id: editing.id,
                   member_no: fd.get("member_no") || undefined,
                   status: fd.get("status"),
                   tier: fd.get("tier") || null,
-                });
+                };
+                if (updateData.tier !== (editing.tier ?? null)) {
+                  setPendingTierUpdate(updateData);
+                } else {
+                  updateMut.mutate(updateData);
+                }
               }}
               className="space-y-3"
             >
@@ -433,10 +420,14 @@ export function MembersTable() {
               <div>
                 <Label>Status</Label>
                 <Select name="status" defaultValue={editing.status}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     {STATUSES.map((s) => (
-                      <SelectItem key={s} value={s}>{s}</SelectItem>
+                      <SelectItem key={s} value={s}>
+                        {s}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -464,9 +455,7 @@ export function MembersTable() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Update member password</DialogTitle>
-            <DialogDescription>
-              {pwdFor ? nameOf(pwdFor) ?? emailOf(pwdFor) ?? "" : ""}
-            </DialogDescription>
+            <DialogDescription>{pwdFor ? (nameOf(pwdFor) ?? emailOf(pwdFor) ?? "") : ""}</DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
             <Label htmlFor="member-password">New password</Label>
@@ -477,16 +466,52 @@ export function MembersTable() {
               onChange={(e) => setPwd(e.target.value)}
             />
           </div>
+          <label className="flex cursor-pointer items-start gap-2 text-sm">
+            <Checkbox checked={sendResetEmail} onCheckedChange={(checked) => setSendResetEmail(checked === true)} />
+            <span>Send a password reset email so the member can choose their own password.</span>
+          </label>
           <DialogFooter>
             <Button
               disabled={pwd.length < 8 || pwdMut.isPending}
-              onClick={() => pwdFor && pwdMut.mutate({ id: pwdFor.id, password: pwd })}
+              onClick={() =>
+                pwdFor && pwdMut.mutate({ id: pwdFor.id, password: pwd, send_reset_email: sendResetEmail })
+              }
             >
               Update password
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!pendingTierUpdate} onOpenChange={(open) => !open && setPendingTierUpdate(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm membership tier change</AlertDialogTitle>
+            <AlertDialogDescription>
+              {editing ? (
+                <span className="block space-y-1">
+                  <span className="block">Member: {nameOf(editing) ?? emailOf(editing) ?? "Unknown member"}</span>
+                  <span className="block">
+                    Current tier: <strong>{editing.tier ?? "No tier"}</strong>
+                  </span>
+                  <span className="block">
+                    New tier: <strong>{pendingTierUpdate?.tier ?? "No tier"}</strong>
+                  </span>
+                </span>
+              ) : null}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={updateMut.isPending}
+              onClick={() => pendingTierUpdate && updateMut.mutate(pendingTierUpdate)}
+            >
+              Confirm change
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog open={!!confirmDel} onOpenChange={(o) => !o && setConfirmDel(null)}>
         <AlertDialogContent>
@@ -496,11 +521,7 @@ export function MembersTable() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => confirmDel && deleteMut.mutate(confirmDel.id)}
-            >
-              Delete
-            </AlertDialogAction>
+            <AlertDialogAction onClick={() => confirmDel && deleteMut.mutate(confirmDel.id)}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
