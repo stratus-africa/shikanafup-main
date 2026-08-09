@@ -47,7 +47,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Pencil, Trash2, MoreHorizontal, Eye } from "lucide-react";
+import { Pencil, Trash2, MoreHorizontal, Eye, KeyRound, UserCog } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { ApplicantDetailsDialog } from "@/components/admin/members/applicant-details-dialog";
 import {
   FilterBar,
@@ -63,6 +64,7 @@ import {
   listMembers,
   updateMember,
   deleteMember,
+  setMemberPassword,
 } from "@/lib/admin/members.functions";
 
 const KEY = ["admin", "members"];
@@ -96,6 +98,7 @@ export function MembersTable() {
   const list = useServerFn(listMembers);
   const update = useServerFn(updateMember);
   const del = useServerFn(deleteMember);
+  const setPwd = useServerFn(setMemberPassword);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -106,6 +109,8 @@ export function MembersTable() {
   const [confirmDel, setConfirmDel] = useState<any | null>(null);
   const [viewing, setViewing] = useState<any | null>(null);
   const [viewOpen, setViewOpen] = useState(false);
+  const [pwdFor, setPwdFor] = useState<any | null>(null);
+  const [pwd, setPwd] = useState("");
 
   const table = useTableState("joined_at", "desc");
 
@@ -132,6 +137,16 @@ export function MembersTable() {
       setConfirmDel(null);
     },
     onError: (e: any) => toast.error(e.message ?? "Delete failed"),
+  });
+
+  const pwdMut = useMutation({
+    mutationFn: (input: { id: string; password: string }) => setPwd({ data: input }),
+    onSuccess: () => {
+      toast.success("Password updated");
+      setPwdFor(null);
+      setPwd("");
+    },
+    onError: (e: any) => toast.error(e.message ?? "Could not set password"),
   });
 
   const tiers = useMemo(
@@ -353,7 +368,18 @@ export function MembersTable() {
                           <Eye className="mr-2 h-4 w-4" /> View applicant details
                         </DropdownMenuItem>
                         <DropdownMenuItem onSelect={() => setEditing(m)}>
-                          <Pencil className="mr-2 h-4 w-4" /> Edit member
+                          <Pencil className="mr-2 h-4 w-4" /> Edit member / tier
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setPwdFor(m)}>
+                          <KeyRound className="mr-2 h-4 w-4" /> Update password
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to="/admin/ui/member-account/$memberId"
+                            params={{ memberId: m.id }}
+                          >
+                            <UserCog className="mr-2 h-4 w-4" /> Masquerade as member
+                          </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -417,7 +443,12 @@ export function MembersTable() {
               </div>
               <div>
                 <Label>Tier</Label>
-                <Input name="tier" defaultValue={editing.tier ?? ""} />
+                <Input name="tier" defaultValue={editing.tier ?? ""} list="member-tiers" />
+                <datalist id="member-tiers">
+                  {tiers.map((t) => (
+                    <option key={t} value={t} />
+                  ))}
+                </datalist>
               </div>
               <DialogFooter>
                 <Button type="submit" disabled={updateMut.isPending}>
@@ -426,6 +457,34 @@ export function MembersTable() {
               </DialogFooter>
             </form>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!pwdFor} onOpenChange={(o) => !o && setPwdFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update member password</DialogTitle>
+            <DialogDescription>
+              {pwdFor ? nameOf(pwdFor) ?? emailOf(pwdFor) ?? "" : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="member-password">New password</Label>
+            <Input
+              id="member-password"
+              value={pwd}
+              placeholder="At least 8 characters"
+              onChange={(e) => setPwd(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              disabled={pwd.length < 8 || pwdMut.isPending}
+              onClick={() => pwdFor && pwdMut.mutate({ id: pwdFor.id, password: pwd })}
+            >
+              Update password
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
