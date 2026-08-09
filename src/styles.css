@@ -231,14 +231,24 @@
 /* Alternating rows for every admin/portal table */
 .admin-theme table tbody tr:nth-child(even),
 .sap-grid table tbody tr:nth-child(even) {
-  background-color: color-mix(in oklab, var(--color-primary) 6%, transparent);
+  background-color: color-mix(in oklab, var(--primary) 6%, transparent);
 }
 
 .admin-theme table tbody tr:hover,
 .sap-grid tbody tr:hover {
-  background-color: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  background-color: color-mix(in oklab, var(--primary) 12%, transparent);
 }
 
 .admin-theme table thead tr {
-  background-color: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  background-color: color-mix(in oklab, var(--primary) 10%, transparent);
+}
+
+/* Sidebar sits on deep navy — lighten inherited text tokens inside it */
+.admin-theme [data-slot="sidebar"],
+.admin-theme[data-slot="sidebar"],
+[data-slot="sidebar-container"].admin-theme,
+.admin-theme [data-slot="sidebar-inner"] {
+  --foreground: #caf0f8;
+  --muted-foreground: #90e0ef;
+  --border: #023e8a;
 }
