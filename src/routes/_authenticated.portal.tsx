@@ -3,7 +3,11 @@ import { MemberPortal } from "@/components/member/member-portal";
 
 export const Route = createFileRoute("/_authenticated/portal")({
   ssr: false,
-  component: MemberPortal,
+  component: () => (
+    <div className="admin-theme min-h-screen">
+      <MemberPortal />
+    </div>
+  ),
   head: () => ({
     meta: [
       { title: "My Membership Portal | SFUP" },

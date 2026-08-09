@@ -33,8 +33,8 @@ function AdminShell() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" navItems={adminNavMain} user={adminUser} />
-      <SidebarInset className="bg-muted/40">
+      <AppSidebar variant="inset" className="admin-theme" navItems={adminNavMain} user={adminUser} />
+      <SidebarInset className="admin-theme bg-background">
         <Outlet />
       </SidebarInset>
     </SidebarProvider>
