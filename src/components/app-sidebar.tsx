@@ -167,6 +167,16 @@ export function AppSidebar({
       </SidebarContent>
 
       <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Back to Website">
+              <Link to="/">
+                <ArrowLeft className="h-4 w-4" />
+                <span>Back to Website</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
