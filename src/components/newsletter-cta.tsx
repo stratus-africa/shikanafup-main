@@ -1,16 +1,17 @@
-import { Mail, Bell } from "lucide-react"
+import { Mail, Bell } from "lucide-react";
 
 export function NewsletterCTA() {
   return (
-    <section className="w-full py-8 md:py-12 bg-primary">
-      <div className="max-w-4xl mx-auto px-4 text-center">
+    <section className="w-full bg-secondary py-16 md:py-20">
+      <div className="mx-auto max-w-4xl px-5 text-center sm:px-8">
         <div className="flex justify-center mb-6">
-          <div className="bg-white/10 p-4 rounded-lg">
+          <div className="border border-white/15 bg-white/10 p-4">
             <Mail size={32} className="text-white" />
           </div>
         </div>
 
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-balance">Stay Updated with Latest News</h2>
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/60">Stay connected</p>
+        <h2 className="mb-4 mt-4 text-4xl font-bold text-white md:text-5xl">Stay updated with Shikana</h2>
 
         <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
           Subscribe to our newsletter to receive the latest articles, policy updates, and news from SFUP directly to
@@ -21,9 +22,9 @@ export function NewsletterCTA() {
           <input
             type="email"
             placeholder="Enter your email address"
-            className="flex-1 px-4 py-3 rounded-lg bg-white text-foreground placeholder:text-muted-foreground focus:outline-none"
+            className="flex-1 border border-white/20 bg-white px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           />
-          <button className="flex items-center justify-center gap-2 bg-secondary text-white px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors whitespace-nowrap">
+          <button className="flex items-center justify-center gap-2 bg-primary px-8 py-3 font-bold text-white transition-colors hover:bg-primary/85 whitespace-nowrap">
             <Bell size={18} />
             Subscribe
           </button>
@@ -32,5 +33,5 @@ export function NewsletterCTA() {
         <p className="text-sm text-white/70">We respect your privacy. Unsubscribe at any time.</p>
       </div>
     </section>
-  )
+  );
 }
