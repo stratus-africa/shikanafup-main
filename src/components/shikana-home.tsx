@@ -1,9 +1,8 @@
 import { Link } from "@/lib/next-shims";
 import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote } from "lucide-react";
-import { EventsPreview } from "./events-preview";
+import { LatestNewsInsights } from "./latest-news-insights";
 import { ImpactStoryHome } from "./impact-story-home";
 import { CampaignPopup } from "./campaign-popup";
-import { SharedResponsibilityInterchange } from "./shared-responsibility-interchange";
 
 const actions = [
   {
@@ -240,14 +239,34 @@ export function ShikanaHome() {
           </div>
         </div>
       </section>
-      <SharedResponsibilityInterchange />
-      <section className="border-y border-slate-200 bg-white px-5 py-24 sm:px-8 lg:py-28">
+      <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
         <div className="mx-auto max-w-[1600px]">
-          <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">UPCOMING EVENTS</p>
-          <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Keep up with the movement.</h2>
+          <div className="mb-12">
+            <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR SHARED RESPONSIBILITY</p>
+            <p className="mt-4 text-xl leading-8 text-slate-700">
+              We safeguard the collective interest of our Cultures, Communities, Constituencies, Counties and the
+              Country.
+            </p>
+          </div>
+          <div
+            className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] sm:h-[600px] lg:h-[700px] bg-cover bg-center"
+            style={{ backgroundImage: "url(/unity-img.jpg)" }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-[#162443]/90 via-[#162443]/70 to-[#162443]/50" />
+            <div className="relative h-full flex items-center justify-center px-6 sm:px-12">
+              <div className="max-w-2xl text-center text-white">
+                <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6">
+                  Discover • Freedom • Truth • Prosperity
+                </h2>
+                <p className="text-lg sm:text-xl leading-8 text-white/90">
+                  Our collective commitment to building a Kenya rooted in shared values and national unity.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-        <EventsPreview />
       </section>
+      <LatestNewsInsights />
 
       <section className="bg-[#c9232b] px-5 py-24 text-white sm:px-8 lg:py-28">
         <div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
