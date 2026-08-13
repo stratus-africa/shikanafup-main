@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import toast from "react-hot-toast";
-import { ExternalLink, RotateCcw, Save } from "lucide-react";
+import { ExternalLink, RotateCcw, Save, Image as ImageIcon, X } from "lucide-react";
 import { listSettings, upsertSetting } from "@/lib/admin/settings.functions";
 import type { PageDefinition } from "@/lib/cms/page-content";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ImagePickerDialog } from "@/components/admin/gallery/image-picker-dialog";
 
 export function PageEditor({ page }: { page: PageDefinition }) {
   const qc = useQueryClient();
@@ -27,12 +28,11 @@ export function PageEditor({ page }: { page: PageDefinition }) {
     return map;
   }, [settings.data]);
 
-  const fields = useMemo(
-    () => page.sections.flatMap((s) => s.fields),
-    [page],
-  );
+  const fields = useMemo(() => page.sections.flatMap((s) => s.fields), [page]);
 
   const [form, setForm] = useState<Record<string, string>>({});
+  const [imagePickerOpen, setImagePickerOpen] = useState(false);
+  const [selectedImageField, setSelectedImageField] = useState<string | null>(null);
 
   useEffect(() => {
     const next: Record<string, string> = {};
@@ -60,6 +60,18 @@ export function PageEditor({ page }: { page: PageDefinition }) {
     const next: Record<string, string> = {};
     for (const f of fields) next[f.key] = f.default;
     setForm(next);
+  };
+
+  const handleImageSelect = (url: string) => {
+    if (selectedImageField) {
+      setForm({ ...form, [selectedImageField]: url });
+      setSelectedImageField(null);
+    }
+  };
+
+  const openImagePicker = (fieldKey: string) => {
+    setSelectedImageField(fieldKey);
+    setImagePickerOpen(true);
   };
 
   return (
@@ -96,7 +108,42 @@ export function PageEditor({ page }: { page: PageDefinition }) {
               {section.fields.map((f) => (
                 <div key={f.key} className="grid gap-2">
                   <Label htmlFor={f.key}>{f.label}</Label>
-                  {f.kind === "textarea" ? (
+                  {f.kind === "image" ? (
+                    <div className="space-y-3">
+                      {(form[f.key] ?? "").trim() && (
+                        <div className="relative inline-block">
+                          <img
+                            src={form[f.key]}
+                            alt={`${f.label} preview`}
+                            className="h-32 w-auto max-w-xs rounded-md border object-cover"
+                          />
+                          <button
+                            onClick={() => setForm({ ...form, [f.key]: "" })}
+                            className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90"
+                            title="Remove image"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => openImagePicker(f.key)}
+                        className="w-full gap-2"
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                        {(form[f.key] ?? "").trim() ? "Change Image" : "Select Image"}
+                      </Button>
+                      <Input
+                        id={f.key}
+                        placeholder="Or paste image URL here"
+                        value={form[f.key] ?? ""}
+                        onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                        className="text-xs"
+                      />
+                    </div>
+                  ) : f.kind === "textarea" ? (
                     <Textarea
                       id={f.key}
                       rows={4}
@@ -110,19 +157,14 @@ export function PageEditor({ page }: { page: PageDefinition }) {
                       onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
                     />
                   )}
-                  {f.kind === "image" && (form[f.key] ?? "").trim() && (
-                    <img
-                      src={form[f.key]}
-                      alt={`${f.label} preview`}
-                      className="h-24 w-full max-w-xs rounded-md border object-cover"
-                    />
-                  )}
                 </div>
               ))}
             </CardContent>
           </Card>
         ))}
       </div>
+
+      <ImagePickerDialog open={imagePickerOpen} onOpenChange={setImagePickerOpen} onSelect={handleImageSelect} />
     </div>
   );
 }
