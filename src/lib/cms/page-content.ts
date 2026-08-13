@@ -53,6 +53,14 @@ export const HOME_PAGE: PageDefinition = {
       ],
     },
     {
+      title: "Homepage hero copy",
+      fields: [
+        t("site.home.hero_eyebrow", "Eyebrow", "SHIKANA FRONTLINERS FOR UNITY PARTY"),
+        t("site.home.hero_title", "Main heading", "Choose the party that chooses you."),
+        t("site.home.hero_subtext", "Support text", "Break the chains of division. Unite in the struggle for a sovereign, just and prosperous Kenya."),
+      ],
+    },
+    {
       title: "Hero slide 2",
       fields: [
         t("site.home.hero2_image", "Background image URL", "/sfu-image.jfif", "image"),
@@ -85,6 +93,21 @@ export const HOME_PAGE: PageDefinition = {
         t("site.home.cta_primary_href", "Primary button link", "/shared-ui/register"),
         t("site.home.cta_secondary_label", "Secondary button label", "Support Us Today"),
         t("site.home.cta_secondary_href", "Secondary button link", "/shared-ui/donate"),
+      ],
+    },
+    {
+      title: "Nothing About Kenyans section",
+      fields: [
+        t("site.home.nothing_heading", "Heading", "Nothing About Kenyans, Without Kenyans!"),
+        t("site.home.nothing_subheading", "Subheading", "A practical vision for Kenya."),
+        t("site.home.reason1_title", "Why us title", "Why Us"),
+        t("site.home.reason1_text", "Why us text", "We are a party that listens to its members and empowers its people. Together, we will transform Kenya into a nation where freedom has meaning, opportunity is within reach, and where every citizen must belong and have a voice.", "textarea"),
+        t("site.home.reason2_title", "Why you title", "Why You"),
+        t("site.home.reason2_text", "Why you text", "Every Kenyan is a partner in governance, and the benefits of economic prosperity belong to all. Together, we must protect the nation, safeguard its natural resources, strengthen our institutions, and preserve the hopes of future generations.", "textarea"),
+        t("site.home.shared_responsibility", "Shared responsibility label", "OUR SHARED RESPONSIBILITY"),
+        t("site.home.shared_responsibility_text", "Shared responsibility text", "We safeguard the collective interest of our Cultures, Communities, Constituencies, Counties and the Country.", "textarea"),
+        t("site.home.impact_card_title", "Impact card title", "Your Impact"),
+        t("site.home.impact_card_text", "Impact card text", "Every action counts. Join thousands of Kenyans making a tangible difference in our nation's future.", "textarea"),
       ],
     },
     {
@@ -146,6 +169,16 @@ export const ABOUT_PAGE: PageDefinition = {
       ],
     },
     {
+      title: "Who we are",
+      fields: [
+        t("site.about.who_heading", "Who we are heading", "A political home built around people."),
+        t("site.about.who_text1", "Paragraph 1", "We are building the next frontier of political power in our communities and throughout the country.", "textarea"),
+        t("site.about.who_text2", "Paragraph 2", "Shikana Frontliners for Unity Party is rooted in the conviction that Kenya's future is strongest when citizens are informed, involved and represented.", "textarea"),
+        t("site.about.story_heading", "Our story heading", "A movement shaped in community."),
+        t("site.about.story_text", "Our story text", "Our journey began with listening. Through consultation with communities, we are creating a party whose priorities are grounded in the daily lives, hopes and ambitions of Kenyans.", "textarea"),
+      ],
+    },
+    {
       title: "What we stand for",
       fields: [t("site.about.stand_heading", "Section heading", "What We Stand For")],
     },
@@ -177,6 +210,15 @@ export const ABOUT_PAGE: PageDefinition = {
         t("site.about.mission_point1", "Bullet 1", "Democratic social order honoring the law"),
         t("site.about.mission_point2", "Bullet 2", "Guided by divinity and consciousness"),
         t("site.about.mission_point3", "Bullet 3", "Truth, love, peace and unity in action"),
+      ],
+    },
+    {
+      title: "Values and culture",
+      fields: [
+        t("site.about.values_heading", "Values heading", "A principled way forward."),
+        t("site.about.values_intro", "Values intro", "Pursuant to Article 10 of the Constitution of Kenya, we pursue a just, morally upright and prosperous society founded on national and traditional values.", "textarea"),
+        t("site.about.culture_heading", "Culture heading", "A place for Kenyans ready to change the nation in real time."),
+        t("site.about.culture_text", "Culture text", "Our culture is centred on service, trust and practical participation—because a powerful movement starts with how we show up for one another.", "textarea"),
       ],
     },
   ],
