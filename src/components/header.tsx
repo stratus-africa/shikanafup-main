@@ -110,7 +110,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)]">
       {/*Top Info Bar*/}
-      <div className="bg-[#d9b75a] py-1 text-[#162443]">
+      <div className="bg-[#162443] py-1 text-white">
         <InfiniteSlider gap={80} reverse>
           <p className="text-sm font-medium">{get("site.site_name")}</p>
           <p className="text-sm font-medium">“Truth, Always, Conquers” - “Veritas, Lux et Lex, Vincit”</p>
