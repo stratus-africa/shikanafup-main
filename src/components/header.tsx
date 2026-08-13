@@ -116,7 +116,7 @@ export function Header() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <header className="w-full">
+    <header className="sticky top-0 z-50 w-full shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)]">
       {/*Top Info Bar*/}
       <div className="bg-secondary py-1 text-primary-foreground">
         <InfiniteSlider gap={80} reverse>
