@@ -1,5 +1,6 @@
 import { Link } from "@/lib/next-shims";
 import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote, TrendingUp, Zap } from "lucide-react";
+import { usePageContent } from "@/hooks/use-page-content";
 import { LatestNewsInsights } from "./latest-news-insights";
 import { CampaignPopup } from "./campaign-popup";
 import { GenerationalTransformation } from "./generational-transformation";
@@ -53,6 +54,25 @@ const nationalPriorities = [
 ];
 
 export function ShikanaHome() {
+  const { c } = usePageContent();
+  const heroEyebrow = c("site.home.hero_eyebrow");
+  const heroTitle = c("site.home.hero_title");
+  const heroSubtext = c("site.home.hero_subtext");
+  const primaryCtaLabel = c("site.home.cta_primary_label");
+  const primaryCtaHref = c("site.home.cta_primary_href");
+  const secondaryCtaLabel = c("site.home.cta_secondary_label");
+  const secondaryCtaHref = c("site.home.cta_secondary_href");
+  const nothingTitle = c("site.home.nothing_heading");
+  const nothingSubheading = c("site.home.nothing_subheading");
+  const reason1Title = c("site.home.reason1_title");
+  const reason1Text = c("site.home.reason1_text");
+  const reason2Title = c("site.home.reason2_title");
+  const reason2Text = c("site.home.reason2_text");
+  const sharedResponsibility = c("site.home.shared_responsibility");
+  const sharedResponsibilityText = c("site.home.shared_responsibility_text");
+  const impactCardTitle = c("site.home.impact_card_title");
+  const impactCardText = c("site.home.impact_card_text");
+
   return (
     <main className="overflow-hidden bg-[#fcfcfa] text-[#162443]">
       <CampaignPopup />
@@ -66,26 +86,24 @@ export function ShikanaHome() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#101c35]/95 via-[#162443]/70 to-[#162443]/20" />
         <div className="mx-auto w-full max-w-[1600px] px-5 pb-24 pt-32 sm:px-8 sm:py-36">
           <p className="mb-6 inline-flex rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.16em] text-white backdrop-blur-sm">
-            SHIKANA FRONTLINERS FOR UNITY PARTY
+            {heroEyebrow}
           </p>
           <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-6xl lg:text-8xl">
-            Choose the party that chooses you.
+            {heroTitle}
           </h1>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-white/85 sm:text-xl">
-            Break the chains of division. Unite in the struggle for a sovereign, just and prosperous Kenya.
-          </p>
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-white/85 sm:text-xl">{heroSubtext}</p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/shared-ui/register"
+              href={primaryCtaHref}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-[#c9232b] px-7 py-4 font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#a9161d] focus:outline-none focus:ring-4 focus:ring-white/40"
             >
-              Join Shikana <ArrowRight size={18} />
+              {primaryCtaLabel} <ArrowRight size={18} />
             </Link>
             <Link
-              href="#agenda"
+              href={secondaryCtaHref}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/60 bg-white/5 px-7 py-4 font-bold text-white backdrop-blur-sm transition hover:bg-white hover:text-[#162443]"
             >
-              Explore our agenda
+              {secondaryCtaLabel}
             </Link>
           </div>
         </div>
@@ -160,28 +178,22 @@ export function ShikanaHome() {
             <div className="flex flex-col justify-center">
               <div className="mb-10 lg:mb-16">
                 <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-4 leading-tight">
-                  Nothing
-                  <br />
-                  About Kenyans,
-                  <br />
-                  Without Kenyans!
+                  {nothingTitle}
                 </h2>
-                <p className="text-sm font-bold tracking-[0.16em] text-[#ecb23b] mt-6">A practical vision for Kenya.</p>
+                <p className="text-sm font-bold tracking-[0.16em] text-[#ecb23b] mt-6">{nothingSubheading}</p>
               </div>
 
               <div className="grid gap-6 sm:gap-8">
                 {[
                   {
                     id: 1,
-                    title: "Why Us",
-                    content:
-                      "We are a party that listens to its members and empowers its people. Together, we will transform Kenya into a nation where freedom has meaning, opportunity is within reach, and where every citizen must belong and have a voice.",
+                    title: reason1Title,
+                    content: reason1Text,
                   },
                   {
                     id: 2,
-                    title: "Why You",
-                    content:
-                      "Every Kenyan is a partner in governance, and the benefits of economic prosperity belong to all. Together, we must protect the nation, safeguard its natural resources, strengthen our institutions, and preserve the hopes of future generations.",
+                    title: reason2Title,
+                    content: reason2Text,
                   },
                 ].map((card) => (
                   <div
@@ -200,11 +212,8 @@ export function ShikanaHome() {
             {/* Right Column - Shared Responsibility and Impact */}
             <div className="flex flex-col justify-center">
               <div className="mb-10 lg:mb-12">
-                <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR SHARED RESPONSIBILITY</p>
-                <p className="mt-4 text-lg leading-8 text-white">
-                  We safeguard the collective interest of our Cultures, Communities, Constituencies, Counties and the
-                  Country.
-                </p>
+                <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">{sharedResponsibility}</p>
+                <p className="mt-4 text-lg leading-8 text-white">{sharedResponsibilityText}</p>
               </div>
 
               {/* Your Impact Card */}
@@ -215,11 +224,10 @@ export function ShikanaHome() {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#162443]/90 via-[#162443]/70 to-[#162443]/50" />
                 <div className="relative h-full flex items-center justify-center px-6 sm:px-12">
                   <div className="max-w-2xl text-center text-white">
-                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4">Your Impact</h3>
-                    <p className="text-base sm:text-lg leading-7 text-white/90">
-                      Every action counts. Join thousands of Kenyans making a tangible difference in our nation's
-                      future.
-                    </p>
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4">
+                      {impactCardTitle}
+                    </h3>
+                    <p className="text-base sm:text-lg leading-7 text-white/90">{impactCardText}</p>
                   </div>
                 </div>
               </div>
