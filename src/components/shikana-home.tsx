@@ -221,17 +221,14 @@ export function ShikanaHome() {
           </div>
         </div>
       </section>
-      <TeamSection />
       <section className="border-y border-slate-200 bg-white px-5 py-24 sm:px-8 lg:py-28">
         <div className="mx-auto max-w-7xl">
-          <p className="text-center text-sm font-bold tracking-[0.16em] text-[#c9232b]">NEWS & EVENTS</p>
-          <h2 className="mt-3 text-center text-4xl font-black tracking-tight sm:text-5xl">
-            Keep up with the movement.
-          </h2>
+          <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">UPCOMING EVENTS</p>
+          <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Keep up with the movement.</h2>
         </div>
-        <BlogPreview />
         <EventsPreview />
       </section>
+
       <section className="bg-[#c9232b] px-5 py-24 text-white sm:px-8 lg:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
