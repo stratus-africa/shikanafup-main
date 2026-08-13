@@ -85,14 +85,6 @@ export function Header() {
     },
 
     {
-      label: "Support Us",
-      children: [
-        { label: "Donate", href: "/shared-ui/donate" },
-        { label: "Shop", href: "/shared-ui/listings" },
-      ],
-    },
-
-    {
       label: "Get Involved",
       children: [
         { label: "Become a Member", href: "/shared-ui/register" },
@@ -118,7 +110,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)]">
       {/*Top Info Bar*/}
-      <div className="bg-secondary py-1 text-primary-foreground">
+      <div className="bg-[#d9b75a] py-1 text-[#162443]">
         <InfiniteSlider gap={80} reverse>
           <p className="text-sm font-medium">{get("site.site_name")}</p>
           <p className="text-sm font-medium">“Truth, Always, Conquers” - “Veritas, Lux et Lex, Vincit”</p>
@@ -141,7 +133,7 @@ export function Header() {
 
       {/* Main Navbar */}
       <nav
-        className="border-b border-secondary/10 bg-white shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)] backdrop-blur"
+        className="border-b border-[#162443]/10 bg-[#d9b75a] shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)] backdrop-blur"
         role="navigation"
         aria-label="Main navigation"
       >
@@ -228,7 +220,7 @@ export function Header() {
             <div className="hidden lg:flex items-center gap-2.5">
               <Link
                 href="/shared-ui/donate"
-                className="inline-flex h-8 items-center justify-center rounded-full border border-[#162443] bg-[#e2c56d]/90 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-[#162443] transition-colors duration-200 hover:bg-[#162443] hover:text-white"
+                className="inline-flex h-8 items-center justify-center rounded-full border border-[#162443] bg-[#162443] px-4 text-[11px] font-black uppercase tracking-[0.08em] text-white transition-colors duration-200 hover:bg-white hover:text-[#162443]"
               >
                 SUPPORT US
               </Link>
@@ -336,7 +328,7 @@ export function Header() {
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <Link
                   href="/shared-ui/donate"
-                  className="inline-flex h-8 items-center justify-center rounded-full border border-[#162443] bg-[#e2c56d]/90 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-[#162443] transition-colors hover:bg-[#162443] hover:text-white"
+                  className="inline-flex h-8 items-center justify-center rounded-full border border-[#162443] bg-[#162443] px-4 text-[11px] font-black uppercase tracking-[0.08em] text-white transition-colors hover:bg-white hover:text-[#162443]"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   SUPPORT US
