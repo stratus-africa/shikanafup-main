@@ -225,12 +225,19 @@ export function Header() {
             </div>
 
             {/* Right Actions */}
-            <div className="hidden lg:flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-2.5">
+              <Link
+                href="/shared-ui/donate"
+                className="inline-flex h-8 items-center justify-center rounded-full border border-[#162443] bg-[#e2c56d]/90 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-[#162443] transition-colors duration-200 hover:bg-[#162443] hover:text-white"
+              >
+                SUPPORT US
+              </Link>
+
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
-                      className="h-9 w-9 rounded-full bg-secondary text-white font-bold flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-secondary"
+                      className="h-8 w-8 rounded-full bg-[#162443] text-white font-bold flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#162443] transition-colors hover:bg-[#1d2d4d]"
                       aria-label="Account menu"
                     >
                       {(user.first_name?.[0] ?? user.email?.[0])?.toUpperCase()}
@@ -274,7 +281,7 @@ export function Header() {
               <button
                 onClick={() => setShowSearch(true)}
                 aria-label="Search site"
-                className="hover:text-secondary transition-colors"
+                className="ml-1 hover:text-secondary transition-colors"
               >
                 <Search size={18} />
               </button>
@@ -326,50 +333,59 @@ export function Header() {
                 </div>
               ))}
 
-              {/* Mobile Login / Profile */}
-              {user ? (
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      setShowProfileDialog(true);
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <Link
+                  href="/shared-ui/donate"
+                  className="inline-flex h-8 items-center justify-center rounded-full border border-[#162443] bg-[#e2c56d]/90 px-4 text-[11px] font-black uppercase tracking-[0.08em] text-[#162443] transition-colors hover:bg-[#162443] hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  SUPPORT US
+                </Link>
+
+                {user ? (
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => {
+                        setShowProfileDialog(true);
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
+                    >
+                      My Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        router.push(isStaff ? "/admin/dashboard" : "/portal");
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
+                    >
+                      {isStaff ? "Admin View" : "Dashboard"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-3 rounded-md bg-destructive/10 text-destructive font-medium"
+                    >
+                      Log Out
+                    </button>
+                  </div>
+                ) : (
+                  <AccountCta
+                    fullWidth
+                    onRegister={() => {
+                      router.push("/shared-ui/register");
                       setIsMenuOpen(false);
                     }}
-                    className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
-                  >
-                    My Profile
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push(isStaff ? "/admin/dashboard" : "/portal");
+                    onLogin={() => {
+                      router.push("/login");
                       setIsMenuOpen(false);
                     }}
-                    className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
-                  >
-                    {isStaff ? "Admin View" : "Dashboard"}
-                  </button>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 rounded-md bg-destructive/10 text-destructive font-medium"
-                  >
-                    Log Out
-                  </button>
-                </div>
-              ) : (
-                <AccountCta
-                  fullWidth
-                  onRegister={() => {
-                    router.push("/shared-ui/register");
-                    setIsMenuOpen(false);
-                  }}
-                  onLogin={() => {
-                    router.push("/login");
-                    setIsMenuOpen(false);
-                  }}
-                />
-              )}
+                  />
+                )}
+              </div>
 
               {/* Mobile Donate CTA */}
               {/* <Button
@@ -401,8 +417,10 @@ function AccountCta({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className={`${fullWidth ? "w-full" : ""} bg-primary text-white hover:bg-[#9a181c]`}>
-          <UserPlus className="size-4" /> Join or log in
+        <Button
+          className={`${fullWidth ? "w-full" : ""} h-8 rounded-full bg-[#162443] px-4 text-[11px] font-black uppercase tracking-[0.08em] text-white shadow-none transition-colors hover:bg-[#1d2d4d]`}
+        >
+          JOIN OR LOG IN
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64 p-2">
