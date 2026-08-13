@@ -85,7 +85,7 @@ export function DonationOptions() {
 
   return (
     <section id="donation-options" className="w-full bg-[#f4f1ed] py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      <div className="mx-auto max-w-[1600px] px-5 sm:px-8">
         {/* Header */}
         <div className="mb-12 text-center">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-primary">Make a contribution</p>
