@@ -5,9 +5,7 @@ import { ImpactStoryHome } from "./impact-story-home";
 import { CampaignPopup } from "./campaign-popup";
 import { WhyUsWhyYou } from "./why-us-why-you";
 import { DiscoverInterchange } from "./discover-interchange";
-import { UpcomingEventsSection } from "./upcoming-events-section";
 import { GenerationalTransformation } from "./generational-transformation";
-import { ElectionCountdown } from "./election-countdown";
 
 const actions = [
   {
@@ -188,7 +186,6 @@ export function ShikanaHome() {
       <WhyUsWhyYou />
       <DiscoverInterchange />
 
-      <ElectionCountdown />
       <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
         <div className="mx-auto max-w-[1600px]">
           <div className="mb-12">
@@ -217,8 +214,6 @@ export function ShikanaHome() {
         </div>
       </section>
       <LatestNewsInsights />
-
-      <UpcomingEventsSection />
 
       <GenerationalTransformation />
 
