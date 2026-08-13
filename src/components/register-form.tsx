@@ -201,7 +201,6 @@ export function RegisterForm() {
 
   const registrationFee = MEMBERSHIP_TYPES.find((type) => type.value === membershipType)?.fee || 0;
 
-<<<<<<< HEAD
   const subCountys = county ? getConstituencies(county) : [];
   const wards = county && constituency ? getWards(county, constituency) : [];
   const steps = [
@@ -238,7 +237,6 @@ export function RegisterForm() {
 
   const userAge = dob ? calculateAge(dob) : 0;
 
-<<<<<<< HEAD
   const isStepComplete = (stepIndex: number) => {
     switch (stepIndex) {
       case 0:
@@ -278,6 +276,7 @@ export function RegisterForm() {
     if (!validateCurrentStep()) return;
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
   };
+
   const isMandatoryFieldsFilled =
     firstName &&
     lastName &&
@@ -300,6 +299,7 @@ export function RegisterForm() {
   const isPaymentRequired = isPaidMembership;
   const isPaymentComplete = !isPaidMembership || (paymentMethod && paymentPhoneNumber.trim().length >= 9);
   const isFormValid = isMandatoryFieldsFilled && isPaymentComplete && userAge >= 18;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -586,88 +586,6 @@ export function RegisterForm() {
                     </div>
                   </div>
 
-<<<<<<< HEAD
-                  <div className="grid md:grid-cols-2 gap-6 mt-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Religion *</label>
-                      <Select
-                        value={RELIGIONS.includes(religion) ? religion : religion ? "Other" : ""}
-                        onValueChange={(val) => {
-                          if (val === "Other") setReligion("Other")
-                          else setReligion(val)
-                        }}
-                        required
-                      >
-                        <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
-                          <SelectValue placeholder="Select Religion" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {RELIGIONS.map((r) => (
-                            <SelectItem key={r} value={r}>
-                              {r}
-                            </SelectItem>
-                          ))}
-                          <SelectItem value="Other">Other (Specify)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {(religion === "Other" || (!RELIGIONS.includes(religion) && religion !== "")) && (
-                        <Input
-                          type="text"
-                          value={religion === "Other" ? "" : religion}
-                          onChange={(e) => setReligion(e.target.value)}
-                          placeholder="Please specify your religion"
-                          required
-                          className="mt-3 h-10 border-border rounded-lg focus:border-secondary bg-background px-4 animate-in fade-in slide-in-from-top-1 transition-colors"
-                        />
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Ethnicity / Tribe *</label>
-                      <div className="space-y-3">
-                        <Popover open={openEthnicity} onOpenChange={setOpenEthnicity}>
-                          <PopoverTrigger asChild>
-                            <button
-                              role="combobox"
-                              aria-expanded={openEthnicity}
-                              className={cn(
-                                "flex h-10 w-full items-center justify-between rounded-lg border border-border bg-background px-4 text-sm transition-colors focus:outline-none focus:border-secondary disabled:cursor-not-allowed disabled:opacity-50",
-                                !ethnicity && "text-muted-foreground"
-                              )}
-                            >
-                              {KENYAN_TRIBES.includes(ethnicity)
-                                ? ethnicity
-                                : ethnicity
-                                  ? "Other"
-                                  : "Select Tribe"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search tribe..." />
-                              <CommandList>
-                                <CommandEmpty>No tribe found.</CommandEmpty>
-                                <CommandGroup>
-                                  {KENYAN_TRIBES.map((tribe) => (
-                                    <CommandItem
-                                      key={tribe}
-                                      value={tribe}
-                                      onSelect={() => {
-                                        setEthnicity(tribe)
-                                        setOpenEthnicity(false)
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          ethnicity === tribe ? "opacity-100" : "opacity-0"
-                                        )}
-                                      />
-                                      {tribe}
-                                    </CommandItem>
-                                  ))}
-=======
                   <div className="grid md:grid-cols-2 gap-6 mt-6">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Religion *</label>
@@ -744,32 +662,20 @@ export function RegisterForm() {
                                       {tribe}
                                     </CommandItem>
                                   ))}
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                                   <CommandItem
-<<<<<<< HEAD
-                                    value="Other"
-                                    onSelect={() => {
-                                      setEthnicity("Other")
-                                      setOpenEthnicity(false)
-=======
                                     value="Other"
                                     onSelect={() => {
                                       setEthnicity("Other");
                                       setOpenEthnicity(false);
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                                     }}
                                   >
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
-<<<<<<< HEAD
-                                        ethnicity === "Other" || (!KENYAN_TRIBES.includes(ethnicity) && ethnicity !== "") ? "opacity-100" : "opacity-0"
-=======
                                         ethnicity === "Other" ||
                                           (!KENYAN_TRIBES.includes(ethnicity) && ethnicity !== "")
                                           ? "opacity-100"
                                           : "opacity-0",
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                                       )}
                                     />
                                     Other (Specify)
@@ -794,29 +700,6 @@ export function RegisterForm() {
                     </div>
                   </div>
 
-<<<<<<< HEAD
-                  <div className="grid md:grid-cols-2 gap-6 mt-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Date of Birth *</label>
-                      <Input
-                        type="date"
-                        required
-                        value={dob}
-                        onChange={(e) => {
-                          const val = e.target.value
-                          setDob(val)
-                          const age = calculateAge(val)
-                          if (age > 35) {
-                            setSpecialInterest((prev) => prev.filter((item) => item !== "Youths"))
-                          }
-                        }}
-                        className={`h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary ${dob && userAge < 18 ? "border-red-500 focus:border-red-500" : ""}`}
-                      />
-                      {dob && userAge < 18 && (
-                        <p className="text-xs text-red-500 mt-1">You should be 18 and above to join a political party.</p>
-                      )}
-                    </div>
-=======
                   <div className="grid md:grid-cols-2 gap-6 mt-6">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Date of Birth *</label>
@@ -840,7 +723,6 @@ export function RegisterForm() {
                         </p>
                       )}
                     </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Sex *</label>
@@ -856,28 +738,6 @@ export function RegisterForm() {
                     </div>
                   </div>
 
-<<<<<<< HEAD
-                  <div className="grid md:grid-cols-2 gap-6 mt-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Document Type *</label>
-                      <Select
-                        value={docType}
-                        onValueChange={(val) => {
-                          setDocType(val)
-                          setIdNo("")
-                        }}
-                        required
-                      >
-                        <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
-                          <SelectValue placeholder="Select Document Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Passport">Passport</SelectItem>
-                          <SelectItem value="National ID">National ID</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-=======
                   <div className="grid md:grid-cols-2 gap-6 mt-6">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Document Type *</label>
@@ -898,29 +758,7 @@ export function RegisterForm() {
                         </SelectContent>
                       </Select>
                     </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Document Number *</label>
-                      <Input
-                        required
-                        value={idNo}
-                        onChange={(e) => {
-                          const value = e.target.value
-                          if (docType === "National ID") {
-                            setIdNo(value.replace(/\D/g, "").slice(0, 9))
-                            return
-                          }
-                          setIdNo(value)
-                        }}
-                        maxLength={docType === "National ID" ? 9 : undefined}
-                        inputMode={docType === "National ID" ? "numeric" : "text"}
-                        placeholder={docType === "National ID" ? "012345678" : "Enter passport number"}
-                        className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                      />
-                    </div>
-=======
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Document Number *</label>
                       <Input
@@ -940,12 +778,7 @@ export function RegisterForm() {
                         className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                       />
                     </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                   </div>
-<<<<<<< HEAD
-                </div>
-              )}
-=======
                 </div>
               )}
 
@@ -1001,28 +834,7 @@ export function RegisterForm() {
                           placeholder="P.O. Box xx"
                         />
                       </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-              {currentStep === 1 && (
-                <>
-                  <div>
-                    <h4 className="text-lg font-bold text-foreground mb-4 pb-2 border-b border-border">
-                      Contact Information
-                    </h4>
-                    <div className="grid md:grid-cols-2 gap-6 mt-6">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">Email Address *</label>
-                        <Input
-                          type="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                          placeholder="john@example.com"
-                        />
-                      </div>
-=======
                       <div>
                         <label className="block text-sm font-medium text-foreground mb-2">Postal Code</label>
                         <Popover open={openPostalCode} onOpenChange={setOpenPostalCode}>
@@ -1072,32 +884,7 @@ export function RegisterForm() {
                       </div>
                     </div>
                   </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">Phone Number *</label>
-                        <Input
-                          type="tel"
-                          required
-                          value={phone}
-                          onChange={(e) => {
-                            let val = e.target.value.replace(/\D/g, "")
-                            if (val.startsWith("0")) {
-                              val = "254" + val.substring(1)
-                            }
-                            if (val.length > 12) {
-                              val = val.slice(0, 12)
-                            }
-                            setPhone(val)
-                          }}
-                          maxLength={12}
-                          className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                          placeholder="2547XXXXXXXX"
-                        />
-                      </div>
-                    </div>
-=======
                   <div className="border-t border-border pt-8 mt-8">
                     <h4 className="text-lg font-bold text-foreground mb-4 pb-2 border-b border-border">
                       Disability & Special Needs
@@ -1132,20 +919,7 @@ export function RegisterForm() {
                           </label>
                         </div>
                       </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                    <div className="grid md:grid-cols-2 gap-6 mt-6">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">Postal Address</label>
-                        <Input
-                          value={postalAddress}
-                          onChange={(e) => setPostalAddress(e.target.value)}
-                          className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                          placeholder="P.O. Box xx"
-                        />
-                      </div>
-=======
                       <div>
                         <label className="block text-sm font-medium text-foreground mb-2">
                           Special Interest Group (optional)
@@ -1206,58 +980,7 @@ export function RegisterForm() {
                         </Popover>
                       </div>
                     </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">Postal Code</label>
-                        <Popover open={openPostalCode} onOpenChange={setOpenPostalCode}>
-                          <PopoverTrigger asChild>
-                            <button
-                              role="combobox"
-                              aria-expanded={openPostalCode}
-                              className={cn(
-                                "flex h-10 w-full items-center justify-between rounded-lg border border-border bg-background px-4 text-sm transition-colors focus:outline-none focus:border-secondary disabled:cursor-not-allowed disabled:opacity-50",
-                                !postalCode && "text-muted-foreground"
-                              )}
-                            >
-                              {postalCode ? postalCode : "Select Postal Code"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
-                            <Command>
-                              <CommandInput placeholder="Search postal code..." />
-                              <CommandList>
-                                <CommandEmpty>No code found.</CommandEmpty>
-                                <CommandGroup>
-                                  {POSTAL_OFFICES.map((address) => (
-                                    <CommandItem
-                                      key={address}
-                                      value={address}
-                                      onSelect={() => {
-                                        const parts = address.split(" – ")
-                                        setPostalCode(parts.length >= 2 ? parts[1] : address)
-                                        setOpenPostalCode(false)
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          postalCode === address.split(" – ")[1] ? "opacity-100" : "opacity-0"
-                                        )}
-                                      />
-                                      {address}
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
-=======
                     {isPWD === "yes" && (
                       <div className="mt-6">
                         <label className="block text-sm font-medium text-foreground mb-2">NCPWD Number *</label>
@@ -1270,112 +993,16 @@ export function RegisterForm() {
                         />
                       </div>
                     )}
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                   </div>
                 </>
               )}
 
-<<<<<<< HEAD
-                  <div className="border-t border-border pt-8 mt-8">
-                    <h4 className="text-lg font-bold text-foreground mb-4 pb-2 border-b border-border">
-                      Disability & Special Needs
-                    </h4>
-                    <div className="grid md:grid-cols-2 gap-6 mt-6">
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-3">
-                          Are you a PWD (Person with Disability)? *
-                        </label>
-                        <div className="flex gap-4">
-                          <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                              type="radio"
-                              name="pwd"
-                              value="yes"
-                              checked={isPWD === "yes"}
-                              onChange={(e) => setIsPWD(e.target.value)}
-                              className="w-4 h-4 text-secondary"
-                            />
-                            <span className="text-foreground">Yes</span>
-                          </label>
-                          <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                              type="radio"
-                              name="pwd"
-                              value="no"
-                              checked={isPWD === "no"}
-                              onChange={(e) => setIsPWD(e.target.value)}
-                              className="w-4 h-4 text-secondary"
-                            />
-                            <span className="text-foreground">No</span>
-                          </label>
-                        </div>
-                      </div>
-=======
               {currentStep === 2 && (
                 <div>
                   <h4 className="text-lg font-bold text-foreground mb-4 pb-2 border-b border-border">
                     Geographic & Voting Location
                   </h4>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                      <div>
-                        <label className="block text-sm font-medium text-foreground mb-2">Special Interest Group (optional)</label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <button
-                              type="button"
-                              className={cn(
-                                "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                                !specialInterest.length && "text-muted-foreground"
-                              )}
-                            >
-                              {specialInterest.length > 0
-                                ? specialInterest.map((i) => (i === "Marginalized" ? "Marginalized Communities" : i)).join(", ")
-                                : "Select Interest Group"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
-                            <Command>
-                              <CommandList>
-                                <CommandGroup>
-                                  {["Youths", "Women", "Minority Group", "Marginalized"].map((group) => {
-                                    if (group === "Youths" && userAge > 35) return null
-                                    if (group === "Women" && gender === "Male") return null
-                                    return (
-                                      <CommandItem
-                                        key={group}
-                                        onSelect={() => {
-                                          setSpecialInterest((prev) =>
-                                            prev.includes(group)
-                                              ? prev.filter((item) => item !== group)
-                                              : [...prev, group]
-                                          )
-                                        }}
-                                      >
-                                        <div
-                                          className={cn(
-                                            "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                                            specialInterest.includes(group)
-                                              ? "bg-primary text-primary-foreground"
-                                              : "opacity-50 [&_svg]:invisible"
-                                          )}
-                                        >
-                                          <Check className={cn("h-4 w-4")} />
-                                        </div>
-                                        {group === "Marginalized" ? "Marginalized Communities" : group}
-                                      </CommandItem>
-                                    )
-                                  })}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
-=======
                   <div className="grid md:grid-cols-2 gap-6 mt-6">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">County *</label>
@@ -1393,22 +1020,7 @@ export function RegisterForm() {
                         </SelectContent>
                       </Select>
                     </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                    {isPWD === "yes" && (
-                      <div className="mt-6">
-                        <label className="block text-sm font-medium text-foreground mb-2">NCPWD Number *</label>
-                        <Input
-                          value={ncpwdNumber}
-                          onChange={(e) => setNCPWDNumber(e.target.value)}
-                          required={isPWD === "yes"}
-                          className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                          placeholder="Enter your NCPWD registration number"
-                        />
-                      </div>
-                    )}
-=======
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Constituency *</label>
                       <Select value={constituency} onValueChange={handleSubcountyChange} required disabled={!county}>
@@ -1425,18 +1037,8 @@ export function RegisterForm() {
                         </SelectContent>
                       </Select>
                     </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                   </div>
-                </>
-              )}
 
-<<<<<<< HEAD
-              {currentStep === 2 && (
-                <div>
-                  <h4 className="text-lg font-bold text-foreground mb-4 pb-2 border-b border-border">
-                    Geographic & Voting Location
-                  </h4>
-=======
                   <div className="grid md:grid-cols-2 gap-6 mt-6">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">Ward *</label>
@@ -1454,43 +1056,7 @@ export function RegisterForm() {
                         </SelectContent>
                       </Select>
                     </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                  <div className="grid md:grid-cols-2 gap-6 mt-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">County *</label>
-                      <Select value={county} onValueChange={handleCountyChange} required>
-                        <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
-                          <SelectValue placeholder="Select County" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Array.isArray(counties) &&
-                            counties.map((c: any) => (
-                              <SelectItem key={c.id} value={c.name}>
-                                {c.name}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Constituency *</label>
-                      <Select value={constituency} onValueChange={handleSubcountyChange} required disabled={!county}>
-                        <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
-                          <SelectValue placeholder="Select Constituency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Array.isArray(subCountys) &&
-                            subCountys.map((sc: any) => (
-                              <SelectItem key={sc.id} value={sc.name}>
-                                {sc.name}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-=======
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">
                         Polling Station (Optional)
@@ -1501,49 +1067,9 @@ export function RegisterForm() {
                         className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                         placeholder="e.g., Nairobi Primary School"
                       />
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                     </div>
                   </div>
 
-<<<<<<< HEAD
-                  <div className="grid md:grid-cols-2 gap-6 mt-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Ward *</label>
-                      <Select value={ward} onValueChange={setWard} required disabled={!constituency}>
-                        <SelectTrigger className="w-full !h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary">
-                          <SelectValue placeholder="Select Ward" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Array.isArray(wards) &&
-                            wards.map((w: any) => (
-                              <SelectItem key={w.id} value={w.name}>
-                                {w.name}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Polling Station (Optional)</label>
-                      <Input
-                        value={pollingStation}
-                        onChange={(e) => setPollingStation(e.target.value)}
-                        className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                        placeholder="e.g., Nairobi Primary School"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6 mt-6">
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-2">Street / Village (Optional)</label>
-                      <Input
-                        value={streetVillage}
-                        onChange={(e) => setStreetVillage(e.target.value)}
-                        className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                        placeholder="e.g., Westlands, Lavington"
-=======
                   <div className="grid md:grid-cols-2 gap-6 mt-6">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">
@@ -1554,7 +1080,6 @@ export function RegisterForm() {
                         onChange={(e) => setStreetVillage(e.target.value)}
                         className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
                         placeholder="e.g., Westlands, Lavington"
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                       />
                     </div>
                     <div>
@@ -1618,21 +1143,6 @@ export function RegisterForm() {
                       </div>
                     )}
 
-<<<<<<< HEAD
-                    <div className="mb-6 mt-6">
-                      <label className="block text-sm font-medium text-foreground mb-2">Membership Type *</label>
-                      <Select
-                        required
-                        value={membershipType}
-                        onValueChange={(val) => {
-                          setMembershipType(val)
-                          const isPaid = val === "Ordinary" || val === "Life"
-                          setIsPaidMembership(isPaid)
-                          if (!isPaid) {
-                            setPaymentProcessed(false)
-                            setPaymentMethod(null)
-                            setPaymentPhoneNumber("")
-=======
                     <div className="mb-6 mt-6">
                       <label className="block text-sm font-medium text-foreground mb-2">Membership Type *</label>
                       <Select
@@ -1646,7 +1156,6 @@ export function RegisterForm() {
                             setPaymentProcessed(false);
                             setPaymentMethod(null);
                             setPaymentPhoneNumber("");
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
                           }
                         }}
                       >
@@ -1663,21 +1172,6 @@ export function RegisterForm() {
                       </Select>
                     </div>
 
-<<<<<<< HEAD
-                    {isPaidMembership && membershipType && (
-                      <div className="border border-border rounded-lg p-4 mb-6">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <p className="text-xs text-muted-foreground">Registration Fee</p>
-                            <p className="text-sm font-medium text-foreground mt-1">
-                              {MEMBERSHIP_TYPES.find((t) => t.value === membershipType)?.label}
-                            </p>
-                          </div>
-                          <span className="text-2xl font-bold text-secondary">KES {registrationFee.toLocaleString()}</span>
-                        </div>
-                      </div>
-                    )}
-=======
                     {isPaidMembership && membershipType && (
                       <div className="border border-border rounded-lg p-4 mb-6">
                         <div className="flex justify-between items-center">
@@ -1693,45 +1187,7 @@ export function RegisterForm() {
                         </div>
                       </div>
                     )}
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                    {isPaidMembership && (
-                      <div className="space-y-6">
-                        <div>
-                          <label className="block text-sm font-medium text-foreground mb-3">Payment Method *</label>
-                          <div className="grid md:grid-cols-2 gap-4">
-                            {(["mpesa", "airtel"] as PaymentMethod[]).map((method) => {
-                              const isSelected = paymentMethod === method
-                              return (
-                                <label
-                                  key={method}
-                                  className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all
-                                    ${isSelected
-                                      ? "border-secondary bg-secondary/10 ring-2 ring-secondary/20"
-                                      : "border-border hover:bg-muted hover:border-secondary/50"}`}
-                                >
-                                  <input
-                                    type="radio"
-                                    name="paymentMethod"
-                                    checked={isSelected}
-                                    onChange={() => setPaymentMethod(method)}
-                                    className="w-4 h-4 text-secondary"
-                                  />
-                                  <img
-                                    src={method === "mpesa" ? "/mpesa_logo.webp" : "/airtel_logo.svg"}
-                                    alt={method === "mpesa" ? "M-Pesa" : "Airtel Money"}
-                                    className="h-7 w-auto"
-                                  />
-                                  <span className="font-medium text-foreground">
-                                    {method === "mpesa" ? "M-Pesa" : "Airtel Money"}
-                                  </span>
-                                </label>
-                              )
-                            })}
-                          </div>
-                        </div>
-=======
                     {isPaidMembership && (
                       <div className="space-y-6">
                         <div>
@@ -1769,29 +1225,7 @@ export function RegisterForm() {
                             })}
                           </div>
                         </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
-<<<<<<< HEAD
-                        <div>
-                          <label className="block text-sm font-medium text-foreground mb-2">Payment Phone Number *</label>
-                          <Input
-                            type="tel"
-                            value={paymentPhoneNumber}
-                            onChange={(e) => {
-                              const val = e.target.value.replace(/\D/g, "")
-                              if (val.startsWith("0")) {
-                                setPaymentPhoneNumber("254" + val.substring(1))
-                              } else {
-                                setPaymentPhoneNumber(val)
-                              }
-                            }}
-                            className="h-10 border-border rounded-lg bg-background px-4 transition-colors focus:border-secondary"
-                            placeholder="2547XXXXXXXX"
-                            required={isPaidMembership}
-                          />
-                          <p className="text-xs text-muted-foreground mt-1.5">Enter the phone number to receive payment prompt</p>
-                        </div>
-=======
                         <div>
                           <label className="block text-sm font-medium text-foreground mb-2">
                             Payment Phone Number *
@@ -1815,7 +1249,6 @@ export function RegisterForm() {
                             Enter the phone number to receive payment prompt
                           </p>
                         </div>
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
                         <div className="pt-4">
                           <button
@@ -1861,24 +1294,6 @@ export function RegisterForm() {
                         </span>
                       </label>
 
-<<<<<<< HEAD
-                      <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={termsConsent}
-                          onChange={(e) => setTermsConsent(e.target.checked)}
-                          required
-                          className="w-4 h-4 accent-secondary mt-1 flex-shrink-0 cursor-pointer"
-                        />
-                        <span className="text-sm text-foreground cursor-pointer">
-                          I agree to the <Link href="/shared-ui/terms" className="text-secondary hover:underline font-semibold">Terms & Conditions</Link> and <Link href="/shared-ui/privacy" className="text-secondary hover:underline font-semibold">Privacy Policy</Link>. *
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                </>
-              )}
-=======
                       <label className="flex items-start gap-3 cursor-pointer p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
                         <input
                           type="checkbox"
@@ -1903,7 +1318,6 @@ export function RegisterForm() {
                   </div>
                 </>
               )}
->>>>>>> e08a1d934dfcbe4a54f191291f742f86b2bd69bd
 
               {currentStep === 4 && (
                 <div>

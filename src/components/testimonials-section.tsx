@@ -36,8 +36,10 @@ export function TestimonialsSection() {
   return (
     <section className="py-8 md:py-16 overflow-hidden" style={{ backgroundColor: "#162443" }}>
       <div className="w-full">
-        <h2 className="mb-4 text-center text-4xl font-bold text-white md:text-5xl">What they Say</h2>
-        <p className="mb-16 text-center text-lg text-white/80">Real experiences. Real impact. Hear why members and supporters across Kenya are joining and supporting the movement.</p>
+        <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-4">What Our People Say</h2>
+        <p className="text-lg text-white/80 text-center mb-16">
+          Hear from our members and supporters across the counties and the country
+        </p>
 
         <div className="relative flex overflow-hidden group">
           <div className="absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-[#162443] to-transparent" />

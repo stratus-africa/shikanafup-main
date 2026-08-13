@@ -84,15 +84,16 @@ export function DonationOptions() {
   }
 
   return (
-    <div className="w-full">
-      {/* Header */}
-      <div className="mb-12 text-center">
-        <p className="text-xs font-bold uppercase tracking-[.2em] text-primary">Make a contribution</p>
-        <h2 className="mt-4 text-4xl font-bold text-secondary">Invest in the Vision</h2>
-        <p className="mt-4 text-lg text-foreground/70">You will receive a payment prompt on your phone</p>
-      </div>
+    <section id="donation-options" className="w-full bg-[#f4f1ed] py-20 md:py-28">
+      <div className="mx-auto max-w-4xl px-5 sm:px-8">
+        {/* Header */}
+        <div className="mb-12 text-center">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-primary">Make a contribution</p>
+          <h2 className="mt-4 text-4xl font-bold text-secondary">Invest in the Vision</h2>
+          <p className="mt-4 text-lg text-foreground/70">You will receive a payment prompt on your phone</p>
+        </div>
 
-      <div className="border border-secondary/15 bg-white p-6 shadow-[0_20px_50px_-35px_rgba(10,25,47,.5)] sm:p-9">
+        <div className="border border-secondary/15 bg-white p-6 shadow-[0_20px_50px_-35px_rgba(10,25,47,.5)] sm:p-9">
           {/* Amount */}
           <div className="mb-8">
             <label className="block text-sm font-medium mb-4">Amount (KES)</label>
@@ -310,6 +311,7 @@ export function DonationOptions() {
             )}
           </button>
         </div>
-    </div>
+      </div>
+    </section>
   );
 }
