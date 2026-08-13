@@ -104,9 +104,9 @@ export function ShikanaHome() {
               A shared national purpose.
             </h2>
             <p className="mt-6 text-lg leading-8 text-slate-600">
-              Before our differences of tribe, region, class or creed, we are one people united by a common destiny.
-              Shikana calls every Kenyan to participate in building an inclusive and prosperous nation founded on
-              equality and solidarity.
+              Before our differences of tribe, region, class, or creed, we are one people united by a common destiny.
+              Shikana calls every Kenyan to embrace a shared national consciousness and participate in building an
+              inclusive and prosperous nation founded on equality and solidarity.
             </p>
           </div>
           <div className="mt-12 grid gap-8 lg:grid-cols-3">
