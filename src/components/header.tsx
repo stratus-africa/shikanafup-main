@@ -141,7 +141,7 @@ export function Header() {
 
       {/* Main Navbar */}
       <nav
-        className="sticky top-0 z-50 border-b border-secondary/10 bg-white/95 shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)] backdrop-blur"
+        className="border-b border-secondary/10 bg-white shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)] backdrop-blur"
         role="navigation"
         aria-label="Main navigation"
       >
