@@ -1,9 +1,10 @@
 import { Link } from "@/lib/next-shims";
 import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote } from "lucide-react";
-import { TeamSection } from "./team-section";
 import { ThematicAreas } from "./thematic-areas";
-import { BlogPreview } from "./blog-preview";
 import { EventsPreview } from "./events-preview";
+import { ImpactStoryHome } from "./impact-story-home";
+import { CampaignPopup } from "./campaign-popup";
+
 
 const actions = [
   {
