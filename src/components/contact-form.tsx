@@ -58,7 +58,7 @@ export function ContactForm() {
   return (
     <section className="w-full bg-[#f4f1ed] py-20 md:py-28">
       <Toaster position="top-right" />
-      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[.8fr_1.2fr] lg:gap-20">
           {/* Contact Info */}
           <div className="space-y-8">

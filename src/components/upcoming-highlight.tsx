@@ -34,7 +34,7 @@ export function UpcomingHighlight() {
       ) : events.length === 0 ? (
         null // Hidden if no events
       ) : (
-        <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-[1500px] mx-auto px-4 py-8 md:py-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-8">Featured Event</h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">

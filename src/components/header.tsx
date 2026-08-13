@@ -116,7 +116,7 @@ export function Header() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <header className="w-full">
+    <header className="sticky top-0 z-50 w-full shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)]">
       {/*Top Info Bar*/}
       <div className="bg-secondary py-1 text-primary-foreground">
         <InfiniteSlider gap={80} reverse>
@@ -141,11 +141,11 @@ export function Header() {
 
       {/* Main Navbar */}
       <nav
-        className="sticky top-0 z-50 border-b border-secondary/10 bg-white/95 shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)] backdrop-blur"
+        className="border-b border-secondary/10 bg-white shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)] backdrop-blur"
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
           <div className="flex h-[76px] items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-secondary">

@@ -139,7 +139,7 @@ export function MemberPortal() {
   return (
     <div className="min-h-screen bg-[#f5f8fb] pb-24 lg:pb-10">
       <header className="border-b border-border bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
           <a href="/" className="flex items-center gap-3">
             <img src="/SFU-LOGO.png" alt="Shikana Frontliners for Unity Party" className="size-10 object-contain" />
             <div>
@@ -158,7 +158,7 @@ export function MemberPortal() {
           </Badge>
         </div>
       </header>
-      <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
+      <div className="mx-auto max-w-[1600px] px-5 py-8 sm:px-8 lg:px-10 lg:py-10">
         <section className="relative overflow-hidden bg-secondary px-6 py-8 text-white sm:px-9 sm:py-10">
           <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(255,255,255,.12),transparent_65%)]" />
           <div className="relative">

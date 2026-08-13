@@ -384,7 +384,7 @@ export function RegisterForm() {
   return (
     <section className="w-full py-16 md:py-24 bg-background">
       <Toaster position="top-right" />
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-[1600px] mx-auto px-4">
         <div className="flex md:flex-row flex-col gap-12 items-start">
           {/* LEFT STATIC INFO COLUMN */}
           <div className="space-y-8 lg:ms-20 md:w-1/3 sm:w-full">

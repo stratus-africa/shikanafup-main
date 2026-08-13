@@ -6,7 +6,7 @@ export function BlogHero() {
     <section className="relative isolate min-h-[470px] overflow-hidden bg-secondary sm:min-h-[540px]">
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/nairobiPicture.jpg)" }} />
       <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/90 to-secondary/35" />
-      <div className="relative mx-auto flex min-h-[470px] max-w-7xl flex-col justify-end px-5 pb-16 pt-28 sm:min-h-[540px] sm:px-8 lg:px-12 lg:pb-20">
+      <div className="relative mx-auto flex min-h-[470px] max-w-[1600px] flex-col justify-end px-5 pb-16 pt-28 sm:min-h-[540px] sm:px-8 lg:px-12 lg:pb-20">
         <nav
           aria-label="Breadcrumb"
           className="mb-auto flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70"

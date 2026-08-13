@@ -19,7 +19,7 @@ export function Footer() {
 
   return (
     <footer className="text-white" style={{ backgroundColor: "#162443" }}>
-      <div className="max-w-7xl mx-auto px-4 py-14">
+      <div className="max-w-[1600px] mx-auto px-4 py-14">
 
         {/* Main Footer Content */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">

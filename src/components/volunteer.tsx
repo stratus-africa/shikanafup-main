@@ -151,7 +151,7 @@ export function Volunteer() {
 
   return (
     <section className="w-full py-16 md:py-24 bg-background">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-[1500px] mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
           {/* Left Column - Volunteer Type Selection */}
           <div className="bg-card border border-border rounded-lg p-8">

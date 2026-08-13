@@ -70,7 +70,7 @@ export function TeamSection() {
 
   return (
     <section className="w-full py-12 md:py-16 bg-gray-50 border-t border-border">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-[1500px] mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4 text-balance">Leadership Team</h2>
           <p className="text-lg text-foreground/70 max-w-2xl mx-auto">

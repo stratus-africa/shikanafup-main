@@ -26,7 +26,7 @@ export function WhyChooseUs() {
 
   return (
     <section className="py-8 md:py-12 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-[1500px] mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-center text-primary mb-4">Why Join Us</h2>
         <p className="text-center text-muted-foreground mb-16 text-lg">Our core values define everything we do</p>
 

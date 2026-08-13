@@ -37,7 +37,7 @@ export function MembershipBenefits() {
 
   return (
     <section className="w-full py-8 md:py-12 bg-muted">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-[1500px] mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">Membership Benefits</h2>
           <p className="text-lg text-foreground/70 max-w-2xl mx-auto">

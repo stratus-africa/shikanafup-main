@@ -32,7 +32,7 @@ export function BlogPreview() {
   return (
     <section className="relative py-8 md:py-12 px-4 bg-white overflow-hidden">
 
-      <div className="relative z-10 max-w-6xl mx-auto">
+      <div className="relative z-10 max-w-[1500px] mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">Latest News & Insights</h2>
         <p className="text-lg text-muted-foreground mb-16">Stay updated with our latest articles and announcements</p>
 
