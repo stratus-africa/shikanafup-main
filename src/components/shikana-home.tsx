@@ -231,30 +231,46 @@ export function ShikanaHome() {
 
       <GenerationalTransformation />
 
-      <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
+      <section className="bg-[#162443] px-5 py-24 sm:px-8 lg:py-32">
         <div className="mx-auto max-w-[1600px]">
-          <div className="mb-12">
+          <div className="mb-12 text-center lg:text-left">
             <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR SHARED RESPONSIBILITY</p>
-            <p className="mt-4 text-xl leading-8 text-slate-700">
+            <p className="mt-4 text-xl leading-8 text-white">
               We safeguard the collective interest of our Cultures, Communities, Constituencies, Counties and the
               Country.
             </p>
           </div>
+
+          {/* Your Impact Card */}
           <div
-            className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] sm:h-[600px] lg:h-[700px] bg-cover bg-center"
+            className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] sm:h-[600px] lg:h-[700px] bg-cover bg-center mb-12"
             style={{ backgroundImage: "url(/unity-img.jpg)" }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[#162443]/90 via-[#162443]/70 to-[#162443]/50" />
             <div className="relative h-full flex items-center justify-center px-6 sm:px-12">
               <div className="max-w-2xl text-center text-white">
-                <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6">
-                  Discover • Freedom • Truth • Prosperity
-                </h2>
+                <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6">Your Impact</h2>
                 <p className="text-lg sm:text-xl leading-8 text-white/90">
-                  Our collective commitment to building a Kenya rooted in shared values and national unity.
+                  Every action counts. Join thousands of Kenyans making a tangible difference in our nation's future.
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Pill Navigation Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+            <button className="px-6 sm:px-8 py-3 rounded-full font-bold text-sm uppercase tracking-[0.08em] transition-all duration-300 bg-[#162443] text-white border-2 border-[#162443] hover:bg-white hover:text-[#162443]">
+              Discover
+            </button>
+            <button className="px-6 sm:px-8 py-3 rounded-full font-bold text-sm uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-[#162443] hover:bg-[#162443] hover:text-white">
+              Freedom
+            </button>
+            <button className="px-6 sm:px-8 py-3 rounded-full font-bold text-sm uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-[#162443] hover:bg-[#162443] hover:text-white">
+              Truth
+            </button>
+            <button className="px-6 sm:px-8 py-3 rounded-full font-bold text-sm uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-[#162443] hover:bg-[#162443] hover:text-white">
+              Prosperity
+            </button>
           </div>
         </div>
       </section>
