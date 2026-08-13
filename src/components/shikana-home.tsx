@@ -3,6 +3,11 @@ import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote } from "l
 import { LatestNewsInsights } from "./latest-news-insights";
 import { ImpactStoryHome } from "./impact-story-home";
 import { CampaignPopup } from "./campaign-popup";
+import { WhyUsWhyYou } from "./why-us-why-you";
+import { DiscoverInterchange } from "./discover-interchange";
+import { UpcomingEventsSection } from "./upcoming-events-section";
+import { GenerationalTransformation } from "./generational-transformation";
+import { ElectionCountdown } from "./election-countdown";
 
 const actions = [
   {
@@ -180,65 +185,10 @@ export function ShikanaHome() {
           </Link>
         </div>
       </section>
-      <section id="ideology" className="bg-[#162443] px-5 py-24 text-white sm:px-8 lg:py-32">
-        <div className="mx-auto max-w-[1600px]">
-          <div className="max-w-2xl">
-            <p className="text-sm font-bold tracking-[0.16em] text-[#ecb23b]">WHAT WE BELIEVE</p>
-            <h2 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">A practical vision for Kenya.</h2>
-            <p className="mt-5 text-lg leading-8 text-white/70">
-              Explore Shikana’s published areas of focus, rooted in social progress, economic transformation and good
-              governance.
-            </p>
-          </div>
-        </div>
-      </section>
-      <section id="journey" className="bg-white px-5 py-24 sm:px-8 lg:py-32">
-        <div className="mx-auto max-w-[1600px]">
-          <div className="max-w-3xl mb-16">
-            <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR JOURNEY IN NUMBERS</p>
-            <h2 className="mt-4 text-4xl font-black leading-tight tracking-tight sm:text-5xl">Growing stronger.</h2>
-            <p className="mt-6 text-xl font-bold text-[#162443]">Building Momentum! Inspiring Action.</p>
-            <p className="mt-4 text-lg leading-8 text-slate-600">
-              Every milestone reflects the growing confidence that Kenyans have in SHIKANA.
-            </p>
-          </div>
+      <WhyUsWhyYou />
+      <DiscoverInterchange />
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5 mb-16">
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8">
-              <p className="text-4xl font-black text-[#c9232b]">+50,000</p>
-              <p className="mt-4 font-bold text-[#162443]">Active party SFUP members</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8">
-              <p className="text-4xl font-black text-[#c9232b]">+30</p>
-              <p className="mt-4 font-bold text-[#162443]">Counties Reached</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8">
-              <p className="text-4xl font-black text-[#c9232b]">+290</p>
-              <p className="mt-4 font-bold text-[#162443]">Constituencies</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8">
-              <p className="text-4xl font-black text-[#c9232b]">+21</p>
-              <p className="mt-4 font-bold text-[#162443]">Activities Conducted</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-[#162443] to-[#0f1929] p-8">
-              <p className="text-4xl font-black text-[#ecb23b]">100%</p>
-              <p className="mt-4 font-bold text-white">Transparent Spending</p>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-[#162443] to-[#0f1929] rounded-2xl p-8 sm:p-12">
-            <div className="max-w-2xl">
-              <p className="text-sm font-bold tracking-[0.16em] text-[#ecb23b]">ELECTION TIMELINES</p>
-              <h3 className="mt-4 text-3xl font-black text-white">Days to Election</h3>
-              <p className="mt-4 text-white/80 leading-8">
-                Track our countdown to the next general election with IEBC official timelines. Every day brings us
-                closer to a historic moment.
-              </p>
-              <p className="mt-6 text-sm text-white/60">Real-time countdown: Years • Months • Weeks • Days</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ElectionCountdown />
       <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
         <div className="mx-auto max-w-[1600px]">
           <div className="mb-12">
@@ -268,29 +218,56 @@ export function ShikanaHome() {
       </section>
       <LatestNewsInsights />
 
-      <section className="bg-[#c9232b] px-5 py-24 text-white sm:px-8 lg:py-28">
-        <div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
-            <p className="text-sm font-bold tracking-[0.16em] text-white/70">GET INVOLVED</p>
-            <h2 className="mt-4 max-w-3xl text-4xl font-black leading-tight tracking-tight sm:text-5xl">
-              Be part of the movement for unity.
-            </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">
-              Your voice and participation matter. Join Shikana or support its work today.
-            </p>
+      <UpcomingEventsSection />
+
+      <GenerationalTransformation />
+
+      <section className="bg-[#162443] px-5 py-24 text-white sm:px-8 lg:py-32">
+        <div className="mx-auto max-w-[1600px]">
+          <div className="mb-12 text-center lg:text-left">
+            <p className="text-sm font-bold tracking-[0.16em] text-[#ecb23b] mb-4">JOIN THE MOVEMENT</p>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6">Get Inspired and Take Action.</h2>
+            <p className="text-xl text-white/80 max-w-2xl mb-12">Do not allow others to decide your future for you.</p>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link
               href="/shared-ui/register"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 font-bold text-[#c9232b] transition hover:bg-[#162443] hover:text-white"
+              className="group bg-white/10 border border-white/30 rounded-2xl p-8 hover:bg-white hover:text-[#162443] transition-all duration-300 hover:scale-105"
             >
-              Join Shikana <ArrowRight size={18} />
+              <h3 className="text-2xl font-bold mb-4 group-hover:text-[#c9232b]">Join Shikana</h3>
+              <p className="text-white/70 group-hover:text-slate-600 mb-6">
+                Become a member and take your place in the movement.
+              </p>
+              <span className="inline-flex items-center gap-2 font-bold group-hover:gap-3 transition-all">
+                Get Started <ArrowRight size={18} />
+              </span>
             </Link>
+
             <Link
-              href="/shared-ui/donate"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/60 px-7 py-4 font-bold transition hover:bg-white hover:text-[#c9232b]"
+              href="/shared-ui/volunteer"
+              className="group bg-white/10 border border-white/30 rounded-2xl p-8 hover:bg-white hover:text-[#162443] transition-all duration-300 hover:scale-105"
             >
-              Support the party <ArrowRight size={18} />
+              <h3 className="text-2xl font-bold mb-4 group-hover:text-[#c9232b]">Become a Volunteer</h3>
+              <p className="text-white/70 group-hover:text-slate-600 mb-6">
+                Give your time and skills to build our nation.
+              </p>
+              <span className="inline-flex items-center gap-2 font-bold group-hover:gap-3 transition-all">
+                Volunteer Now <ArrowRight size={18} />
+              </span>
+            </Link>
+
+            <Link
+              href="/shared-ui/local-group"
+              className="group bg-white/10 border border-white/30 rounded-2xl p-8 hover:bg-white hover:text-[#162443] transition-all duration-300 hover:scale-105"
+            >
+              <h3 className="text-2xl font-bold mb-4 group-hover:text-[#c9232b]">Get Involved</h3>
+              <p className="text-white/70 group-hover:text-slate-600 mb-6">
+                Connect with your local branch and take action.
+              </p>
+              <span className="inline-flex items-center gap-2 font-bold group-hover:gap-3 transition-all">
+                Find Local Branch <ArrowRight size={18} />
+              </span>
             </Link>
           </div>
         </div>
