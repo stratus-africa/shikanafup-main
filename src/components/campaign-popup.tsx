@@ -1,22 +1,38 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { usePathname } from "@/lib/next-shims";
 import votingCampaign from "@/assets/shikana-vote-campaign.jpg.asset.json";
 
 const STORAGE_KEY = "shikana-campaign-popup-dismissed";
+const SHOW_FREQUENCY_HOURS = 24; // Show every 24 hours
 
 export function CampaignPopup() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (sessionStorage.getItem(STORAGE_KEY) === "1") return;
+
+    const lastDismissed = localStorage.getItem(STORAGE_KEY);
+    const now = Date.now();
+
+    if (lastDismissed) {
+      const dismissedTime = parseInt(lastDismissed, 10);
+      const hoursPassed = (now - dismissedTime) / (1000 * 60 * 60);
+
+      // Only show if enough time has passed
+      if (hoursPassed < SHOW_FREQUENCY_HOURS) return;
+    }
+
     const timer = window.setTimeout(() => setOpen(true), 900);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [pathname]);
 
   const close = () => {
     setOpen(false);
-    if (typeof window !== "undefined") sessionStorage.setItem(STORAGE_KEY, "1");
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    }
   };
 
   useEffect(() => {
