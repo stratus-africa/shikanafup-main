@@ -127,175 +127,88 @@ export function Header() {
             </div>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-6 text-sm font-semibold uppercase tracking-[0.12em] text-[#12203d]">
-            <Link href="/shared-ui/about" className="transition hover:text-[#4a3110]">About</Link>
-            <Link href="/shared-ui/events" className="transition hover:text-[#4a3110]">Events</Link>
-            <Link href="/shared-ui/blog" className="transition hover:text-[#4a3110]">Media</Link>
-            <Link href="/shared-ui/donate" className="transition hover:text-[#4a3110]">Support Us</Link>
-            <Link href="/shared-ui/listings" className="transition hover:text-[#4a3110]">Shop</Link>
+          <div className="hidden flex-1 items-center justify-center gap-6 text-sm font-semibold uppercase tracking-[0.12em] text-[#12203d] lg:flex">
+            {navItems.map((item) => (
+              <div key={item.label} className="relative group">
+                {item.children ? (
+                  <button className="transition hover:text-[#4a3110]">
+                    {item.label}
+                  </button>
+                ) : (
+                  <Link href={item.href} className="transition hover:text-[#4a3110]">
+                    {item.label}
+                  </Link>
+                )}
+              </div>
+            ))}
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              href="/shared-ui/donate"
-              className="hidden rounded-full border border-[#12203d]/50 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#12203d] transition hover:bg-[#12203d] hover:text-[#f6d374] sm:inline-flex"
-            >
-              Support us
-            </Link>
-            <Link
-              href="/shared-ui/register"
-              className="inline-flex items-center justify-center rounded-full bg-[#12203d] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[#0b1327]"
-            >
-              Join or log in
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Navbar */}
-      <nav
-        className="border-b border-secondary/10 bg-white shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)] backdrop-blur"
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
-          <div className="flex h-[76px] items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-secondary">
-              <img
-                src={get("site.logo_url")}
-                alt={`${get("site.site_name")} logo`}
-                className="h-14 w-14 object-contain"
-              />
-              <div className="hidden sm:flex flex-col leading-tight">
-                <span className="font-bold text-secondary text-md">{get("site.site_name")}</span>
-                <span className="text-sm text-primary">{get("site.tagline")}</span>
-              </div>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-8">
-              {navItems.map((item) => (
-                <div key={item.label} className="relative group">
-                  {!item.children ? (
-                    <Link
-                      href={item.href}
-                      className={`text-base font-medium transition-colors pb-1
-            ${
-              isActive(item.href)
-                ? "text-secondary border-b-2 border-secondary"
-                : "text-foreground hover:text-secondary"
-            }
-          `}
-                    >
-                      {item.label}
-                    </Link>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="h-9 w-9 rounded-full bg-[#12203d] text-white font-bold flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#12203d]"
+                    aria-label="Account menu"
+                  >
+                    {(user.first_name?.[0] ?? user.email?.[0])?.toUpperCase()}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-60">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-foreground">
+                        {[user.first_name, user.last_name].filter(Boolean).join(" ") || "My account"}
+                      </span>
+                      <span className="text-xs text-muted-foreground truncate">{user.email}</span>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setShowProfileDialog(true)}>
+                    <UserIcon className="mr-2 h-4 w-4" /> My Profile
+                  </DropdownMenuItem>
+                  {isStaff ? (
+                    <DropdownMenuItem onClick={() => router.push("/admin/dashboard")}>
+                      <Shield className="mr-2 h-4 w-4" /> Admin View
+                    </DropdownMenuItem>
                   ) : (
-                    <>
-                      {/* Parent button with highlight on hover */}
-                      <button
-                        className="text-base font-medium hover:text-secondary focus:outline-none focus:text-secondary relative"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                      >
-                        {item.label}
-
-                        {/* Optional small underline/highlight when open */}
-                        <span className="absolute left-0 right-0 -bottom-1 h-0.5 bg-secondary scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                      </button>
-
-                      {/* Dropdown card */}
-                      <div
-                        className="
-              absolute left-1/2 transform -translate-x-1/2 top-full mt-4
-              invisible opacity-0 translate-y-3
-              group-hover:visible group-hover:opacity-100 group-hover:translate-y-0
-              transition-all duration-300 ease-out
-              bg-white border border-border rounded-lg shadow-lg w-56
-              z-50
-            "
-                      >
-                        {/* Triangle pointer */}
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-3 h-3 bg-white rotate-45 border-l border-t border-border"></div>
-
-                        {/* Dropdown links */}
-                        <div className="py-2">
-                          {item.children.map((sub) => (
-                            <Link
-                              key={sub.label}
-                              href={sub.href}
-                              className="block px-4 py-2 text-sm text-foreground hover:bg-secondary/10 focus:bg-secondary/10 focus:outline-none"
-                            >
-                              {sub.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    </>
+                    <DropdownMenuItem onClick={() => router.push("/portal")}>
+                      <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
+                    </DropdownMenuItem>
                   )}
-                </div>
-              ))}
-            </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => logout()} className="text-destructive focus:text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" /> Log Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link
+                  href="/shared-ui/donate"
+                  className="hidden rounded-full border border-[#12203d]/50 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#12203d] transition hover:bg-[#12203d] hover:text-[#f6d374] sm:inline-flex"
+                >
+                  Support us
+                </Link>
+                <Link
+                  href="/shared-ui/register"
+                  className="inline-flex items-center justify-center rounded-full bg-[#12203d] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[#0b1327]"
+                >
+                  Join or log in
+                </Link>
+              </>
+            )}
 
-            {/* Right Actions */}
-            <div className="hidden lg:flex items-center gap-4">
-              {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      className="h-9 w-9 rounded-full bg-secondary text-white font-bold flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-secondary"
-                      aria-label="Account menu"
-                    >
-                      {(user.first_name?.[0] ?? user.email?.[0])?.toUpperCase()}
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-60">
-                    <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col">
-                        <span className="font-semibold text-foreground">
-                          {[user.first_name, user.last_name].filter(Boolean).join(" ") || "My account"}
-                        </span>
-                        <span className="text-xs text-muted-foreground truncate">{user.email}</span>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setShowProfileDialog(true)}>
-                      <UserIcon className="mr-2 h-4 w-4" /> My Profile
-                    </DropdownMenuItem>
-                    {isStaff ? (
-                      <DropdownMenuItem onClick={() => router.push("/admin/dashboard")}>
-                        <Shield className="mr-2 h-4 w-4" /> Admin View
-                      </DropdownMenuItem>
-                    ) : (
-                      <DropdownMenuItem onClick={() => router.push("/portal")}>
-                        <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard
-                      </DropdownMenuItem>
-                    )}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => logout()} className="text-destructive focus:text-destructive">
-                      <LogOut className="mr-2 h-4 w-4" /> Log Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <AccountCta
-                  onRegister={() => router.push("/shared-ui/register")}
-                  onLogin={() => router.push("/login")}
-                />
-              )}
-
-              <button
-                onClick={() => setShowSearch(true)}
-                aria-label="Search site"
-                className="hover:text-secondary transition-colors"
-              >
-                <Search size={18} />
-              </button>
-            </div>
-
-            {/* Mobile Toggle */}
             <button
-              className="lg:hidden focus:outline-none focus:ring-2 focus:ring-secondary"
+              onClick={() => setShowSearch(true)}
+              aria-label="Search site"
+              className="hidden transition-colors hover:text-[#4a3110] lg:inline-flex"
+            >
+              <Search size={18} />
+            </button>
+
+            <button
+              className="lg:hidden focus:outline-none focus:ring-2 focus:ring-[#12203d]"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
               aria-expanded={isMenuOpen}
@@ -304,97 +217,88 @@ export function Header() {
               {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
-
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-            <div id="mobile-navigation" className="lg:hidden border-t pt-6 pb-4 space-y-5">
-              {/* Navigation */}
-              {navItems.map((item) => (
-                <div key={item.label}>
-                  {item.children ? (
-                    <span className="block text-base font-semibold text-foreground">{item.label}</span>
-                  ) : (
-                    <Link
-                      href={item.href || "#"}
-                      className="block text-base font-semibold text-foreground hover:text-secondary transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  )}
-                  {item.children && (
-                    <div className="pl-4 mt-3 space-y-3">
-                      {item.children.map((sub) => (
-                        <Link
-                          key={sub.label}
-                          href={sub.href}
-                          className="block text-sm text-foreground/80"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {sub.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              {/* Mobile Login / Profile */}
-              {user ? (
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      setShowProfileDialog(true);
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
-                  >
-                    My Profile
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push(isStaff ? "/admin/dashboard" : "/portal");
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
-                  >
-                    {isStaff ? "Admin View" : "Dashboard"}
-                  </button>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full text-left px-4 py-3 rounded-md bg-destructive/10 text-destructive font-medium"
-                  >
-                    Log Out
-                  </button>
-                </div>
-              ) : (
-                <AccountCta
-                  fullWidth
-                  onRegister={() => {
-                    router.push("/shared-ui/register");
-                    setIsMenuOpen(false);
-                  }}
-                  onLogin={() => {
-                    router.push("/login");
-                    setIsMenuOpen(false);
-                  }}
-                />
-              )}
-
-              {/* Mobile Donate CTA */}
-              {/* <Button
-                onClick={() => router.push("/shared-ui/donate")}
-                className="w-full bg-secondary text-white"
-              >
-                Donate
-              </Button> */}
-            </div>
-          )}
         </div>
-      </nav>
+      </div>
+
+      {isMenuOpen && (
+        <div id="mobile-navigation" className="border-t border-[#12203d]/10 bg-white px-5 py-6 lg:hidden">
+          <div className="space-y-5">
+            {navItems.map((item) => (
+              <div key={item.label}>
+                {item.children ? (
+                  <span className="block text-base font-semibold text-foreground">{item.label}</span>
+                ) : (
+                  <Link
+                    href={item.href || "#"}
+                    className="block text-base font-semibold text-foreground hover:text-secondary transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )}
+                {item.children && (
+                  <div className="mt-3 space-y-3 pl-4">
+                    {item.children.map((sub) => (
+                      <Link
+                        key={sub.label}
+                        href={sub.href}
+                        className="block text-sm text-foreground/80"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {user ? (
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    setShowProfileDialog(true);
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full rounded-md bg-secondary/10 px-4 py-3 text-left font-medium text-secondary"
+                >
+                  My Profile
+                </button>
+                <button
+                  onClick={() => {
+                    router.push(isStaff ? "/admin/dashboard" : "/portal");
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full rounded-md bg-secondary/10 px-4 py-3 text-left font-medium text-secondary"
+                >
+                  {isStaff ? "Admin View" : "Dashboard"}
+                </button>
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full rounded-md bg-destructive/10 px-4 py-3 text-left font-medium text-destructive"
+                >
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <AccountCta
+                fullWidth
+                onRegister={() => {
+                  router.push("/shared-ui/register");
+                  setIsMenuOpen(false);
+                }}
+                onLogin={() => {
+                  router.push("/login");
+                  setIsMenuOpen(false);
+                }}
+              />
+            )}
+          </div>
+        </div>
+      )}
 
       <UserProfileDialog open={showProfileDialog} onOpenChange={setShowProfileDialog} />
       <SearchDialog open={showSearch} onOpenChange={setShowSearch} />
