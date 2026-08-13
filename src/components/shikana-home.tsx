@@ -3,6 +3,7 @@ import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote } from "l
 import { EventsPreview } from "./events-preview";
 import { ImpactStoryHome } from "./impact-story-home";
 import { CampaignPopup } from "./campaign-popup";
+import { SharedResponsibilityInterchange } from "./shared-responsibility-interchange";
 
 const actions = [
   {
@@ -30,8 +31,6 @@ const actions = [
     href: "/shared-ui/local-group",
   },
 ];
-
-const fiveCs = ["Cultures", "Communities", "Constituencies", "Counties", "Country"];
 
 const nationalPriorities = [
   {
@@ -241,31 +240,7 @@ export function ShikanaHome() {
           </div>
         </div>
       </section>
-      <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
-        <div className="mx-auto max-w-[1600px]">
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div className="max-w-2xl">
-              <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR SHARED RESPONSIBILITY</p>
-              <h2 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">The 5Cs</h2>
-            </div>
-            <p className="max-w-md leading-7 text-slate-600">
-              We safeguard the collective interest of our Cultures, Communities, Constituencies, Counties and the
-              Country.
-            </p>
-          </div>
-          <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {fiveCs.map((item, index) => (
-              <div
-                key={item}
-                className="group rounded-2xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-[#c9232b] hover:shadow-lg"
-              >
-                <span className="text-sm font-black text-[#c9232b]">0{index + 1}</span>
-                <h3 className="mt-12 text-2xl font-black">{item}</h3>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <SharedResponsibilityInterchange />
       <section className="border-y border-slate-200 bg-white px-5 py-24 sm:px-8 lg:py-28">
         <div className="mx-auto max-w-[1600px]">
           <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">UPCOMING EVENTS</p>
