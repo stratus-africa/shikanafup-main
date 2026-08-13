@@ -120,8 +120,15 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-      "Helvetica Neue", Arial, sans-serif;
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
   }
 }
 
@@ -186,38 +193,37 @@
   background-color: color-mix(in oklab, var(--color-muted) 50%, transparent);
 }
 
-
 /* ------------------------------------------------------------------ */
 /* Ocean Blue Serenity — admin + member portal theme                    */
 /* ------------------------------------------------------------------ */
 
 .admin-theme {
-  --background: #f2fafd;
-  --foreground: #03045e;
+  --background: #f6f7fb;
+  --foreground: #162443;
   --card: #ffffff;
-  --card-foreground: #03045e;
+  --card-foreground: #162443;
   --popover: #ffffff;
-  --popover-foreground: #03045e;
-  --primary: #0077b6;
+  --popover-foreground: #162443;
+  --primary: #c9232b;
   --primary-foreground: #ffffff;
-  --secondary: #caf0f8;
-  --secondary-foreground: #023e8a;
-  --muted: #e6f6fb;
-  --muted-foreground: #3b6f8c;
-  --accent: #ade8f4;
-  --accent-foreground: #03045e;
+  --secondary: #d9b75a;
+  --secondary-foreground: #162443;
+  --muted: #f3f5fa;
+  --muted-foreground: #42547a;
+  --accent: #e9eefb;
+  --accent-foreground: #162443;
   --destructive: #b3261e;
   --destructive-foreground: #ffffff;
-  --border: #bfe6f2;
-  --input: #bfe6f2;
-  --ring: #0096c7;
-  --chart-1: #03045e;
-  --chart-2: #0077b6;
-  --chart-3: #00b4d8;
-  --chart-4: #48cae4;
-  --chart-5: #90e0ef;
-  --sidebar: #03045e;
-  --sidebar-foreground: #caf0f8;
+  --border: rgba(22, 36, 67, 0.12);
+  --input: rgba(22, 36, 67, 0.12);
+  --ring: #162443;
+  --chart-1: #162443;
+  --chart-2: #d9b75a;
+  --chart-3: #c9232b;
+  --chart-4: #4a5d8a;
+  --chart-5: #cfdaf5;
+  --sidebar: #162443;
+  --sidebar-foreground: #f5f7ff;
   --sidebar-primary: #00b4d8;
   --sidebar-primary-foreground: #03045e;
   --sidebar-accent: #023e8a;
