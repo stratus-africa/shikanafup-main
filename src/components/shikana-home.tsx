@@ -151,40 +151,9 @@ export function ShikanaHome() {
           ))}
         </div>
       </section>
-      <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-24 sm:px-8 lg:grid-cols-2 lg:items-center lg:py-32">
-        <div className="relative">
-          <img
-            src="/about-image.jpg"
-            alt="Shikana members at a community gathering"
-            className="h-[440px] w-full rounded-2xl object-cover shadow-xl sm:h-[540px]"
-          />
-          <div className="absolute -bottom-5 -right-3 max-w-[220px] rounded-xl bg-[#c9232b] p-6 text-white shadow-xl sm:-right-5">
-            <p className="text-3xl font-black">Truth.</p>
-            <p className="mt-1 text-sm font-medium">Always conquers.</p>
-          </div>
-        </div>
-        <div className="max-w-xl">
-          <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">WHO WE ARE</p>
-          <h2 className="mt-4 text-4xl font-black leading-tight tracking-tight sm:text-5xl">
-            Unity begins with the people.
-          </h2>
-          <p className="mt-6 text-lg leading-8 text-slate-600">
-            Shikana Frontliners for Unity Party brings people together around a shared commitment to unity,
-            participation and responsible public leadership.
-          </p>
-          <p className="mt-4 leading-7 text-slate-600">
-            Our work is grounded in the belief that every Kenyan should have a meaningful stake in the country’s future.
-          </p>
-          <Link
-            href="/shared-ui/about"
-            className="mt-8 inline-flex items-center gap-2 font-bold text-[#c9232b] hover:gap-3"
-          >
-            Learn about Shikana <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
       <WhyUsWhyYou />
       <DiscoverInterchange />
+      <GenerationalTransformation />
 
       <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
         <div className="mx-auto max-w-[1600px]">
@@ -214,8 +183,6 @@ export function ShikanaHome() {
         </div>
       </section>
       <LatestNewsInsights />
-
-      <GenerationalTransformation />
 
       <section className="bg-[#162443] px-5 py-24 text-white sm:px-8 lg:py-32">
         <div className="mx-auto max-w-[1600px]">
