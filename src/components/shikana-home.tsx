@@ -197,32 +197,47 @@ export function ShikanaHome() {
               </div>
             </div>
 
-            {/* Right Column - Impact Content */}
-            <div className="bg-[#f4f1ed] rounded-2xl p-8 sm:p-10 lg:p-12">
-              <div className="text-center mb-10 lg:mb-12">
-                <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 text-balance">Our Impact</h3>
-                <p className="text-base text-foreground/70">See the difference we're making across Kenya</p>
+            {/* Right Column - Shared Responsibility and Impact */}
+            <div className="flex flex-col justify-center">
+              <div className="mb-10 lg:mb-12">
+                <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR SHARED RESPONSIBILITY</p>
+                <p className="mt-4 text-lg leading-8 text-white">
+                  We safeguard the collective interest of our Cultures, Communities, Constituencies, Counties and the
+                  Country.
+                </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-6 sm:gap-8">
-                {[1, 2, 3, 4].map((n) => {
-                  const icons = [Users, MapPinned, TrendingUp, Zap];
-                  const Icon = icons[n - 1];
-                  const stats = ["2,082+", "47", "50K+", "12M"];
-                  const labels = ["Active Members", "Counties", "Volunteers", "Young People"];
-                  const descriptions = ["Across Kenya", "Represented", "Engaged", "Called to Action"];
+              {/* Your Impact Card */}
+              <div
+                className="relative rounded-2xl overflow-hidden shadow-2xl h-[400px] sm:h-[500px] bg-cover bg-center mb-8"
+                style={{ backgroundImage: "url(/unity-img.jpg)" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#162443]/90 via-[#162443]/70 to-[#162443]/50" />
+                <div className="relative h-full flex items-center justify-center px-6 sm:px-12">
+                  <div className="max-w-2xl text-center text-white">
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4">Your Impact</h3>
+                    <p className="text-base sm:text-lg leading-7 text-white/90">
+                      Every action counts. Join thousands of Kenyans making a tangible difference in our nation's
+                      future.
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-                  return (
-                    <div key={n} className="text-center flex flex-col items-center">
-                      <div className="bg-white p-3 sm:p-4 rounded-lg mb-3 sm:mb-4 w-fit mx-auto border border-border/50 shadow-sm">
-                        <Icon className="text-[#c9232b]" size={28} />
-                      </div>
-                      <div className="text-2xl sm:text-3xl font-bold text-foreground mb-1">{stats[n - 1]}</div>
-                      <p className="text-sm sm:text-base font-bold text-[#c9232b] mb-1">{labels[n - 1]}</p>
-                      <p className="text-xs sm:text-sm text-foreground/60">{descriptions[n - 1]}</p>
-                    </div>
-                  );
-                })}
+              {/* Pill Navigation Buttons */}
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 sm:gap-4">
+                <button className="px-5 sm:px-6 py-2 rounded-full font-bold text-xs uppercase tracking-[0.08em] transition-all duration-300 bg-[#162443] text-white border-2 border-white hover:bg-white hover:text-[#162443]">
+                  Discover
+                </button>
+                <button className="px-5 sm:px-6 py-2 rounded-full font-bold text-xs uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-white hover:bg-[#162443] hover:text-white">
+                  Freedom
+                </button>
+                <button className="px-5 sm:px-6 py-2 rounded-full font-bold text-xs uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-white hover:bg-[#162443] hover:text-white">
+                  Truth
+                </button>
+                <button className="px-5 sm:px-6 py-2 rounded-full font-bold text-xs uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-white hover:bg-[#162443] hover:text-white">
+                  Prosperity
+                </button>
               </div>
             </div>
           </div>
@@ -231,49 +246,6 @@ export function ShikanaHome() {
 
       <GenerationalTransformation />
 
-      <section className="bg-[#162443] px-5 py-24 sm:px-8 lg:py-32">
-        <div className="mx-auto max-w-[1600px]">
-          <div className="mb-12 text-center lg:text-left">
-            <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR SHARED RESPONSIBILITY</p>
-            <p className="mt-4 text-xl leading-8 text-white">
-              We safeguard the collective interest of our Cultures, Communities, Constituencies, Counties and the
-              Country.
-            </p>
-          </div>
-
-          {/* Your Impact Card */}
-          <div
-            className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] sm:h-[600px] lg:h-[700px] bg-cover bg-center mb-12"
-            style={{ backgroundImage: "url(/unity-img.jpg)" }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-[#162443]/90 via-[#162443]/70 to-[#162443]/50" />
-            <div className="relative h-full flex items-center justify-center px-6 sm:px-12">
-              <div className="max-w-2xl text-center text-white">
-                <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6">Your Impact</h2>
-                <p className="text-lg sm:text-xl leading-8 text-white/90">
-                  Every action counts. Join thousands of Kenyans making a tangible difference in our nation's future.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Pill Navigation Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-            <button className="px-6 sm:px-8 py-3 rounded-full font-bold text-sm uppercase tracking-[0.08em] transition-all duration-300 bg-[#162443] text-white border-2 border-[#162443] hover:bg-white hover:text-[#162443]">
-              Discover
-            </button>
-            <button className="px-6 sm:px-8 py-3 rounded-full font-bold text-sm uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-[#162443] hover:bg-[#162443] hover:text-white">
-              Freedom
-            </button>
-            <button className="px-6 sm:px-8 py-3 rounded-full font-bold text-sm uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-[#162443] hover:bg-[#162443] hover:text-white">
-              Truth
-            </button>
-            <button className="px-6 sm:px-8 py-3 rounded-full font-bold text-sm uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-[#162443] hover:bg-[#162443] hover:text-white">
-              Prosperity
-            </button>
-          </div>
-        </div>
-      </section>
       <LatestNewsInsights />
 
       <section className="bg-[#d9b75a] px-5 py-24 text-[#162443] sm:px-8 lg:py-32">
