@@ -5,7 +5,6 @@ import { EventsPreview } from "./events-preview";
 import { ImpactStoryHome } from "./impact-story-home";
 import { CampaignPopup } from "./campaign-popup";
 
-
 const actions = [
   {
     icon: Users,
@@ -135,17 +134,17 @@ export function ShikanaHome() {
         </div>
       </section>
       <section id="get-involved" className="relative z-10 mx-auto -mt-10 max-w-[1600px] px-4 sm:px-8">
-        <div className="grid overflow-hidden rounded-2xl bg-white shadow-[0_18px_60px_rgba(22,36,67,.14)] sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid overflow-hidden rounded-2xl shadow-[0_18px_60px_rgba(22,36,67,.14)] sm:grid-cols-2 lg:grid-cols-4">
           {actions.map(({ icon: Icon, title, copy, href }) => (
             <Link
               key={title}
               href={href}
-              className="group border-b border-slate-100 p-6 transition hover:bg-[#162443] hover:text-white sm:p-7 lg:border-b-0 lg:border-r last:border-0"
+              className="group border-b border-[#0f1929] bg-[#162443] text-white p-6 transition hover:bg-white hover:text-[#162443] sm:p-7 lg:border-b-0 lg:border-r last:border-0"
             >
-              <Icon className="mb-7 text-[#c9232b] transition group-hover:scale-110 group-hover:text-white" size={27} />
+              <Icon className="mb-7 text-white transition group-hover:scale-110 group-hover:text-[#c9232b]" size={27} />
               <h2 className="text-lg font-extrabold">{title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-500 transition group-hover:text-white/70">{copy}</p>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-[#c9232b] group-hover:text-white">
+              <p className="mt-2 text-sm leading-6 text-white/70 transition group-hover:text-slate-500">{copy}</p>
+              <span className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-white group-hover:text-[#c9232b]">
                 Explore <ArrowRight size={15} />
               </span>
             </Link>
@@ -261,6 +260,5 @@ export function ShikanaHome() {
       </section>
       <ImpactStoryHome />
     </main>
-
   );
 }
