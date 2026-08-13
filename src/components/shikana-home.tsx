@@ -68,7 +68,7 @@ export function ShikanaHome() {
           className="absolute inset-0 -z-20 h-full w-full object-cover"
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#101c35]/95 via-[#162443]/70 to-[#162443]/20" />
-        <div className="mx-auto w-full max-w-7xl px-5 pb-24 pt-32 sm:px-8 sm:py-36">
+        <div className="mx-auto w-full max-w-[1600px] px-5 pb-24 pt-32 sm:px-8 sm:py-36">
           <p className="mb-6 inline-flex rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.16em] text-white backdrop-blur-sm">
             SHIKANA FRONTLINERS FOR UNITY PARTY
           </p>
@@ -101,7 +101,7 @@ export function ShikanaHome() {
         </a>
       </section>
       <section className="bg-[#f4f1ed] px-5 py-20 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1600px]">
           <div className="max-w-3xl">
             <p className="text-sm font-bold tracking-[.16em] text-[#c9232b]">THE NATIONALIST AGENDA</p>
             <h2 className="mt-4 text-4xl font-black leading-tight tracking-tight sm:text-5xl">
@@ -134,7 +134,7 @@ export function ShikanaHome() {
           </div>
         </div>
       </section>
-      <section id="get-involved" className="relative z-10 mx-auto -mt-10 max-w-7xl px-4 sm:px-8">
+      <section id="get-involved" className="relative z-10 mx-auto -mt-10 max-w-[1600px] px-4 sm:px-8">
         <div className="grid overflow-hidden rounded-2xl bg-white shadow-[0_18px_60px_rgba(22,36,67,.14)] sm:grid-cols-2 lg:grid-cols-4">
           {actions.map(({ icon: Icon, title, copy, href }) => (
             <Link
@@ -152,7 +152,7 @@ export function ShikanaHome() {
           ))}
         </div>
       </section>
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-24 sm:px-8 lg:grid-cols-2 lg:items-center lg:py-32">
+      <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-24 sm:px-8 lg:grid-cols-2 lg:items-center lg:py-32">
         <div className="relative">
           <img
             src="/about-image.jpg"
@@ -185,7 +185,7 @@ export function ShikanaHome() {
         </div>
       </section>
       <section id="ideology" className="bg-[#162443] px-5 py-24 text-white sm:px-8 lg:py-32">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1600px]">
           <div className="max-w-2xl">
             <p className="text-sm font-bold tracking-[0.16em] text-[#ecb23b]">WHAT WE BELIEVE</p>
             <h2 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">A practical vision for Kenya.</h2>
@@ -200,7 +200,7 @@ export function ShikanaHome() {
         <ThematicAreas />
       </div>
       <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1600px]">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
             <div className="max-w-2xl">
               <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR SHARED RESPONSIBILITY</p>
@@ -225,7 +225,7 @@ export function ShikanaHome() {
         </div>
       </section>
       <section className="border-y border-slate-200 bg-white px-5 py-24 sm:px-8 lg:py-28">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-[1600px]">
           <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">UPCOMING EVENTS</p>
           <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Keep up with the movement.</h2>
         </div>
@@ -233,7 +233,7 @@ export function ShikanaHome() {
       </section>
 
       <section className="bg-[#c9232b] px-5 py-24 text-white sm:px-8 lg:py-28">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
             <p className="text-sm font-bold tracking-[0.16em] text-white/70">GET INVOLVED</p>
             <h2 className="mt-4 max-w-3xl text-4xl font-black leading-tight tracking-tight sm:text-5xl">

@@ -21,7 +21,7 @@ export function EventsHero() {
         />
       </video>
       <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
-      <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
+      <div className="relative z-10 max-w-[1500px] mx-auto px-4 text-center">
         <Herotext title="Events & Gatherings" />
         <p className="text-xl md:text-2xl md:mt-3 text-white/90 mb-8 max-w-4xl mx-auto text-balance">
           <span className="block font-medium">Come connect with us, embrace our vision, and help power a movement built on peace, love, and unity. Join us at SFUP events near you to share your ideas and engage with fellow citizens</span>

@@ -39,7 +39,7 @@ export function FeaturedArticle() {
 
   return (
     <section className="bg-[#f4f1ed] py-16 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
         <div className="mb-8 flex items-end justify-between gap-6">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">From the journal</p>

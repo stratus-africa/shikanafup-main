@@ -72,7 +72,7 @@ export function BlogGrid() {
   return (
     <section className="bg-background py-20 sm:py-24">
       <Toaster position="top-right" />
-      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
         <div className="border-b border-secondary/15 pb-8">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Explore the journal</p>
           <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">

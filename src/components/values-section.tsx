@@ -98,7 +98,7 @@ export function ValuesSection() {
 
   return (
     <section className="w-full py-12 md:py-16 bg-white border-t border-border">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-[1500px] mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">Our Party Values</h2>
           <p className="text-lg text-foreground/80 leading-relaxed">

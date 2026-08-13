@@ -12,7 +12,7 @@ export function DonateHero() {
         style={{ backgroundImage: 'url(/donate-hero.png)' }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70" />
-      <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
+      <div className="relative z-10 max-w-[1500px] mx-auto px-4 text-center">
         <div className="flex justify-center mb-6">
           <Heart size={48} className="text-secondary" />
         </div>

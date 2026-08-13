@@ -37,7 +37,7 @@ export function OurIdeology() {
   return (
     <>
       <section className="py-8 md:py-12 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-[1500px] mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
             <h2 className="text-4xl md:text-5xl font-bold text-primary mb-3">What We Believe</h2>
@@ -81,7 +81,7 @@ export function OurIdeology() {
 
       {/* Blue shading to break white monotony */}
       <section className="py-12 md:py-16 px-4 bg-gray-50 border-t border-border">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-[1500px] mx-auto">
           {/* ideology */}
           <div className="text-center">
             <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6">Our Ideology</h2>

@@ -88,7 +88,7 @@ export function PublicationsSection() {
         <>
             {/* Policy Documents */}
             <section className="w-full py-12 md:py-16 bg-gray-50 border-y border-border">
-                <div className="max-w-6xl mx-auto px-4">
+                <div className="max-w-[1500px] mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                             Policy Documents
@@ -124,7 +124,7 @@ export function PublicationsSection() {
 
             {/* Bills in Parliament */}
             <section className="w-full py-12 md:py-16 bg-white">
-                <div className="max-w-6xl mx-auto px-4">
+                <div className="max-w-[1500px] mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                             Bills in Parliament

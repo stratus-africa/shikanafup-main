@@ -48,7 +48,7 @@ export function AboutProfile() {
         <Image src={c("site.about.hero_image")} alt="Shikana community gathering" fill priority className="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/85 to-secondary/35" />
         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-secondary/70 to-transparent" />
-        <div className="relative mx-auto flex min-h-[620px] max-w-7xl flex-col justify-end px-5 pb-16 pt-32 sm:min-h-[680px] sm:px-8 sm:pb-20 lg:px-12">
+        <div className="relative mx-auto flex min-h-[620px] max-w-[1600px] flex-col justify-end px-5 pb-16 pt-32 sm:min-h-[680px] sm:px-8 sm:pb-20 lg:px-12">
           <nav aria-label="Breadcrumb" className="mb-auto flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
             <Link href="/">Home</Link><ChevronRight className="size-3" /><span className="text-white">About Shikana</span>
           </nav>
@@ -60,7 +60,7 @@ export function AboutProfile() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:gap-20 lg:px-12 lg:py-28">
+      <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:gap-20 lg:px-12 lg:py-28">
         <div className="lg:col-span-4"><p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Who we are</p><h2 className="mt-5 text-4xl font-bold leading-tight text-secondary sm:text-5xl">A political home built around people.</h2></div>
         <div className="lg:col-span-7 lg:col-start-6">
           <p className="text-2xl font-medium leading-snug text-secondary sm:text-3xl">We are building the next frontier of political power in our communities and throughout the country.</p>
@@ -72,7 +72,7 @@ export function AboutProfile() {
       </section>
 
       <section id="timeline" className="bg-secondary py-8 sm:py-12">
-        <div className="mx-auto grid max-w-7xl overflow-hidden bg-secondary sm:grid-cols-2">
+        <div className="mx-auto grid max-w-[1600px] overflow-hidden bg-secondary sm:grid-cols-2">
           <div className="min-h-[360px] sm:min-h-[590px]"><Image src="/about-image.jpg" alt="Shikana members together" width={1200} height={1000} className="h-full w-full object-cover" /></div>
           <div className="flex items-center px-5 py-16 text-white sm:px-10 lg:px-16">
             <div><p className="text-xs font-bold uppercase tracking-[0.22em] text-primary-foreground/60">Our story</p><h2 className="mt-5 text-4xl font-bold leading-tight sm:text-5xl">A movement shaped in community.</h2>
@@ -83,7 +83,7 @@ export function AboutProfile() {
         </div>
       </section>
 
-      <section id="mission-vision" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+      <section id="mission-vision" className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <div className="max-w-3xl"><p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">{c("site.about.stand_heading")}</p><h2 className="mt-5 text-4xl font-bold text-secondary sm:text-5xl">The purpose that keeps us moving.</h2></div>
         <div className="mt-14 grid gap-8 lg:grid-cols-2">
           <Statement label="Vision" title={c("site.about.vision_heading")} text={c("site.about.vision_text")} points={visionPoints} image="/unity-img.jpg" imageAlt="Unity in the Shikana community" />
@@ -92,7 +92,7 @@ export function AboutProfile() {
       </section>
 
       <section className="bg-[#f4f1ed] py-20 lg:py-28">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
+        <div className="mx-auto grid max-w-[1600px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-12">
           <div className="relative order-2 lg:order-1"><Image src="/nairobiPicture.jpg" alt="Nairobi, Kenya" width={1200} height={900} className="aspect-[4/3] w-full object-cover" /><div className="absolute -bottom-5 -right-3 bg-primary px-6 py-5 text-white sm:-right-5"><span className="block text-3xl font-bold">47</span><span className="text-xs font-semibold uppercase tracking-wider">Counties in view</span></div></div>
           <div className="order-1 lg:order-2"><p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Values</p><h2 className="mt-5 text-4xl font-bold leading-tight text-secondary sm:text-5xl">A principled way forward.</h2><p className="mt-6 text-lg leading-8 text-foreground/75">Pursuant to Article 10 of the Constitution of Kenya, we pursue a just, morally upright and prosperous society founded on national and traditional values.</p>
             <div className="mt-8 grid gap-x-6 gap-y-3 sm:grid-cols-2">{values.map((value) => <div key={value} className="flex gap-3 border-t border-secondary/15 py-3 text-sm font-semibold text-secondary"><Check className="mt-0.5 size-4 shrink-0 text-primary" />{value}</div>)}</div>
@@ -100,7 +100,7 @@ export function AboutProfile() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+      <section className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
         <div className="max-w-3xl"><p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Culture & community</p><h2 className="mt-5 text-4xl font-bold leading-tight text-secondary sm:text-5xl">A place for Kenyans ready to change the nation in real time.</h2><p className="mt-6 text-lg leading-8 text-foreground/75">Our culture is centred on service, trust and practical participation—because a powerful movement starts with how we show up for one another.</p></div>
         <div className="mt-12 grid gap-px bg-secondary/15 sm:grid-cols-2 lg:grid-cols-4">{culture.map(({ icon: Icon, title, text }) => <div key={title} className="bg-background p-7"><Icon className="size-6 text-primary" /><h3 className="mt-8 text-xl font-bold text-secondary">{title}</h3><p className="mt-3 leading-7 text-foreground/70">{text}</p></div>)}</div>
       </section>
@@ -109,7 +109,7 @@ export function AboutProfile() {
       <div id="team" className="scroll-mt-24"><TeamSection /></div>
 
       <section className="bg-secondary px-5 py-16 text-white sm:px-8 lg:py-20">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-end"><div><p className="text-xs font-bold uppercase tracking-[0.22em] text-white/55">Move with Shikana</p><h2 className="mt-5 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">The future is not a spectator sport.</h2></div><div className="flex flex-col gap-3 sm:flex-row lg:justify-end"><Link href="/documents/SHIKANA%20FRONTLINERS%20PARTY%20-%20IDEOLOGY.pdf" target="_blank" className="inline-flex items-center justify-center gap-2 border border-white/30 px-6 py-4 text-sm font-bold transition hover:bg-white hover:text-secondary">Explore our ideology <ArrowRight className="size-4" /></Link><Link href="/shared-ui/register" className="inline-flex items-center justify-center gap-2 bg-primary px-6 py-4 text-sm font-bold transition hover:bg-primary/85">Join Shikana <ArrowRight className="size-4" /></Link></div></div>
+        <div className="mx-auto grid max-w-[1600px] gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-end"><div><p className="text-xs font-bold uppercase tracking-[0.22em] text-white/55">Move with Shikana</p><h2 className="mt-5 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">The future is not a spectator sport.</h2></div><div className="flex flex-col gap-3 sm:flex-row lg:justify-end"><Link href="/documents/SHIKANA%20FRONTLINERS%20PARTY%20-%20IDEOLOGY.pdf" target="_blank" className="inline-flex items-center justify-center gap-2 border border-white/30 px-6 py-4 text-sm font-bold transition hover:bg-white hover:text-secondary">Explore our ideology <ArrowRight className="size-4" /></Link><Link href="/shared-ui/register" className="inline-flex items-center justify-center gap-2 bg-primary px-6 py-4 text-sm font-bold transition hover:bg-primary/85">Join Shikana <ArrowRight className="size-4" /></Link></div></div>
       </section>
     </main>
   );

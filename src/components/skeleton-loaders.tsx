@@ -79,7 +79,7 @@ export function JobListingSkeleton() {
 
 export function FeaturedArticleSkeleton() {
     return (
-        <div className="max-w-6xl mx-auto px-4 py-16 md:py-24">
+        <div className="max-w-[1500px] mx-auto px-4 py-16 md:py-24">
             <Skeleton className="h-10 w-48 mb-8" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-card border border-border rounded-lg overflow-hidden">
                 <Skeleton className="w-full h-96" />
@@ -106,7 +106,7 @@ export function FeaturedArticleSkeleton() {
 
 export function UpcomingHighlightSkeleton() {
     return (
-        <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-[1500px] mx-auto px-4 py-8 md:py-12">
             <Skeleton className="h-10 w-48 mb-8" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <Skeleton className="w-full h-96 rounded-lg" />

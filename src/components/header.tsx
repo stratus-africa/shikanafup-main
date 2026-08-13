@@ -145,7 +145,7 @@ export function Header() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
           <div className="flex h-[76px] items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-secondary">
