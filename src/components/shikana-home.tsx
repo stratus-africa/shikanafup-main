@@ -59,6 +59,8 @@ const nationalPriorities = [
 export function ShikanaHome() {
   return (
     <main className="overflow-hidden bg-[#fcfcfa] text-[#162443]">
+      <CampaignPopup />
+
       <section className="relative isolate flex min-h-[calc(100svh-80px)] items-end overflow-hidden bg-[#162443] sm:items-center">
         <img
           src="/unity-img.jpg"
@@ -257,6 +259,8 @@ export function ShikanaHome() {
           </div>
         </div>
       </section>
+      <ImpactStoryHome />
     </main>
+
   );
 }
