@@ -1,10 +1,7 @@
 import { Link } from "@/lib/next-shims";
-import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote } from "lucide-react";
+import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote, TrendingUp, Zap } from "lucide-react";
 import { LatestNewsInsights } from "./latest-news-insights";
-import { ImpactStoryHome } from "./impact-story-home";
 import { CampaignPopup } from "./campaign-popup";
-import { WhyUsWhyYou } from "./why-us-why-you";
-import { DiscoverInterchange } from "./discover-interchange";
 import { GenerationalTransformation } from "./generational-transformation";
 
 const actions = [
@@ -133,7 +130,10 @@ export function ShikanaHome() {
           </div>
         </div>
       </section>
-      <section id="get-involved" className="relative z-10 mx-auto -mt-10 max-w-[1600px] px-4 sm:px-8">
+      <section
+        id="get-involved"
+        className="relative z-10 mx-auto -mt-10 max-w-[1600px] px-4 sm:px-8 pb-20 sm:pb-24 lg:pb-28"
+      >
         <div className="grid overflow-hidden rounded-2xl shadow-[0_18px_60px_rgba(22,36,67,.14)] sm:grid-cols-2 lg:grid-cols-4">
           {actions.map(({ icon: Icon, title, copy, href }) => (
             <Link
@@ -151,8 +151,84 @@ export function ShikanaHome() {
           ))}
         </div>
       </section>
-      <WhyUsWhyYou />
-      <DiscoverInterchange />
+
+      {/* Combined WhyUsWhyYou + ImpactStoryHome Section */}
+      <section className="bg-[#162443] px-5 py-16 sm:px-8 md:py-24 lg:py-32 text-white">
+        <div className="mx-auto max-w-[1600px]">
+          <div className="grid gap-8 lg:gap-12 lg:grid-cols-[1fr_1.2fr] items-center">
+            {/* Left Column - WhyUsWhyYou Content */}
+            <div className="flex flex-col justify-center">
+              <div className="mb-10 lg:mb-16">
+                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-4 leading-tight">
+                  Nothing
+                  <br />
+                  About Kenyans,
+                  <br />
+                  Without Kenyans!
+                </h2>
+                <p className="text-sm font-bold tracking-[0.16em] text-[#ecb23b] mt-6">A practical vision for Kenya.</p>
+              </div>
+
+              <div className="grid gap-6 sm:gap-8">
+                {[
+                  {
+                    id: 1,
+                    title: "Why Us",
+                    content:
+                      "We are a party that listens to its members and empowers its people. Together, we will transform Kenya into a nation where freedom has meaning, opportunity is within reach, and where every citizen must belong and have a voice.",
+                  },
+                  {
+                    id: 2,
+                    title: "Why You",
+                    content:
+                      "Every Kenyan is a partner in governance, and the benefits of economic prosperity belong to all. Together, we must protect the nation, safeguard its natural resources, strengthen our institutions, and preserve the hopes of future generations.",
+                  },
+                ].map((card) => (
+                  <div
+                    key={card.id}
+                    className="group bg-[#162443] border-2 border-[#162443] rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:bg-white hover:text-[#162443] hover:border-white hover:shadow-2xl hover:-translate-y-2 cursor-pointer"
+                  >
+                    <h3 className="text-xl sm:text-2xl font-black mb-4 transition-colors duration-300">{card.title}</h3>
+                    <p className="text-base leading-7 text-white/80 group-hover:text-slate-600 transition-colors duration-300">
+                      {card.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column - Impact Content */}
+            <div className="bg-[#f4f1ed] rounded-2xl p-8 sm:p-10 lg:p-12">
+              <div className="text-center mb-10 lg:mb-12">
+                <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 text-balance">Our Impact</h3>
+                <p className="text-base text-foreground/70">See the difference we're making across Kenya</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6 sm:gap-8">
+                {[1, 2, 3, 4].map((n) => {
+                  const icons = [Users, MapPinned, TrendingUp, Zap];
+                  const Icon = icons[n - 1];
+                  const stats = ["2,082+", "47", "50K+", "12M"];
+                  const labels = ["Active Members", "Counties", "Volunteers", "Young People"];
+                  const descriptions = ["Across Kenya", "Represented", "Engaged", "Called to Action"];
+
+                  return (
+                    <div key={n} className="text-center flex flex-col items-center">
+                      <div className="bg-white p-3 sm:p-4 rounded-lg mb-3 sm:mb-4 w-fit mx-auto border border-border/50 shadow-sm">
+                        <Icon className="text-[#c9232b]" size={28} />
+                      </div>
+                      <div className="text-2xl sm:text-3xl font-bold text-foreground mb-1">{stats[n - 1]}</div>
+                      <p className="text-sm sm:text-base font-bold text-[#c9232b] mb-1">{labels[n - 1]}</p>
+                      <p className="text-xs sm:text-sm text-foreground/60">{descriptions[n - 1]}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <GenerationalTransformation />
 
       <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
@@ -234,7 +310,6 @@ export function ShikanaHome() {
           </div>
         </div>
       </section>
-      <ImpactStoryHome />
     </main>
   );
 }
