@@ -52,7 +52,9 @@ export function ImageGalleryManager() {
                 <ImageIcon className="h-4 w-4 text-primary" />
                 <span className="truncate">{image.name}</span>
               </div>
-              <div className="rounded-md border bg-muted/40 p-2 text-xs text-muted-foreground break-all">{image.url}</div>
+              <div className="rounded-md border bg-muted/40 p-2 text-xs text-muted-foreground break-all">
+                {image.url}
+              </div>
               <Button variant="outline" size="sm" className="w-full" onClick={() => copyUrl(image.url)}>
                 <Copy className="mr-2 h-4 w-4" />
                 {copied === image.url ? "Copied" : "Copy URL"}
