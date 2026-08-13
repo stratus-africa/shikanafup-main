@@ -117,26 +117,39 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full shadow-[0_6px_24px_-20px_rgba(10,25,47,.45)]">
-      {/*Top Info Bar*/}
-      <div className="bg-secondary py-1 text-primary-foreground">
-        <InfiniteSlider gap={80} reverse>
-          <p className="text-sm font-medium">{get("site.site_name")}</p>
-          <p className="text-sm font-medium">“Truth, Always, Conquers” - “Veritas, Lux et Lex, Vincit”</p>
-          <p className="text-sm flex items-center gap-2">
-            <Phone size={16} />
-            {get("site.contact_phone")}
-          </p>
-          <p className="text-sm flex items-center gap-2">
-            <Mail size={16} />
-            {get("site.contact_email")}
-          </p>
-          <div className="flex gap-4">
-            <Facebook size={16} />
-            <Twitter size={16} />
-            <Instagram size={16} />
-            <Youtube size={16} />
+      <div className="bg-[#d4a12a] text-[#12203d]">
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-5 py-3 sm:px-8 lg:px-12">
+          <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-[#12203d]">
+            <img src={get("site.logo_url")} alt={`${get("site.site_name")} logo`} className="h-12 w-12 object-contain" />
+            <div className="hidden sm:flex flex-col leading-tight">
+              <span className="font-black text-[0.9rem] uppercase tracking-[0.18em]">{get("site.site_name")}</span>
+              <span className="text-xs font-medium uppercase tracking-[0.16em] text-[#12203d]/75">{get("site.tagline")}</span>
+            </div>
+          </Link>
+
+          <div className="hidden lg:flex items-center gap-6 text-sm font-semibold uppercase tracking-[0.12em] text-[#12203d]">
+            <Link href="/shared-ui/about" className="transition hover:text-[#4a3110]">About</Link>
+            <Link href="/shared-ui/events" className="transition hover:text-[#4a3110]">Events</Link>
+            <Link href="/shared-ui/blog" className="transition hover:text-[#4a3110]">Media</Link>
+            <Link href="/shared-ui/donate" className="transition hover:text-[#4a3110]">Support Us</Link>
+            <Link href="/shared-ui/listings" className="transition hover:text-[#4a3110]">Shop</Link>
           </div>
-        </InfiniteSlider>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/shared-ui/donate"
+              className="hidden rounded-full border border-[#12203d]/50 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#12203d] transition hover:bg-[#12203d] hover:text-[#f6d374] sm:inline-flex"
+            >
+              Support us
+            </Link>
+            <Link
+              href="/shared-ui/register"
+              className="inline-flex items-center justify-center rounded-full bg-[#12203d] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[#0b1327]"
+            >
+              Join or log in
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Main Navbar */}
