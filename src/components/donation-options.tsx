@@ -94,7 +94,7 @@ export function DonationOptions() {
         </div>
 
         {/* Two-Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6 lg:gap-8">
           {/* Make Contribution Card */}
           <div className="border border-secondary/15 bg-white p-6 shadow-[0_20px_50px_-35px_rgba(10,25,47,.5)] sm:p-9">
             {/* Amount */}
