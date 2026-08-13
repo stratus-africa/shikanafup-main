@@ -1,6 +1,5 @@
 import { Link } from "@/lib/next-shims";
 import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote } from "lucide-react";
-import { ThematicAreas } from "./thematic-areas";
 import { EventsPreview } from "./events-preview";
 import { ImpactStoryHome } from "./impact-story-home";
 import { CampaignPopup } from "./campaign-popup";
@@ -195,9 +194,53 @@ export function ShikanaHome() {
           </div>
         </div>
       </section>
-      <div id="agenda">
-        <ThematicAreas />
-      </div>
+      <section id="journey" className="bg-white px-5 py-24 sm:px-8 lg:py-32">
+        <div className="mx-auto max-w-[1600px]">
+          <div className="max-w-3xl mb-16">
+            <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b]">OUR JOURNEY IN NUMBERS</p>
+            <h2 className="mt-4 text-4xl font-black leading-tight tracking-tight sm:text-5xl">Growing stronger.</h2>
+            <p className="mt-6 text-xl font-bold text-[#162443]">Building Momentum! Inspiring Action.</p>
+            <p className="mt-4 text-lg leading-8 text-slate-600">
+              Every milestone reflects the growing confidence that Kenyans have in SHIKANA.
+            </p>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5 mb-16">
+            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8">
+              <p className="text-4xl font-black text-[#c9232b]">+50,000</p>
+              <p className="mt-4 font-bold text-[#162443]">Active party SFUP members</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8">
+              <p className="text-4xl font-black text-[#c9232b]">+30</p>
+              <p className="mt-4 font-bold text-[#162443]">Counties Reached</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8">
+              <p className="text-4xl font-black text-[#c9232b]">+290</p>
+              <p className="mt-4 font-bold text-[#162443]">Constituencies</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-8">
+              <p className="text-4xl font-black text-[#c9232b]">+21</p>
+              <p className="mt-4 font-bold text-[#162443]">Activities Conducted</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-[#162443] to-[#0f1929] p-8">
+              <p className="text-4xl font-black text-[#ecb23b]">100%</p>
+              <p className="mt-4 font-bold text-white">Transparent Spending</p>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-[#162443] to-[#0f1929] rounded-2xl p-8 sm:p-12">
+            <div className="max-w-2xl">
+              <p className="text-sm font-bold tracking-[0.16em] text-[#ecb23b]">ELECTION TIMELINES</p>
+              <h3 className="mt-4 text-3xl font-black text-white">Days to Election</h3>
+              <p className="mt-4 text-white/80 leading-8">
+                Track our countdown to the next general election with IEBC official timelines. Every day brings us
+                closer to a historic moment.
+              </p>
+              <p className="mt-6 text-sm text-white/60">Real-time countdown: Years • Months • Weeks • Days</p>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="bg-[#f1f0eb] px-5 py-24 sm:px-8 lg:py-32">
         <div className="mx-auto max-w-[1600px]">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
