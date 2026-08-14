@@ -23,7 +23,7 @@ export const SITE_DEFAULTS = {
   "campaign_popup.primary_cta_label": "Check your voting details",
   "campaign_popup.primary_cta_url": "https://verify.iebc.or.ke/",
   "campaign_popup.secondary_cta_label": "Continue to site",
-  "campaign_popup.dismiss_hours": "24",
+  "campaign_popup.dismiss_hours": "0.5",
 } as const;
 
 export type SiteSettingKey = keyof typeof SITE_DEFAULTS;
