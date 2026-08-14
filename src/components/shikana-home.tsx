@@ -4,6 +4,7 @@ import { usePageContent } from "@/hooks/use-page-content";
 import { LatestNewsInsights } from "./latest-news-insights";
 import { CampaignPopup } from "./campaign-popup";
 import { GenerationalTransformation } from "./generational-transformation";
+import { IebcCountdownMini } from "./iebc-countdown-mini";
 
 const actions = [
   {
