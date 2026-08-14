@@ -1,157 +1,147 @@
 import { useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Copy, Grid3x3, List, Upload, Loader2, Trash2, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  type GalleryImage,
+  deleteGalleryImage,
+  listGalleryImages,
+  uploadGalleryImages,
+} from "@/lib/gallery";
 
-const DEFAULT_IMAGES = [
-  { name: "unity-img.jpg", url: "/unity-img.jpg" },
-  { name: "Sfu-login-bg.avif", url: "/Sfu-login-bg.avif" },
-  { name: "sfu-image.jfif", url: "/sfu-image.jfif" },
-  { name: "about-image.jpg", url: "/about-image.jpg" },
-  { name: "about-img.jpeg", url: "/about-img.jpeg" },
-  { name: "teamwork.jpg.jpeg", url: "/teamwork.jpg.jpeg" },
-  { name: "nairobiPicture.jpg", url: "/nairobiPicture.jpg" },
-  { name: "Servant.jpeg", url: "/Servant.jpeg" },
-  { name: "Harvest.jpg.jpeg", url: "/Harvest.jpg.jpeg" },
-  { name: "deer.gif", url: "/deer.gif" },
-  { name: "campaign-bg.jpg", url: "/campaign-bg.jpg", disabled: true },
-];
+export type { GalleryImage };
 
-export type GalleryImage = { name: string; url: string; disabled?: boolean };
+export function useGalleryImages() {
+  return useQuery({ queryKey: ["admin", "gallery"], queryFn: listGalleryImages });
+}
 
 export function ImageGalleryManager() {
+  const qc = useQueryClient();
   const [copied, setCopied] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [images, setImages] = useState<GalleryImage[]>(DEFAULT_IMAGES);
-  const [uploading, setUploading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<GalleryImage | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { data: images = [], isLoading } = useGalleryImages();
+
+  const uploadMut = useMutation({
+    mutationFn: (files: File[]) => uploadGalleryImages(files),
+    onSuccess: (added) => {
+      qc.invalidateQueries({ queryKey: ["admin", "gallery"] });
+      toast.success(`${added.length} image${added.length > 1 ? "s" : ""} uploaded`);
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Failed to upload images"),
+    onSettled: () => {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    },
+  });
+
+  const deleteMut = useMutation({
+    mutationFn: (name: string) => deleteGalleryImage(name),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "gallery"] });
+      toast.success("Image deleted");
+      setDeleteTarget(null);
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Failed to delete image"),
+  });
 
   const copyUrl = async (url: string) => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(url);
       toast.success("Image URL copied");
-      window.setTimeout(() => setCopied((prev: string | null) => (prev === url ? null : prev)), 1500);
+      window.setTimeout(() => setCopied((prev) => (prev === url ? null : prev)), 1500);
     } catch {
       toast.error("Clipboard is unavailable in this browser");
     }
   };
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    if (!files.length) return;
-
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      files.forEach((file) => formData.append("files", file));
-
-      const response = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) throw new Error("Upload failed");
-
-      const data = await response.json();
-      const newImages = data.urls.map((url: string) => ({
-        name: url.split("/").pop() || "image",
-        url,
-      }));
-
-      setImages((prev: GalleryImage[]) => [...newImages, ...prev]);
-      toast.success(`${newImages.length} image${newImages.length > 1 ? "s" : ""} uploaded`);
-    } catch (error) {
-      console.error("Upload error:", error);
-      toast.error("Failed to upload images");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
+    if (files.length) uploadMut.mutate(files);
   };
 
-  const visibleImages = images.filter((image) => !image.disabled);
+  const uploading = uploadMut.isPending;
 
   return (
     <div className="space-y-6 p-4 md:p-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Image Gallery</h1>
-          <p className="text-sm text-muted-foreground">Manage and upload image assets for your website.</p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Image Gallery</h1>
+        <p className="text-sm text-muted-foreground">Upload, copy and delete image assets for your website.</p>
       </div>
 
-      {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
         <Input
           ref={fileInputRef}
           type="file"
           multiple
           accept="image/*"
-          onChange={handleFileSelect}
+          onChange={onFiles}
           disabled={uploading}
           className="hidden"
         />
         <Button onClick={() => fileInputRef.current?.click()} disabled={uploading} className="gap-2">
-          {uploading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Uploading…
-            </>
-          ) : (
-            <>
-              <Upload className="h-4 w-4" />
-              Upload Images
-            </>
-          )}
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+          {uploading ? "Uploading…" : "Upload Images"}
         </Button>
 
-        <div className="flex items-center gap-1 border rounded-md p-1">
-          <Button
-            variant={viewMode === "grid" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("grid")}
-            title="Grid view"
-          >
+        <div className="flex items-center gap-1 rounded-md border p-1">
+          <Button variant={viewMode === "grid" ? "default" : "ghost"} size="sm" onClick={() => setViewMode("grid")}>
             <Grid3x3 className="h-4 w-4" />
           </Button>
-          <Button
-            variant={viewMode === "list" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("list")}
-            title="List view"
-          >
+          <Button variant={viewMode === "list" ? "default" : "ghost"} size="sm" onClick={() => setViewMode("list")}>
             <List className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="text-sm text-muted-foreground ml-auto">
-          {visibleImages.length} image{visibleImages.length !== 1 ? "s" : ""}
+        <div className="ml-auto text-sm text-muted-foreground">
+          {isLoading ? "Loading…" : `${images.length} image${images.length !== 1 ? "s" : ""}`}
         </div>
       </div>
 
-      {/* Grid View */}
       {viewMode === "grid" && (
-        <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-          {visibleImages.map((image) => (
-            <Card key={image.url} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <CardHeader className="p-0">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+          {images.map((image) => (
+            <Card key={image.url} className="group relative overflow-hidden transition-shadow hover:shadow-lg">
+              <CardHeader className="relative p-0">
                 <img
                   src={image.url}
                   alt={image.name}
-                  className="h-32 w-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                  className="h-32 w-full cursor-pointer object-cover transition-opacity hover:opacity-80"
                   onClick={() => copyUrl(image.url)}
                   title="Click to copy URL"
                 />
+                {!image.builtin && (
+                  <button
+                    type="button"
+                    onClick={() => setDeleteTarget(image)}
+                    className="absolute right-1 top-1 rounded-full bg-destructive p-1 text-destructive-foreground opacity-0 transition-opacity group-hover:opacity-100"
+                    title="Delete image"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                )}
               </CardHeader>
               <CardContent className="space-y-2 p-3">
-                <div className="flex items-start gap-2 min-h-[40px]">
-                  <ImageIcon className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                  <span className="text-xs font-medium text-foreground truncate break-words">{image.name}</span>
+                <div className="flex min-h-[40px] items-start gap-2">
+                  <ImageIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                  <span className="truncate break-words text-xs font-medium">{image.name}</span>
                 </div>
-                <Button variant="outline" size="sm" className="w-full text-xs h-7" onClick={() => copyUrl(image.url)}>
+                <Button variant="outline" size="sm" className="h-7 w-full text-xs" onClick={() => copyUrl(image.url)}>
                   <Copy className="mr-1 h-3 w-3" />
                   {copied === image.url ? "Copied" : "Copy"}
                 </Button>
@@ -161,30 +151,59 @@ export function ImageGalleryManager() {
         </div>
       )}
 
-      {/* List View */}
       {viewMode === "list" && (
-        <div className="space-y-2 border rounded-lg divide-y">
-          {visibleImages.map((image) => (
-            <div key={image.url} className="flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors">
+        <div className="divide-y rounded-lg border">
+          {images.map((image) => (
+            <div key={image.url} className="flex items-center gap-4 p-4 transition-colors hover:bg-muted/50">
               <img
                 src={image.url}
                 alt={image.name}
-                className="h-16 w-16 object-cover rounded border flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                className="h-16 w-16 flex-shrink-0 cursor-pointer rounded border object-cover"
                 onClick={() => copyUrl(image.url)}
-                title="Click to copy URL"
               />
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate">{image.name}</p>
-                <p className="text-xs text-muted-foreground truncate break-all mt-1">{image.url}</p>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{image.name}</p>
+                <p className="mt-1 truncate break-all text-xs text-muted-foreground">{image.url}</p>
               </div>
-              <Button variant="outline" size="sm" onClick={() => copyUrl(image.url)} className="flex-shrink-0">
+              <Button variant="outline" size="sm" onClick={() => copyUrl(image.url)}>
                 <Copy className="h-4 w-4" />
                 {copied === image.url ? "Copied" : "Copy"}
               </Button>
+              {!image.builtin && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setDeleteTarget(image)}
+                  className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           ))}
         </div>
       )}
+
+      <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete image</AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteTarget?.name} will be permanently removed from the gallery. Pages still using it will show a
+              broken image.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteTarget && deleteMut.mutate(deleteTarget.name)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleteMut.isPending ? "Deleting…" : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
