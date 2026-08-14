@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { Search, MapPin, Send, CheckCircle, ChevronDown, Check } from "lucide-react";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
@@ -9,40 +11,23 @@ import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
 import { cn } from "@/lib/utils";
+import { publicListLocalGroups } from "@/lib/public/content.functions";
 
 export function LocalGroupForm() {
   const [formData, setFormData] = useState({
     membershipNumber: "",
     groupId: "",
   });
-  const [groups, setGroups] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [loadingGroups, setLoadingGroups] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "loading">("idle");
+  const listGroups = useServerFn(publicListLocalGroups);
+  const { data: groups = [], isLoading: loadingGroups } = useQuery({
+    queryKey: ["public", "local-groups"],
+    queryFn: () => listGroups(),
+  });
 
   // 🔹 Terms Consent State
   const [termsConsent, setTermsConsent] = useState(false);
-
-  useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        setLoadingGroups(true);
-        const res = await api.get("/api/local-groups/all");
-        setGroups(Array.isArray(res.data?.data) ? res.data.data : []);
-      } catch (err) {
-        console.error("Failed to fetch local branches", err);
-        setGroups([
-          { id: 1, name: "Nairobi Central Group", county: "Nairobi", constituency: "Starehe" },
-          { id: 2, name: "Kiambu Unity Group", county: "Kiambu", constituency: "Kiambu Town" },
-          { id: 3, name: "Mombasa Coastal Front", county: "Mombasa", constituency: "Mvita" },
-        ]);
-      } finally {
-        setLoadingGroups(false);
-      }
-    };
-    fetchGroups();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,8 +60,9 @@ export function LocalGroupForm() {
     }
   };
 
-  const selectedGroupLabel = groups.find((g) => g.id.toString() === formData.groupId)
-    ? `${groups.find((g) => g.id.toString() === formData.groupId).county} - ${groups.find((g) => g.id.toString() === formData.groupId).constituency}`
+  const selectedGroup = groups.find((g: any) => g.id.toString() === formData.groupId);
+  const selectedGroupLabel = selectedGroup
+    ? `${selectedGroup.name}${selectedGroup.county ? ` — ${selectedGroup.county}` : ""}`
     : "Select local branch...";
 
   return (
@@ -146,7 +132,7 @@ export function LocalGroupForm() {
                       aria-expanded={popoverOpen}
                       className="w-full justify-between px-4 h-10 border-border rounded-lg text-foreground bg-background hover:bg-muted font-normal text-left focus:ring-0 focus:border-secondary transition-colors shadow-none"
                     >
-                      {selectedGroupLabel}
+                      {loadingGroups ? "Loading branches…" : selectedGroupLabel}
                       <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
@@ -156,18 +142,21 @@ export function LocalGroupForm() {
                       <CommandList className="max-h-[300px]">
                         <CommandEmpty>No group found.</CommandEmpty>
                         <CommandGroup>
-                          {groups.map((group) => (
+                          {groups.map((group: any) => (
                             <CommandItem
                               key={group.id}
-                              value={`${group.county} ${group.constituency}`}
+                              value={`${group.name} ${group.county ?? ""} ${group.constituency ?? ""} ${group.ward ?? ""}`}
                               onSelect={() => {
                                 setFormData((prev) => ({ ...prev, groupId: group.id.toString() }));
                                 setPopoverOpen(false);
                               }}
                             >
                               <div className="flex flex-col">
-                                <span className="font-medium">{group.county}</span>
-                                <span className="text-xs text-muted-foreground">{group.constituency}</span>
+                                <span className="font-medium">{group.name}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {[group.county, group.constituency, group.ward].filter(Boolean).join(" · ") ||
+                                    "Local group"}
+                                </span>
                               </div>
                               <Check
                                 className={cn(
