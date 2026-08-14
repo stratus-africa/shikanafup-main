@@ -390,7 +390,8 @@ function Page() {
               )}
             </TableBody>
           </Table>
-        </div>
+        </CollapsibleContent>
+        </Collapsible>
       </div>
     </>
   );
