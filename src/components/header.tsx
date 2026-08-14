@@ -160,7 +160,7 @@ export function Header() {
                   {!item.children ? (
                     <Link
                       href={item.href}
-                      className={`text-base font-medium transition-colors pb-1
+                      className={`text-base font-bold transition-colors pb-1
             ${
               isActive(item.href)
                 ? "text-secondary border-b-2 border-secondary"
@@ -174,7 +174,7 @@ export function Header() {
                     <>
                       {/* Parent button with highlight on hover */}
                       <button
-                        className="text-base font-medium hover:text-secondary focus:outline-none focus:text-secondary relative"
+                        className="text-base font-bold hover:text-secondary focus:outline-none focus:text-secondary relative"
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
@@ -204,7 +204,7 @@ export function Header() {
                             <Link
                               key={sub.label}
                               href={sub.href}
-                              className="block px-4 py-2 text-sm text-foreground hover:bg-secondary/10 focus:bg-secondary/10 focus:outline-none"
+                              className="block px-4 py-2 text-sm font-bold text-foreground hover:bg-secondary/10 focus:bg-secondary/10 focus:outline-none"
                             >
                               {sub.label}
                             </Link>
@@ -315,7 +315,7 @@ export function Header() {
                         <Link
                           key={sub.label}
                           href={sub.href}
-                          className="block text-sm text-foreground/80"
+                          className="block text-sm font-bold text-foreground/80"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {sub.label}
