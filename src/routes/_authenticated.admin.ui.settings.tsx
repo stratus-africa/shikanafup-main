@@ -15,6 +15,9 @@ import { Plus, Trash2 } from "lucide-react";
 import { listSettings, upsertSetting, deleteSetting } from "@/lib/admin/settings.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SITE_DEFAULTS } from "@/hooks/use-site-settings";
+import { ImagePicker } from "@/components/admin/gallery/image-picker";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 
 function CampaignPopupCard({
   settings,
@@ -31,12 +34,14 @@ function CampaignPopupCard({
     return typeof row.value === "string" ? row.value : String(row.value ?? "");
   };
 
+  const [popupImage, setPopupImage] = useState<string>(valueOf("campaign_popup.image_url"));
+
   const saveAll = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const updates = [
       ["campaign_popup.enabled", String(fd.get("enabled") === "on")],
-      ["campaign_popup.image_url", String(fd.get("image_url") ?? "")],
+      ["campaign_popup.image_url", popupImage],
       ["campaign_popup.title", String(fd.get("title") ?? "")],
       ["campaign_popup.body", String(fd.get("body") ?? "")],
       ["campaign_popup.primary_cta_label", String(fd.get("primary_cta_label") ?? "")],
@@ -72,8 +77,17 @@ function CampaignPopupCard({
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-1.5 md:col-span-2">
-              <Label htmlFor="campaign-image_url">Image URL</Label>
-              <Input id="campaign-image_url" name="image_url" defaultValue={valueOf("campaign_popup.image_url")} />
+              <Label htmlFor="campaign-image_url">Banner image</Label>
+              <div className="flex flex-wrap items-center gap-2">
+                <Input
+                  id="campaign-image_url"
+                  name="image_url"
+                  value={popupImage}
+                  onChange={(e) => setPopupImage(e.target.value)}
+                  className="min-w-[240px] flex-1"
+                />
+                <ImagePicker onSelect={setPopupImage} label="Select from gallery" />
+              </div>
             </div>
 
             <div className="space-y-1.5 md:col-span-2">
@@ -125,10 +139,10 @@ function CampaignPopupCard({
             </div>
           </div>
 
-          {valueOf("campaign_popup.image_url") && (
+          {popupImage && (
             <div className="rounded-md border bg-slate-50 p-3">
               <img
-                src={valueOf("campaign_popup.image_url")}
+                src={popupImage}
                 alt="Campaign popup preview"
                 className="mx-auto max-h-48 rounded-md object-cover"
               />
@@ -176,6 +190,8 @@ function SiteBrandingCard({
     if (!row) return (SITE_DEFAULTS as any)[key] ?? "";
     return typeof row.value === "string" ? row.value : String(row.value ?? "");
   };
+  const [logoUrl, setLogoUrl] = useState<string>(valueOf("site.logo_url"));
+
   return (
     <Card>
       <CardHeader>
@@ -184,7 +200,31 @@ function SiteBrandingCard({
       <CardContent>
         <p className="mb-4 text-sm text-muted-foreground">These values appear in the website header and footer.</p>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SITE_FIELDS.map((f) => (
+          {SITE_FIELDS.map((f) =>
+            f.key === "site.logo_url" ? (
+              <form
+                key={f.key}
+                className="space-y-1.5 sm:col-span-2 lg:col-span-3"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  onSave({ key: f.key, value: logoUrl });
+                }}
+              >
+                <Label htmlFor={f.key}>{f.label}</Label>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Input
+                    id={f.key}
+                    value={logoUrl}
+                    onChange={(e) => setLogoUrl(e.target.value)}
+                    className="min-w-[240px] flex-1"
+                  />
+                  <ImagePicker onSelect={setLogoUrl} label="Select from gallery" />
+                  <Button type="submit" variant="outline" size="sm" disabled={saving}>
+                    Save
+                  </Button>
+                </div>
+              </form>
+            ) : (
             <form
               key={f.key}
               className="space-y-1.5"
@@ -202,11 +242,12 @@ function SiteBrandingCard({
                 </Button>
               </div>
             </form>
-          ))}
+            ),
+          )}
         </div>
-        {valueOf("site.logo_url") && (
+        {logoUrl && (
           <div className="mt-6 flex items-center gap-3 rounded-md border p-3">
-            <img src={valueOf("site.logo_url")} alt="Current website logo" className="h-12 w-12 object-contain" />
+            <img src={logoUrl} alt="Current website logo" className="h-12 w-12 object-contain" />
             <span className="text-xs text-muted-foreground">Current logo preview</span>
           </div>
         )}
@@ -225,6 +266,7 @@ function Page() {
   const upsert = useServerFn(upsertSetting);
   const del = useServerFn(deleteSetting);
   const [open, setOpen] = useState(false);
+  const [kvOpen, setKvOpen] = useState(false);
 
   const { data = [], isLoading } = useQuery({ queryKey: ["admin", "settings"], queryFn: () => list() });
   const inv = () => qc.invalidateQueries({ queryKey: ["admin", "settings"] });
@@ -254,8 +296,15 @@ function Page() {
 
         <CampaignPopupCard settings={data as any[]} onSave={(v) => upsertMut.mutate(v)} saving={upsertMut.isPending} />
 
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-muted-foreground">Key-value site configuration.</p>
+        <Collapsible open={kvOpen} onOpenChange={setKvOpen} className="rounded-md border">
+        <div className="flex justify-between items-center gap-3 p-3">
+          <CollapsibleTrigger asChild>
+            <button type="button" className="flex items-center gap-2 text-sm font-medium">
+              <ChevronDown className={`h-4 w-4 transition-transform ${kvOpen ? "" : "-rotate-90"}`} />
+              Key-value site configuration
+              <span className="text-xs font-normal text-muted-foreground">({(data as any[]).length})</span>
+            </button>
+          </CollapsibleTrigger>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>
@@ -299,7 +348,7 @@ function Page() {
           </Dialog>
         </div>
 
-        <div className="rounded-md border">
+        <CollapsibleContent className="border-t">
           <Table>
             <TableHeader>
               <TableRow>
@@ -342,7 +391,8 @@ function Page() {
               )}
             </TableBody>
           </Table>
-        </div>
+        </CollapsibleContent>
+        </Collapsible>
       </div>
     </>
   );

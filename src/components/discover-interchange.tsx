@@ -100,7 +100,7 @@ export function DiscoverInterchange() {
 
   const stage = stages[currentStage];
   const currentItem =
-    stage.type === "descriptions" ? stage.items[currentDescIndex] : null;
+    stage.type === "descriptions" ? (stage.items?.[currentDescIndex] ?? null) : null;
 
   return (
     <section className="bg-gradient-to-b from-white to-slate-50 px-5 py-12 sm:px-8 sm:py-16">

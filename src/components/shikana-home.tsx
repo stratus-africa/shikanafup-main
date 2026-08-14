@@ -4,6 +4,7 @@ import { usePageContent } from "@/hooks/use-page-content";
 import { LatestNewsInsights } from "./latest-news-insights";
 import { CampaignPopup } from "./campaign-popup";
 import { GenerationalTransformation } from "./generational-transformation";
+import { IebcCountdownMini } from "./iebc-countdown-mini";
 
 const actions = [
   {
@@ -258,12 +259,17 @@ export function ShikanaHome() {
 
       <section className="bg-[#d9b75a] px-5 py-24 text-[#162443] sm:px-8 lg:py-32">
         <div className="mx-auto max-w-[1600px]">
-          <div className="mb-12 text-center lg:text-left">
-            <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b] mb-4">JOIN THE MOVEMENT</p>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6">Get Inspired and Take Action.</h2>
-            <p className="text-xl text-[#162443]/75 max-w-2xl mb-12">
-              Do not allow others to decide your future for you.
-            </p>
+          <div className="mb-12 flex flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
+            <div>
+              <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b] mb-4">JOIN THE MOVEMENT</p>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6">Get Inspired and Take Action.</h2>
+              <p className="text-xl text-[#162443]/75 max-w-2xl">
+                Do not allow others to decide your future for you.
+              </p>
+            </div>
+            <div className="flex w-full justify-center lg:w-auto lg:justify-end">
+              <IebcCountdownMini />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

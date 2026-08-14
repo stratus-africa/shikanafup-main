@@ -54,6 +54,7 @@ import { Route as PublicEventsIdRouteImport } from './routes/_public.events.$id'
 import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated.admin.dashboard'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
+import { Route as ApiPublicGallerySplatRouteImport } from './routes/api.public.gallery.$'
 import { Route as PublicSharedUiEventsIdRouteImport } from './routes/_public.shared-ui.events.$id'
 import { Route as PublicSharedUiBlogIdRouteImport } from './routes/_public.shared-ui.blog.$id'
 import { Route as PublicEventsIdRegisterRouteImport } from './routes/_public.events.$id.register'
@@ -311,6 +312,11 @@ const LovableEmailQueueProcessRoute =
     path: '/lovable/email/queue/process',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicGallerySplatRoute = ApiPublicGallerySplatRouteImport.update({
+  id: '/api/public/gallery/$',
+  path: '/api/public/gallery/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicSharedUiEventsIdRoute = PublicSharedUiEventsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -534,6 +540,7 @@ export interface FileRoutesByFullPath {
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
   '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/api/public/gallery/$': typeof ApiPublicGallerySplatRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/admin/ui/member-account/$memberId': typeof AuthenticatedAdminUiMemberAccountMemberIdRoute
   '/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
@@ -606,6 +613,7 @@ export interface FileRoutesByTo {
   '/events/$id/register': typeof PublicEventsIdRegisterRoute
   '/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/api/public/gallery/$': typeof ApiPublicGallerySplatRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/admin/ui/member-account/$memberId': typeof AuthenticatedAdminUiMemberAccountMemberIdRoute
   '/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
@@ -681,6 +689,7 @@ export interface FileRoutesById {
   '/_public/events/$id/register': typeof PublicEventsIdRegisterRoute
   '/_public/shared-ui/blog/$id': typeof PublicSharedUiBlogIdRoute
   '/_public/shared-ui/events/$id': typeof PublicSharedUiEventsIdRouteWithChildren
+  '/api/public/gallery/$': typeof ApiPublicGallerySplatRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/_authenticated/admin/ui/member-account/$memberId': typeof AuthenticatedAdminUiMemberAccountMemberIdRoute
   '/_authenticated/admin/ui/pages/about': typeof AuthenticatedAdminUiPagesAboutRoute
@@ -755,6 +764,7 @@ export interface FileRouteTypes {
     | '/events/$id/register'
     | '/shared-ui/blog/$id'
     | '/shared-ui/events/$id'
+    | '/api/public/gallery/$'
     | '/lovable/email/queue/process'
     | '/admin/ui/member-account/$memberId'
     | '/admin/ui/pages/about'
@@ -827,6 +837,7 @@ export interface FileRouteTypes {
     | '/events/$id/register'
     | '/shared-ui/blog/$id'
     | '/shared-ui/events/$id'
+    | '/api/public/gallery/$'
     | '/lovable/email/queue/process'
     | '/admin/ui/member-account/$memberId'
     | '/admin/ui/pages/about'
@@ -901,6 +912,7 @@ export interface FileRouteTypes {
     | '/_public/events/$id/register'
     | '/_public/shared-ui/blog/$id'
     | '/_public/shared-ui/events/$id'
+    | '/api/public/gallery/$'
     | '/lovable/email/queue/process'
     | '/_authenticated/admin/ui/member-account/$memberId'
     | '/_authenticated/admin/ui/pages/about'
@@ -917,6 +929,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   OtpRoute: typeof OtpRoute
+  ApiPublicGallerySplatRoute: typeof ApiPublicGallerySplatRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
@@ -1235,6 +1248,13 @@ declare module '@tanstack/react-router' {
       path: '/lovable/email/queue/process'
       fullPath: '/lovable/email/queue/process'
       preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/gallery/$': {
+      id: '/api/public/gallery/$'
+      path: '/api/public/gallery/$'
+      fullPath: '/api/public/gallery/$'
+      preLoaderRoute: typeof ApiPublicGallerySplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/shared-ui/events/$id': {
@@ -1668,6 +1688,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   OtpRoute: OtpRoute,
+  ApiPublicGallerySplatRoute: ApiPublicGallerySplatRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
