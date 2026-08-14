@@ -3,12 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import toast from "react-hot-toast";
 import { Plus, Trash2, Pencil } from "lucide-react";
-import {
-  listFaqs,
-  createFaq,
-  updateFaq,
-  deleteFaq,
-} from "@/lib/admin/faqs.functions";
+import { listFaqs, createFaq, updateFaq, deleteFaq } from "@/lib/admin/faqs.functions";
 import {
   listPublications,
   createPublication,
@@ -24,21 +19,8 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const SITE_KEYS = [
   { key: "site.tagline", label: "Homepage tagline" },
@@ -170,26 +152,16 @@ function FaqsPanel() {
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Label>Question</Label>
-              <Input
-                value={form.question}
-                onChange={(e) => setForm({ ...form, question: e.target.value })}
-              />
+              <Input value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} />
             </div>
             <div className="grid gap-2">
               <Label>Answer</Label>
-              <Textarea
-                rows={5}
-                value={form.answer}
-                onChange={(e) => setForm({ ...form, answer: e.target.value })}
-              />
+              <Textarea rows={5} value={form.answer} onChange={(e) => setForm({ ...form, answer: e.target.value })} />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="grid gap-2">
                 <Label>Category</Label>
-                <Input
-                  value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
-                />
+                <Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
               </div>
               <div className="grid gap-2">
                 <Label>Sort order</Label>
@@ -201,10 +173,7 @@ function FaqsPanel() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Switch
-                checked={form.is_published}
-                onCheckedChange={(v) => setForm({ ...form, is_published: v })}
-              />
+              <Switch checked={form.is_published} onCheckedChange={(v) => setForm({ ...form, is_published: v })} />
               <Label>Published on the website</Label>
             </div>
           </div>
@@ -212,10 +181,7 @@ function FaqsPanel() {
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button
-              disabled={!form.question || !form.answer || save.isPending}
-              onClick={() => save.mutate()}
-            >
+            <Button disabled={!form.question || !form.answer || save.isPending} onClick={() => save.mutate()}>
               {save.isPending ? "Saving…" : "Save"}
             </Button>
           </DialogFooter>
@@ -256,9 +222,7 @@ function PublicationsPanel() {
         cover_url: form.cover_url || null,
         is_published: form.is_published,
       };
-      return editing
-        ? update({ data: { id: editing.id, ...payload } })
-        : create({ data: payload });
+      return editing ? update({ data: { id: editing.id, ...payload } }) : create({ data: payload });
     },
     onSuccess: () => {
       toast.success(editing ? "Publication updated" : "Publication created");
@@ -323,9 +287,7 @@ function PublicationsPanel() {
             {(pubs.data ?? []).map((p: any) => (
               <TableRow key={p.id}>
                 <TableCell className="max-w-[360px] truncate font-medium">{p.title}</TableCell>
-                <TableCell className="hidden max-w-[320px] truncate md:table-cell">
-                  {p.file_url}
-                </TableCell>
+                <TableCell className="hidden max-w-[320px] truncate md:table-cell">{p.file_url}</TableCell>
                 <TableCell>
                   <Badge variant={p.is_published ? "default" : "secondary"}>
                     {p.is_published ? "Published" : "Draft"}
@@ -382,10 +344,7 @@ function PublicationsPanel() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Switch
-                checked={form.is_published}
-                onCheckedChange={(v) => setForm({ ...form, is_published: v })}
-              />
+              <Switch checked={form.is_published} onCheckedChange={(v) => setForm({ ...form, is_published: v })} />
               <Label>Published on the website</Label>
             </div>
           </div>
@@ -393,10 +352,7 @@ function PublicationsPanel() {
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button
-              disabled={!form.title || !form.file_url || save.isPending}
-              onClick={() => save.mutate()}
-            >
+            <Button disabled={!form.title || !form.file_url || save.isPending} onClick={() => save.mutate()}>
               {save.isPending ? "Saving…" : "Save"}
             </Button>
           </DialogFooter>
@@ -462,24 +418,14 @@ export function CmsManager() {
     <div className="w-full space-y-6 p-4 md:p-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Content management</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage the content that appears on the public website.
-        </p>
+        <p className="text-sm text-muted-foreground">Manage the content that appears on the public website.</p>
       </div>
-      <Tabs defaultValue="content">
+      <Tabs defaultValue="faqs">
         <TabsList>
-          <TabsTrigger value="content">Website content</TabsTrigger>
           <TabsTrigger value="faqs">FAQs</TabsTrigger>
-          <TabsTrigger value="publications">Publications</TabsTrigger>
         </TabsList>
-        <TabsContent value="content" className="mt-4">
-          <SiteContentPanel />
-        </TabsContent>
         <TabsContent value="faqs" className="mt-4">
           <FaqsPanel />
-        </TabsContent>
-        <TabsContent value="publications" className="mt-4">
-          <PublicationsPanel />
         </TabsContent>
       </Tabs>
     </div>
