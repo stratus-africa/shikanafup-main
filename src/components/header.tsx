@@ -29,7 +29,6 @@ import {
 import { InfiniteSlider } from "./motion-primitives/infinite-slider";
 import { useAuth } from "@/context/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { UserProfileDialog } from "./user-profile-dialog";
 import { SearchDialog } from "./search-dialog";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 
@@ -38,7 +37,6 @@ const STAFF_ROLES = ["super_admin", "admin", "editor", "moderator"];
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [showProfileDialog, setShowProfileDialog] = useState(false);
   const [isStaff, setIsStaff] = useState(false);
 
   const pathname = usePathname();
@@ -245,7 +243,7 @@ export function Header() {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setShowProfileDialog(true)}>
+                    <DropdownMenuItem onClick={() => router.push("/portal")}>
                       <UserIcon className="mr-2 h-4 w-4" /> My Profile
                     </DropdownMenuItem>
                     {isStaff ? (
@@ -338,7 +336,7 @@ export function Header() {
                   <div className="space-y-2">
                     <button
                       onClick={() => {
-                        setShowProfileDialog(true);
+                        router.push("/portal");
                         setIsMenuOpen(false);
                       }}
                       className="w-full text-left px-4 py-3 rounded-md bg-secondary/10 text-secondary font-medium"
@@ -391,7 +389,6 @@ export function Header() {
         </div>
       </nav>
 
-      <UserProfileDialog open={showProfileDialog} onOpenChange={setShowProfileDialog} />
       <SearchDialog open={showSearch} onOpenChange={setShowSearch} />
     </header>
   );
