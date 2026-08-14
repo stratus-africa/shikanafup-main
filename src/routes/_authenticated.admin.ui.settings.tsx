@@ -295,8 +295,15 @@ function Page() {
 
         <CampaignPopupCard settings={data as any[]} onSave={(v) => upsertMut.mutate(v)} saving={upsertMut.isPending} />
 
-        <div className="flex justify-between items-center">
-          <p className="text-sm text-muted-foreground">Key-value site configuration.</p>
+        <Collapsible open={kvOpen} onOpenChange={setKvOpen} className="rounded-md border">
+        <div className="flex justify-between items-center gap-3 p-3">
+          <CollapsibleTrigger asChild>
+            <button type="button" className="flex items-center gap-2 text-sm font-medium">
+              <ChevronDown className={`h-4 w-4 transition-transform ${kvOpen ? "" : "-rotate-90"}`} />
+              Key-value site configuration
+              <span className="text-xs font-normal text-muted-foreground">({(data as any[]).length})</span>
+            </button>
+          </CollapsibleTrigger>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>
