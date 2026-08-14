@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Copy, Grid3x3, List, Upload, Loader2, Trash2, Image as ImageIcon } from "lucide-react";
+import { Copy, Grid3x3, List, Upload, Loader2, Trash2, Image as ImageIcon, Search } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -15,12 +16,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  type GalleryImage,
-  deleteGalleryImage,
-  listGalleryImages,
-  uploadGalleryImages,
-} from "@/lib/gallery";
+import { type GalleryImage, deleteGalleryImage, listGalleryImages, uploadGalleryImages } from "@/lib/gallery";
+import { listSettings } from "@/lib/admin/settings.functions";
 
 export type { GalleryImage };
 
@@ -29,13 +26,39 @@ export function useGalleryImages() {
 }
 
 export function ImageGalleryManager() {
+  const PAGE_SIZE = 24;
   const qc = useQueryClient();
+  const getSettings = useServerFn(listSettings);
   const [copied, setCopied] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [deleteTarget, setDeleteTarget] = useState<GalleryImage | null>(null);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: images = [], isLoading } = useGalleryImages();
+  const { data: settings = [] } = useQuery({
+    queryKey: ["admin", "settings"],
+    queryFn: () => getSettings(),
+  });
+  const filteredImages = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return query ? images.filter((image) => `${image.name} ${image.url}`.toLowerCase().includes(query)) : images;
+  }, [images, search]);
+  const totalPages = Math.max(1, Math.ceil(filteredImages.length / PAGE_SIZE));
+  const pagedImages = filteredImages.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const usageFor = (image: GalleryImage) => {
+    const labels: string[] = [];
+    if (settings.some((setting: any) => setting.key === "site.logo_url" && String(setting.value) === image.url))
+      labels.push("website logo");
+    if (
+      settings.some((setting: any) => setting.key === "campaign_popup.image_url" && String(setting.value) === image.url)
+    )
+      labels.push("campaign popup banner");
+    return labels;
+  };
+  useEffect(() => setPage(1), [search]);
+  useEffect(() => setPage((current) => Math.min(current, totalPages)), [totalPages]);
 
   const uploadMut = useMutation({
     mutationFn: (files: File[]) => uploadGalleryImages(files),
@@ -76,6 +99,7 @@ export function ImageGalleryManager() {
   };
 
   const uploading = uploadMut.isPending;
+  const deleteUsage = deleteTarget ? usageFor(deleteTarget) : [];
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -89,7 +113,7 @@ export function ImageGalleryManager() {
           ref={fileInputRef}
           type="file"
           multiple
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
           onChange={onFiles}
           disabled={uploading}
           className="hidden"
@@ -98,6 +122,16 @@ export function ImageGalleryManager() {
           {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
           {uploading ? "Uploading…" : "Upload Images"}
         </Button>
+
+        <div className="relative min-w-[220px] flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search by image name or URL…"
+            className="pl-9"
+          />
+        </div>
 
         <div className="flex items-center gap-1 rounded-md border p-1">
           <Button variant={viewMode === "grid" ? "default" : "ghost"} size="sm" onClick={() => setViewMode("grid")}>
@@ -115,7 +149,7 @@ export function ImageGalleryManager() {
 
       {viewMode === "grid" && (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-          {images.map((image) => (
+          {pagedImages.map((image) => (
             <Card key={image.url} className="group relative overflow-hidden transition-shadow hover:shadow-lg">
               <CardHeader className="relative p-0">
                 <img
@@ -153,7 +187,7 @@ export function ImageGalleryManager() {
 
       {viewMode === "list" && (
         <div className="divide-y rounded-lg border">
-          {images.map((image) => (
+          {pagedImages.map((image) => (
             <div key={image.url} className="flex items-center gap-4 p-4 transition-colors hover:bg-muted/50">
               <img
                 src={image.url}
@@ -184,23 +218,53 @@ export function ImageGalleryManager() {
         </div>
       )}
 
+      {!isLoading && filteredImages.length === 0 && (
+        <div className="rounded-lg border border-dashed py-12 text-center text-sm text-muted-foreground">
+          No images match “{search}”. Try a different name or URL.
+        </div>
+      )}
+
+      {filteredImages.length > PAGE_SIZE && (
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm text-muted-foreground">
+            Page {page} of {totalPages}
+          </p>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page === totalPages}
+              onClick={() => setPage((current) => current + 1)}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      )}
+
       <AlertDialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete image</AlertDialogTitle>
+            <AlertDialogTitle>{deleteUsage.length ? "Image is in use" : "Delete image"}</AlertDialogTitle>
             <AlertDialogDescription>
-              {deleteTarget?.name} will be permanently removed from the gallery. Pages still using it will show a
-              broken image.
+              {deleteUsage.length
+                ? `${deleteTarget?.name} is currently used as the ${deleteUsage.join(" and ")}. Select or upload a replacement in Settings, save it, then try deleting this image again.`
+                : `${deleteTarget?.name} will be permanently removed from the gallery.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => deleteTarget && deleteMut.mutate(deleteTarget.name)}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {deleteMut.isPending ? "Deleting…" : "Delete"}
-            </AlertDialogAction>
+            {!deleteUsage.length && (
+              <AlertDialogAction
+                onClick={() => deleteTarget && deleteMut.mutate(deleteTarget.name)}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deleteMut.isPending ? "Deleting…" : "Delete"}
+              </AlertDialogAction>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
