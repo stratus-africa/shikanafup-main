@@ -234,6 +234,13 @@
   color: var(--foreground);
 }
 
+/* Keep the member-facing portal aligned with the public site's navy. */
+.member-portal {
+  --secondary: #162443;
+  --secondary-foreground: #ffffff;
+  --chart-2: #162443;
+}
+
 /* Alternating rows for every admin/portal table */
 .admin-theme table tbody tr:nth-child(even),
 .sap-grid table tbody tr:nth-child(even) {
