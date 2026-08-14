@@ -263,9 +263,7 @@ export function ShikanaHome() {
             <div>
               <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b] mb-4">JOIN THE MOVEMENT</p>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6">Get Inspired and Take Action.</h2>
-              <p className="text-xl text-[#162443]/75 max-w-2xl">
-                Do not allow others to decide your future for you.
-              </p>
+              <p className="text-xl text-[#162443]/75 max-w-2xl">Do not allow others to decide your future for you.</p>
             </div>
             <div className="flex w-full justify-center lg:w-auto lg:justify-end">
               <IebcCountdownMini />
@@ -275,12 +273,10 @@ export function ShikanaHome() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link
               href="/shared-ui/register"
-              className="group bg-white/10 border border-white/30 rounded-2xl p-8 hover:bg-white hover:text-[#162443] transition-all duration-300 hover:scale-105"
+              className="group rounded-2xl border border-white/20 bg-[#162443] p-8 text-white transition-all duration-300 hover:scale-105 hover:bg-[#1d3158]"
             >
-              <h3 className="text-2xl font-bold mb-4 group-hover:text-[#c9232b]">Join Shikana</h3>
-              <p className="text-white/70 group-hover:text-slate-600 mb-6">
-                Become a member and take your place in the movement.
-              </p>
+              <h3 className="mb-4 text-2xl font-bold text-[#c9232b]">Join Shikana</h3>
+              <p className="mb-6 text-white/75">Become a member and take your place in the movement.</p>
               <span className="inline-flex items-center gap-2 font-bold group-hover:gap-3 transition-all">
                 Get Started <ArrowRight size={18} />
               </span>
@@ -288,12 +284,10 @@ export function ShikanaHome() {
 
             <Link
               href="/shared-ui/volunteer"
-              className="group bg-white/10 border border-white/30 rounded-2xl p-8 hover:bg-white hover:text-[#162443] transition-all duration-300 hover:scale-105"
+              className="group rounded-2xl border border-white/20 bg-[#162443] p-8 text-white transition-all duration-300 hover:scale-105 hover:bg-[#1d3158]"
             >
-              <h3 className="text-2xl font-bold mb-4 group-hover:text-[#c9232b]">Become a Volunteer</h3>
-              <p className="text-white/70 group-hover:text-slate-600 mb-6">
-                Give your time and skills to build our nation.
-              </p>
+              <h3 className="mb-4 text-2xl font-bold text-[#c9232b]">Become a Volunteer</h3>
+              <p className="mb-6 text-white/75">Give your time and skills to build our nation.</p>
               <span className="inline-flex items-center gap-2 font-bold group-hover:gap-3 transition-all">
                 Volunteer Now <ArrowRight size={18} />
               </span>
@@ -301,12 +295,10 @@ export function ShikanaHome() {
 
             <Link
               href="/shared-ui/local-group"
-              className="group bg-white/10 border border-white/30 rounded-2xl p-8 hover:bg-white hover:text-[#162443] transition-all duration-300 hover:scale-105"
+              className="group rounded-2xl border border-white/20 bg-[#162443] p-8 text-white transition-all duration-300 hover:scale-105 hover:bg-[#1d3158]"
             >
-              <h3 className="text-2xl font-bold mb-4 group-hover:text-[#c9232b]">Get Involved</h3>
-              <p className="text-white/70 group-hover:text-slate-600 mb-6">
-                Connect with your local branch and take action.
-              </p>
+              <h3 className="mb-4 text-2xl font-bold text-[#c9232b]">Get Involved</h3>
+              <p className="mb-6 text-white/75">Connect with your local branch and take action.</p>
               <span className="inline-flex items-center gap-2 font-bold group-hover:gap-3 transition-all">
                 Find Local Branch <ArrowRight size={18} />
               </span>
