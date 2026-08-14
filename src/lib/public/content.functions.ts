@@ -5,15 +5,16 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const sb = async () =>
-  (await import("@/integrations/supabase/client.server")).supabaseAdmin;
+const sb = async () => (await import("@/integrations/supabase/client.server")).supabaseAdmin;
 
 // ===== Reads =====
 export const publicListEvents = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = await sb();
   const { data, error } = await supabase
     .from("events")
-    .select("id, title, slug, description, location, starts_at, ends_at, cover_url, capacity, category:event_categories(id,name,color)")
+    .select(
+      "id, title, slug, description, location, starts_at, ends_at, cover_url, capacity, category:event_categories(id,name,color)",
+    )
     .eq("is_published", true)
     .order("starts_at", { ascending: true });
   if (error) throw new Error(error.message);
@@ -26,7 +27,9 @@ export const publicGetEvent = createServerFn({ method: "GET" })
     const supabase = await sb();
     const { data: row, error } = await supabase
       .from("events")
-      .select("id, title, slug, description, location, starts_at, ends_at, cover_url, capacity, category:event_categories(id,name,color)")
+      .select(
+        "id, title, slug, description, location, starts_at, ends_at, cover_url, capacity, category:event_categories(id,name,color)",
+      )
       .eq("slug", data.slug)
       .eq("is_published", true)
       .maybeSingle();
@@ -51,7 +54,9 @@ export const publicGetBlog = createServerFn({ method: "GET" })
     const supabase = await sb();
     const { data: row, error } = await supabase
       .from("blogs")
-      .select("id, title, slug, excerpt, body, cover_url, tags, published_at, author:profiles(id, full_name, avatar_url)")
+      .select(
+        "id, title, slug, excerpt, body, cover_url, tags, published_at, author:profiles(id, full_name, avatar_url)",
+      )
       .eq("slug", data.slug)
       .eq("status", "published")
       .maybeSingle();
@@ -114,6 +119,16 @@ export const publicListFaqs = createServerFn({ method: "GET" }).handler(async ()
   return data ?? [];
 });
 
+export const publicListLocalGroups = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = await sb();
+  const { data, error } = await supabase
+    .from("local_groups")
+    .select("id, name, county, constituency, ward, description")
+    .order("name");
+  if (error) throw new Error(error.message);
+  return data ?? [];
+});
+
 // ===== Submissions =====
 export const submitContactMessage = createServerFn({ method: "POST" })
   .inputValidator(
@@ -162,20 +177,15 @@ export const submitAnonymousDonation = createServerFn({ method: "POST" })
   });
 
 // ===== Site settings (logo, contacts) used by the public site chrome =====
-export const publicGetSiteSettings = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const supabase = await sb();
-    const { data, error } = await supabase
-      .from("settings")
-      .select("key, value")
-      .like("key", "site.%");
-    if (error) throw new Error(error.message);
-    const out: Record<string, string> = {};
-    for (const row of data ?? []) {
-      const v = (row as any).value;
-      const s = typeof v === "string" ? v : v == null ? "" : String(v);
-      if (s.trim()) out[(row as any).key] = s;
-    }
-    return out;
-  },
-);
+export const publicGetSiteSettings = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = await sb();
+  const { data, error } = await supabase.from("settings").select("key, value").like("key", "site.%");
+  if (error) throw new Error(error.message);
+  const out: Record<string, string> = {};
+  for (const row of data ?? []) {
+    const v = (row as any).value;
+    const s = typeof v === "string" ? v : v == null ? "" : String(v);
+    if (s.trim()) out[(row as any).key] = s;
+  }
+  return out;
+});
