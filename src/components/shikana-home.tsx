@@ -1,4 +1,5 @@
 import { Link } from "@/lib/next-shims";
+import { useEffect, useState } from "react";
 import { ArrowDown, ArrowRight, HeartHandshake, MapPinned, Users, Vote, TrendingUp, Zap } from "lucide-react";
 import { usePageContent } from "@/hooks/use-page-content";
 import { LatestNewsInsights } from "./latest-news-insights";
@@ -56,9 +57,32 @@ const nationalPriorities = [
 
 export function ShikanaHome() {
   const { c } = usePageContent();
+  const [activeHeroIndex, setActiveHeroIndex] = useState(0);
+  const heroSlides = [
+    {
+      image: c("site.home.hero1_image"),
+      title: c("site.home.hero1_title"),
+      description: c("site.home.hero1_description"),
+    },
+    {
+      image: c("site.home.hero2_image"),
+      title: c("site.home.hero2_title"),
+      description: c("site.home.hero2_description"),
+    },
+    {
+      image: c("site.home.hero3_image"),
+      title: c("site.home.hero3_title"),
+      description: c("site.home.hero3_description"),
+    },
+  ];
+  const activeHero = heroSlides[activeHeroIndex] ?? heroSlides[0];
+
+  useEffect(() => {
+    const interval = window.setInterval(() => setActiveHeroIndex((index) => (index + 1) % heroSlides.length), 7000);
+    return () => window.clearInterval(interval);
+  }, [heroSlides.length]);
+
   const heroEyebrow = c("site.home.hero_eyebrow");
-  const heroTitle = c("site.home.hero_title");
-  const heroSubtext = c("site.home.hero_subtext");
   const primaryCtaLabel = c("site.home.cta_primary_label");
   const primaryCtaHref = c("site.home.cta_primary_href");
   const secondaryCtaLabel = c("site.home.cta_secondary_label");
@@ -80,8 +104,9 @@ export function ShikanaHome() {
 
       <section className="relative isolate flex min-h-[calc(100svh-80px)] items-end overflow-hidden bg-[#162443] sm:items-center">
         <img
-          src="/unity-img.jpg"
-          alt="Shikana community members together"
+          key={activeHero.image}
+          src={activeHero.image}
+          alt="Shikana Frontliners"
           className="absolute inset-0 -z-20 h-full w-full object-cover"
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#101c35]/95 via-[#162443]/70 to-[#162443]/20" />
@@ -90,9 +115,9 @@ export function ShikanaHome() {
             {heroEyebrow}
           </p>
           <h1 className="max-w-4xl text-5xl font-black leading-[0.98] tracking-[-0.04em] text-white sm:text-6xl lg:text-8xl">
-            {heroTitle}
+            {activeHero.title}
           </h1>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-white/85 sm:text-xl">{heroSubtext}</p>
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-white/85 sm:text-xl">{activeHero.description}</p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
               href={primaryCtaHref}
@@ -106,6 +131,20 @@ export function ShikanaHome() {
             >
               {secondaryCtaLabel}
             </Link>
+          </div>
+          <div className="mt-8 flex items-center gap-2" aria-label="Hero slides">
+            {heroSlides.map((slide, index) => (
+              <button
+                key={slide.image}
+                type="button"
+                aria-label={`Show slide ${index + 1}`}
+                aria-current={index === activeHeroIndex ? "true" : undefined}
+                onClick={() => setActiveHeroIndex(index)}
+                className={`h-2.5 rounded-full transition-all ${
+                  index === activeHeroIndex ? "w-8 bg-white" : "w-2.5 bg-white/50 hover:bg-white/80"
+                }`}
+              />
+            ))}
           </div>
         </div>
         <a
