@@ -265,7 +265,7 @@ export function ShikanaHome() {
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6">Get Inspired and Take Action.</h2>
               <p className="text-xl text-[#162443]/75 max-w-2xl">Do not allow others to decide your future for you.</p>
             </div>
-            <div className="flex w-full justify-center lg:w-auto lg:justify-end">
+            <div className="flex w-full justify-center lg:w-[calc((100%-3rem)/3)] lg:justify-end">
               <IebcCountdownMini />
             </div>
           </div>
