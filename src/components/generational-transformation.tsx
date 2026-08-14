@@ -9,7 +9,7 @@ export function GenerationalTransformation() {
           {/* Image Side */}
           <div className="order-2 lg:order-1">
             <img
-              src="/api/public/gallery/1786695498705-5evvqj-group-afro-americans-working-together.jpgw=800&h=600&fit=crop"
+              src="https://shikana.co.ke/api/public/gallery/1786695498705-5evvqj-group-afro-americans-working-together.jpg"
               alt="Young diverse people working together for Kenya's future"
               className="w-full rounded-2xl shadow-2xl"
             />
