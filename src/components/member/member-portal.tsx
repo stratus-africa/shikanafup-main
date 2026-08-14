@@ -171,7 +171,7 @@ export function MemberPortal() {
         </section>
 
         <Tabs defaultValue="profile" className="mt-8 grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8">
-          <TabsList className="fixed inset-x-4 bottom-4 z-30 grid h-auto grid-cols-3 border border-border bg-white p-1.5 shadow-xl lg:sticky lg:top-6 lg:inset-auto lg:h-fit lg:grid-cols-1 lg:self-start lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
+          <TabsList className="fixed bottom-4 left-1/2 z-30 grid h-auto w-[calc(100%-2rem)] max-w-md -translate-x-1/2 grid-cols-3 border border-border bg-white p-1.5 shadow-xl lg:sticky lg:top-6 lg:left-auto lg:w-fit lg:translate-x-0 lg:grid-cols-1 lg:self-start lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
             <TabsTrigger
               value="profile"
               className="flex min-h-12 w-full flex-col items-center justify-center gap-1 text-center text-[10px] font-bold uppercase tracking-wide data-[state=active]:bg-secondary data-[state=active]:text-white lg:flex-row lg:justify-start lg:gap-3 lg:rounded-none lg:border-l-2 lg:border-transparent lg:px-4 lg:text-sm lg:normal-case lg:tracking-normal lg:data-[state=active]:border-primary"
