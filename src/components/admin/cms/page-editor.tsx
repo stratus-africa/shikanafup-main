@@ -1,241 +1,170 @@
-import { useRef, useState, useEffect } from "react";
-import { Copy, Grid3x3, List, Upload, Loader2, Trash2, Image as ImageIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import toast from "react-hot-toast";
+import { ExternalLink, RotateCcw, Save, Image as ImageIcon, X } from "lucide-react";
+import { listSettings, upsertSetting } from "@/lib/admin/settings.functions";
+import type { PageDefinition } from "@/lib/cms/page-content";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ImagePickerDialog } from "@/components/admin/gallery/image-picker-dialog";
 
-const DEFAULT_IMAGES = [
-  { name: "unity-img.jpg", url: "/unity-img.jpg" },
-  { name: "Sfu-login-bg.avif", url: "/Sfu-login-bg.avif" },
-  { name: "sfu-image.jfif", url: "/sfu-image.jfif" },
-  { name: "about-image.jpg", url: "/about-image.jpg" },
-  { name: "about-img.jpeg", url: "/about-img.jpeg" },
-  { name: "teamwork.jpg.jpeg", url: "/teamwork.jpg.jpeg" },
-  { name: "nairobiPicture.jpg", url: "/nairobiPicture.jpg" },
-  { name: "Servant.jpeg", url: "/Servant.jpeg" },
-  { name: "Harvest.jpg.jpeg", url: "/Harvest.jpg.jpeg" },
-  { name: "deer.gif", url: "/deer.gif" },
-  { name: "campaign-bg.jpg", url: "/campaign-bg.jpg", disabled: true },
-];
+export function PageEditor({ page }: { page: PageDefinition }) {
+  const qc = useQueryClient();
+  const load = useServerFn(listSettings);
+  const save = useServerFn(upsertSetting);
 
-export type GalleryImage = { name: string; url: string; disabled?: boolean };
+  const settings = useQuery({ queryKey: ["admin-settings"], queryFn: () => load() });
 
-export function ImageGalleryManager() {
-  const [copied, setCopied] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [images, setImages] = useState<GalleryImage[]>(DEFAULT_IMAGES);
-  const [uploading, setUploading] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const saved = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const row of (settings.data ?? []) as any[]) {
+      const v = row.value;
+      map[row.key] = typeof v === "string" ? v : v == null ? "" : String(v);
+    }
+    return map;
+  }, [settings.data]);
 
-  const handleDeleteImage = (url: string) => {
-    setImages((prev) => prev.filter((img) => img.url !== url));
-    toast.success("Image deleted from gallery");
-    setDeleteConfirm(null);
+  const fields = useMemo(() => page.sections.flatMap((s) => s.fields), [page]);
+
+  const [form, setForm] = useState<Record<string, string>>({});
+  const [imagePickerOpen, setImagePickerOpen] = useState(false);
+  const [selectedImageField, setSelectedImageField] = useState<string | null>(null);
+
+  useEffect(() => {
+    const next: Record<string, string> = {};
+    for (const f of fields) next[f.key] = saved[f.key] ?? f.default;
+    setForm(next);
+  }, [fields, saved]);
+
+  const persist = useMutation({
+    mutationFn: async () => {
+      const changed = fields.filter((f) => (form[f.key] ?? "") !== (saved[f.key] ?? f.default));
+      for (const f of changed) {
+        await save({ data: { key: f.key, value: form[f.key] ?? "" } });
+      }
+      return changed.length;
+    },
+    onSuccess: (n) => {
+      toast.success(n ? `${page.title} updated` : "No changes to save");
+      qc.invalidateQueries({ queryKey: ["admin-settings"] });
+      qc.invalidateQueries({ queryKey: ["public", "site-settings"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not save content"),
+  });
+
+  const resetDefaults = () => {
+    const next: Record<string, string> = {};
+    for (const f of fields) next[f.key] = f.default;
+    setForm(next);
   };
 
-  const copyUrl = async (url: string) => {
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(url);
-      toast.success("Image URL copied");
-      window.setTimeout(() => setCopied((prev: string | null) => (prev === url ? null : prev)), 1500);
-    } catch {
-      toast.error("Clipboard is unavailable in this browser");
+  const handleImageSelect = (url: string) => {
+    if (selectedImageField) {
+      setForm({ ...form, [selectedImageField]: url });
+      setSelectedImageField(null);
     }
   };
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    if (!files.length) return;
-
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      files.forEach((file) => formData.append("files", file));
-
-      const response = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) throw new Error("Upload failed");
-
-      const data = await response.json();
-      const newImages = data.urls.map((url: string) => ({
-        name: url.split("/").pop() || "image",
-        url,
-      }));
-
-      setImages((prev: GalleryImage[]) => [...newImages, ...prev]);
-      toast.success(`${newImages.length} image${newImages.length > 1 ? "s" : ""} uploaded`);
-    } catch (error) {
-      console.error("Upload error:", error);
-      toast.error("Failed to upload images");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
+  const openImagePicker = (fieldKey: string) => {
+    setSelectedImageField(fieldKey);
+    setImagePickerOpen(true);
   };
-
-  const visibleImages = images.filter((image) => !image.disabled);
 
   return (
-    <div className="space-y-6 p-4 md:p-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Image Gallery</h1>
-          <p className="text-sm text-muted-foreground">Manage and upload image assets for your website.</p>
+          <h1 className="text-2xl font-semibold tracking-tight">{page.title}</h1>
+          <p className="text-sm text-muted-foreground">{page.description}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <a href={page.path} target="_blank" rel="noreferrer">
+              <ExternalLink className="mr-1 size-4" /> View page
+            </a>
+          </Button>
+          <Button variant="outline" size="sm" onClick={resetDefaults}>
+            <RotateCcw className="mr-1 size-4" /> Restore defaults
+          </Button>
+          <Button size="sm" disabled={persist.isPending} onClick={() => persist.mutate()}>
+            <Save className="mr-1 size-4" />
+            {persist.isPending ? "Saving…" : "Save changes"}
+          </Button>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="flex flex-wrap items-center gap-3">
-        <Input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleFileSelect}
-          disabled={uploading}
-          className="hidden"
-        />
-        <Button onClick={() => fileInputRef.current?.click()} disabled={uploading} className="gap-2">
-          {uploading ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Uploading…
-            </>
-          ) : (
-            <>
-              <Upload className="h-4 w-4" />
-              Upload Images
-            </>
-          )}
-        </Button>
-
-        <div className="flex items-center gap-1 border rounded-md p-1">
-          <Button
-            variant={viewMode === "grid" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("grid")}
-            title="Grid view"
-          >
-            <Grid3x3 className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={viewMode === "list" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("list")}
-            title="List view"
-          >
-            <List className="h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="text-sm text-muted-foreground ml-auto">
-          {visibleImages.length} image{visibleImages.length !== 1 ? "s" : ""}
-        </div>
-      </div>
-
-      {/* Grid View */}
-      {viewMode === "grid" && (
-        <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
-          {visibleImages.map((image) => (
-            <Card key={image.url} className="overflow-hidden hover:shadow-lg transition-shadow group relative">
-              <CardHeader className="p-0">
-                <img
-                  src={image.url}
-                  alt={image.name}
-                  className="h-32 w-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => copyUrl(image.url)}
-                  title="Click to copy URL"
-                />
-                <button
-                  onClick={() => setDeleteConfirm(image.url)}
-                  className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                  title="Delete image"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </CardHeader>
-              <CardContent className="space-y-2 p-3">
-                <div className="flex items-start gap-2 min-h-[40px]">
-                  <ImageIcon className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                  <span className="text-xs font-medium text-foreground truncate break-words">{image.name}</span>
+      <div className="grid gap-6 xl:grid-cols-2">
+        {page.sections.map((section) => (
+          <Card key={section.title}>
+            <CardHeader>
+              <CardTitle className="text-base">{section.title}</CardTitle>
+              {section.description && <CardDescription>{section.description}</CardDescription>}
+            </CardHeader>
+            <CardContent className="grid gap-4">
+              {section.fields.map((f) => (
+                <div key={f.key} className="grid gap-2">
+                  <Label htmlFor={f.key}>{f.label}</Label>
+                  {f.kind === "image" ? (
+                    <div className="space-y-3">
+                      {(form[f.key] ?? "").trim() && (
+                        <div className="relative inline-block">
+                          <img
+                            src={form[f.key]}
+                            alt={`${f.label} preview`}
+                            className="h-32 w-auto max-w-xs rounded-md border object-cover"
+                          />
+                          <button
+                            onClick={() => setForm({ ...form, [f.key]: "" })}
+                            className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90"
+                            title="Remove image"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => openImagePicker(f.key)}
+                        className="w-full gap-2"
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                        {(form[f.key] ?? "").trim() ? "Change Image" : "Select Image"}
+                      </Button>
+                      <Input
+                        id={f.key}
+                        placeholder="Or paste image URL here"
+                        value={form[f.key] ?? ""}
+                        onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                        className="text-xs"
+                      />
+                    </div>
+                  ) : f.kind === "textarea" ? (
+                    <Textarea
+                      id={f.key}
+                      rows={4}
+                      value={form[f.key] ?? ""}
+                      onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                    />
+                  ) : (
+                    <Input
+                      id={f.key}
+                      value={form[f.key] ?? ""}
+                      onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                    />
+                  )}
                 </div>
-                <Button variant="outline" size="sm" className="w-full text-xs h-7" onClick={() => copyUrl(image.url)}>
-                  <Copy className="mr-1 h-3 w-3" />
-                  {copied === image.url ? "Copied" : "Copy"}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+              ))}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-      {/* List View */}
-      {viewMode === "list" && (
-        <div className="space-y-2 border rounded-lg divide-y">
-          {visibleImages.map((image) => (
-            <div key={image.url} className="flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors group">
-              <img
-                src={image.url}
-                alt={image.name}
-                className="h-16 w-16 object-cover rounded border flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
-                onClick={() => copyUrl(image.url)}
-                title="Click to copy URL"
-              />
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-sm truncate">{image.name}</p>
-                <p className="text-xs text-muted-foreground truncate break-all mt-1">{image.url}</p>
-              </div>
-              <Button variant="outline" size="sm" onClick={() => copyUrl(image.url)} className="flex-shrink-0">
-                <Copy className="h-4 w-4" />
-                {copied === image.url ? "Copied" : "Copy"}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setDeleteConfirm(image.url)}
-                className="flex-shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity"
-                title="Delete image"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteConfirm !== null} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete image</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to remove this image from the gallery? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogAction
-            onClick={() => deleteConfirm && handleDeleteImage(deleteConfirm)}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            Delete
-          </AlertDialogAction>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ImagePickerDialog open={imagePickerOpen} onOpenChange={setImagePickerOpen} onSelect={handleImageSelect} />
     </div>
   );
 }
