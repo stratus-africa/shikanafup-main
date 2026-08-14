@@ -9,7 +9,7 @@ export function GenerationalTransformation() {
           {/* Image Side */}
           <div className="order-2 lg:order-1">
             <img
-              src="https://images.unsplash.com/photo-1517457373614-b7152f800fd1?w=800&h=600&fit=crop"
+              src="/api/public/gallery/1786695498705-5evvqj-group-afro-americans-working-together.jpgw=800&h=600&fit=crop"
               alt="Young diverse people working together for Kenya's future"
               className="w-full rounded-2xl shadow-2xl"
             />
@@ -18,21 +18,27 @@ export function GenerationalTransformation() {
           {/* Content Side */}
           <div className="order-1 lg:order-2">
             <div className="mb-8">
-              <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b] mb-4">
-                A GENERATIONAL TRANSFORMATION!
-              </p>
+              <p className="text-sm font-bold tracking-[0.16em] text-[#c9232b] mb-4">A GENERATIONAL TRANSFORMATION!</p>
               <h2 className="text-4xl sm:text-5xl font-black text-[#162443] leading-tight mb-6">
-                The spirit of revolution<br />that will shape Kenya's tomorrow..
+                The spirit of revolution
+                <br />
+                that will shape Kenya's tomorrow..
               </h2>
             </div>
 
             <div className="prose prose-lg max-w-none text-slate-700 space-y-6 mb-8">
               <p className="leading-8">
-                History remembers generations for the future they create, not the challenges they inherit. Kenya's youthful, connected, and entrepreneurial population, together with the wisdom and experience of older generations, presents a unique opportunity for structural transformation, national renewal, and shared progress.
+                History remembers generations for the future they create, not the challenges they inherit. Kenya's
+                youthful, connected, and entrepreneurial population, together with the wisdom and experience of older
+                generations, presents a unique opportunity for structural transformation, national renewal, and shared
+                progress.
               </p>
 
               <p className="leading-8">
-                Every young person, every woman, every man, every worker, every entrepreneur, every farmer, every student, every professional, and every elder has a role in building the Kenya we all deserve. SHIKANA calls on 12 million young people and all Kenyans across All 47 counties to register and vote in the 2027 General Elections.
+                Every young person, every woman, every man, every worker, every entrepreneur, every farmer, every
+                student, every professional, and every elder has a role in building the Kenya we all deserve. SHIKANA
+                calls on 12 million young people and all Kenyans across All 47 counties to register and vote in the 2027
+                General Elections.
               </p>
             </div>
 
