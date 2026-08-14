@@ -347,7 +347,7 @@ function Page() {
           </Dialog>
         </div>
 
-        <div className="rounded-md border">
+        <CollapsibleContent className="border-t">
           <Table>
             <TableHeader>
               <TableRow>
