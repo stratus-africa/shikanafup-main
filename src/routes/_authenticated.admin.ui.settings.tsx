@@ -266,6 +266,7 @@ function Page() {
   const upsert = useServerFn(upsertSetting);
   const del = useServerFn(deleteSetting);
   const [open, setOpen] = useState(false);
+  const [kvOpen, setKvOpen] = useState(false);
 
   const { data = [], isLoading } = useQuery({ queryKey: ["admin", "settings"], queryFn: () => list() });
   const inv = () => qc.invalidateQueries({ queryKey: ["admin", "settings"] });
