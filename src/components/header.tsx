@@ -138,15 +138,18 @@ export function Header() {
         <div className="mx-auto max-w-[1600px] px-5 sm:px-8 lg:px-12">
           <div className="flex h-[76px] items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-secondary">
+            <Link
+              href="/"
+              className="flex min-w-0 items-center gap-2 sm:gap-3 focus:outline-none focus:ring-2 focus:ring-secondary"
+            >
               <img
                 src={get("site.logo_url")}
                 alt={`${get("site.site_name")} logo`}
-                className="h-14 w-14 object-contain"
+                className="h-12 w-12 shrink-0 object-contain sm:h-14 sm:w-14"
               />
-              <div className="hidden sm:flex flex-col leading-tight">
-                <span className="font-bold text-secondary text-md">{get("site.site_name")}</span>
-                <span className="text-sm text-primary">{get("site.tagline")}</span>
+              <div className="flex min-w-0 flex-col leading-tight">
+                <span className="truncate text-sm font-bold text-secondary sm:text-md">{get("site.site_name")}</span>
+                <span className="truncate text-xs text-primary sm:text-sm">{get("site.tagline")}</span>
               </div>
             </Link>
 
