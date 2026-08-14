@@ -179,7 +179,10 @@ export const submitAnonymousDonation = createServerFn({ method: "POST" })
 // ===== Site settings (logo, contacts) used by the public site chrome =====
 export const publicGetSiteSettings = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = await sb();
-  const { data, error } = await supabase.from("settings").select("key, value").like("key", "site.%");
+  const { data, error } = await supabase
+    .from("settings")
+    .select("key, value")
+    .or("key.like.site.*,key.like.campaign_popup.*");
   if (error) throw new Error(error.message);
   const out: Record<string, string> = {};
   for (const row of data ?? []) {
