@@ -75,96 +75,135 @@ export function PageEditor({ page }: { page: PageDefinition }) {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{page.title}</h1>
-          <p className="text-sm text-muted-foreground">{page.description}</p>
+    <div className="min-h-full bg-muted/30 p-4 md:p-6">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6">
+        <div className="flex flex-wrap items-start justify-between gap-4 rounded-lg border bg-background p-5 shadow-sm">
+          <div>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Pages / {page.title}
+            </p>
+            <h1 className="text-2xl font-semibold tracking-tight">Edit {page.title}</h1>
+            <p className="text-sm text-muted-foreground">{page.description}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <a href={page.path} target="_blank" rel="noreferrer">
+                <ExternalLink className="mr-1 size-4" /> View page
+              </a>
+            </Button>
+            <Button variant="outline" size="sm" onClick={resetDefaults}>
+              <RotateCcw className="mr-1 size-4" /> Restore defaults
+            </Button>
+            <Button size="sm" disabled={persist.isPending} onClick={() => persist.mutate()}>
+              <Save className="mr-1 size-4" />
+              {persist.isPending ? "Saving…" : "Save changes"}
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" asChild>
-            <a href={page.path} target="_blank" rel="noreferrer">
-              <ExternalLink className="mr-1 size-4" /> View page
-            </a>
-          </Button>
-          <Button variant="outline" size="sm" onClick={resetDefaults}>
-            <RotateCcw className="mr-1 size-4" /> Restore defaults
-          </Button>
-          <Button size="sm" disabled={persist.isPending} onClick={() => persist.mutate()}>
-            <Save className="mr-1 size-4" />
-            {persist.isPending ? "Saving…" : "Save changes"}
-          </Button>
-        </div>
-      </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
-        {page.sections.map((section) => (
-          <Card key={section.title}>
-            <CardHeader>
-              <CardTitle className="text-base">{section.title}</CardTitle>
-              {section.description && <CardDescription>{section.description}</CardDescription>}
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              {section.fields.map((f) => (
-                <div key={f.key} className="grid gap-2">
-                  <Label htmlFor={f.key}>{f.label}</Label>
-                  {f.kind === "image" ? (
-                    <div className="space-y-3">
-                      {(form[f.key] ?? "").trim() && (
-                        <div className="relative inline-block">
-                          <img
-                            src={form[f.key]}
-                            alt={`${f.label} preview`}
-                            className="h-32 w-auto max-w-xs rounded-md border object-cover"
-                          />
-                          <button
-                            onClick={() => setForm({ ...form, [f.key]: "" })}
-                            className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90"
-                            title="Remove image"
+        <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="grid gap-6 xl:grid-cols-2">
+            {page.sections.map((section) => (
+              <Card key={section.title}>
+                <CardHeader>
+                  <CardTitle className="text-base">{section.title}</CardTitle>
+                  {section.description && <CardDescription>{section.description}</CardDescription>}
+                </CardHeader>
+                <CardContent className="grid gap-4">
+                  {section.fields.map((f) => (
+                    <div key={f.key} className="grid gap-2">
+                      <Label htmlFor={f.key}>{f.label}</Label>
+                      {f.kind === "image" ? (
+                        <div className="space-y-3">
+                          {(form[f.key] ?? "").trim() && (
+                            <div className="relative inline-block">
+                              <img
+                                src={form[f.key]}
+                                alt={`${f.label} preview`}
+                                className="h-32 w-auto max-w-xs rounded-md border object-cover"
+                              />
+                              <button
+                                onClick={() => setForm({ ...form, [f.key]: "" })}
+                                className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90"
+                                title="Remove image"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
+                          )}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => openImagePicker(f.key)}
+                            className="w-full gap-2"
                           >
-                            <X className="h-4 w-4" />
-                          </button>
+                            <ImageIcon className="h-4 w-4" />
+                            {(form[f.key] ?? "").trim() ? "Change Image" : "Select Image"}
+                          </Button>
+                          <Input
+                            id={f.key}
+                            placeholder="Or paste image URL here"
+                            value={form[f.key] ?? ""}
+                            onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                            className="text-xs"
+                          />
                         </div>
+                      ) : f.kind === "textarea" ? (
+                        <Textarea
+                          id={f.key}
+                          rows={4}
+                          value={form[f.key] ?? ""}
+                          onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                        />
+                      ) : (
+                        <Input
+                          id={f.key}
+                          value={form[f.key] ?? ""}
+                          onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                        />
                       )}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => openImagePicker(f.key)}
-                        className="w-full gap-2"
-                      >
-                        <ImageIcon className="h-4 w-4" />
-                        {(form[f.key] ?? "").trim() ? "Change Image" : "Select Image"}
-                      </Button>
-                      <Input
-                        id={f.key}
-                        placeholder="Or paste image URL here"
-                        value={form[f.key] ?? ""}
-                        onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-                        className="text-xs"
-                      />
                     </div>
-                  ) : f.kind === "textarea" ? (
-                    <Textarea
-                      id={f.key}
-                      rows={4}
-                      value={form[f.key] ?? ""}
-                      onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-                    />
-                  ) : (
-                    <Input
-                      id={f.key}
-                      value={form[f.key] ?? ""}
-                      onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
-                    />
-                  )}
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <aside className="space-y-4 xl:sticky xl:top-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Publish</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <p className="text-muted-foreground">Changes update the live website page after you save.</p>
+                <Button className="w-full" disabled={persist.isPending} onClick={() => persist.mutate()}>
+                  <Save className="mr-1 size-4" />
+                  {persist.isPending ? "Updating…" : "Update page"}
+                </Button>
+                <Button variant="outline" className="w-full" asChild>
+                  <a href={page.path} target="_blank" rel="noreferrer">
+                    <ExternalLink className="mr-1 size-4" />
+                    Preview page
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Page sections</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {page.sections.map((section) => (
+                  <p key={section.title} className="border-l-2 border-primary/30 pl-3 text-sm text-muted-foreground">
+                    {section.title}
+                  </p>
+                ))}
+              </CardContent>
+            </Card>
+          </aside>
+        </div>
 
-      <ImagePickerDialog open={imagePickerOpen} onOpenChange={setImagePickerOpen} onSelect={handleImageSelect} />
+        <ImagePickerDialog open={imagePickerOpen} onOpenChange={setImagePickerOpen} onSelect={handleImageSelect} />
+      </div>
     </div>
   );
 }
