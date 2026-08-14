@@ -192,3 +192,23 @@ export const publicGetSiteSettings = createServerFn({ method: "GET" }).handler(a
   }
   return out;
 });
+
+export const publicVerifyMembership = createServerFn({ method: "POST" })
+  .inputValidator(
+    z.object({
+      documentType: z.enum(["National ID", "Passport"]),
+      documentNumber: z.string().trim().min(1).max(40),
+    }),
+  )
+  .handler(async ({ data }) => {
+    const supabase = await sb();
+    const { data: application, error } = await supabase
+      .from("membership_applications")
+      .select("id")
+      .eq("doc_type", data.documentType)
+      .eq("id_no", data.documentNumber)
+      .limit(1)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return { exists: Boolean(application) };
+  });
