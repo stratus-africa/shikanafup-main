@@ -55,9 +55,29 @@ const nationalPriorities = [
   },
 ];
 
+const impactStories = [
+  {
+    label: "Discover",
+    text: "The awakening of our people to their shared identity, common destiny, and collective power.",
+  },
+  {
+    label: "Freedom",
+    text: "We are the force that will stand on the frontlines for Kenya; to protect our land and resources.",
+  },
+  {
+    label: "Truth",
+    text: "We commit to the spirit of truth, serve Kenyans fairly and guarantee equal opportunity for all.",
+  },
+  {
+    label: "Prosperity",
+    text: "Our true progress is measured by ensuring that growth reaches every corner of Kenya.",
+  },
+];
+
 export function ShikanaHome() {
   const { c } = usePageContent();
   const [activeHeroIndex, setActiveHeroIndex] = useState(0);
+  const [activeImpactIndex, setActiveImpactIndex] = useState(0);
   const heroSlides = [
     {
       image: c("site.home.hero1_image"),
@@ -96,7 +116,6 @@ export function ShikanaHome() {
   const sharedResponsibility = c("site.home.shared_responsibility");
   const sharedResponsibilityText = c("site.home.shared_responsibility_text");
   const impactCardTitle = c("site.home.impact_card_title");
-  const impactCardText = c("site.home.impact_card_text");
 
   return (
     <main className="overflow-hidden bg-[#fcfcfa] text-[#162443]">
@@ -267,25 +286,30 @@ export function ShikanaHome() {
                     <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-4">
                       {impactCardTitle}
                     </h3>
-                    <p className="text-base sm:text-lg leading-7 text-white/90">{impactCardText}</p>
+                    <p className="text-base sm:text-lg leading-7 text-white/90">
+                      {impactStories[activeImpactIndex].text}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* Pill Navigation Buttons */}
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3 sm:gap-4">
-                <button className="px-5 sm:px-6 py-2 rounded-full font-bold text-xs uppercase tracking-[0.08em] transition-all duration-300 bg-[#162443] text-white border-2 border-white hover:bg-white hover:text-[#162443]">
-                  Discover
-                </button>
-                <button className="px-5 sm:px-6 py-2 rounded-full font-bold text-xs uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-white hover:bg-[#162443] hover:text-white">
-                  Freedom
-                </button>
-                <button className="px-5 sm:px-6 py-2 rounded-full font-bold text-xs uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-white hover:bg-[#162443] hover:text-white">
-                  Truth
-                </button>
-                <button className="px-5 sm:px-6 py-2 rounded-full font-bold text-xs uppercase tracking-[0.08em] transition-all duration-300 bg-white text-[#162443] border-2 border-white hover:bg-[#162443] hover:text-white">
-                  Prosperity
-                </button>
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                {impactStories.map((story, index) => (
+                  <button
+                    key={story.label}
+                    type="button"
+                    aria-pressed={index === activeImpactIndex}
+                    onClick={() => setActiveImpactIndex(index)}
+                    className={`rounded-full border-2 px-5 py-2 text-xs font-bold uppercase tracking-[0.08em] transition-all duration-300 sm:px-6 ${
+                      index === activeImpactIndex
+                        ? "border-white bg-[#162443] text-white"
+                        : "border-white bg-white text-[#162443] hover:bg-[#162443] hover:text-white"
+                    }`}
+                  >
+                    {story.label}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
