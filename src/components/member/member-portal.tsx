@@ -137,7 +137,7 @@ export function MemberPortal() {
           : "No application";
 
   return (
-    <div className="min-h-screen bg-[#f5f8fb] pb-24 lg:pb-10">
+    <div className="member-portal min-h-screen bg-[#f5f8fb] pb-24 lg:pb-10">
       <header className="border-b border-border bg-white">
         <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
           <a href="/" className="flex items-center gap-3">
@@ -174,21 +174,21 @@ export function MemberPortal() {
           <TabsList className="fixed inset-x-4 bottom-4 z-30 grid h-auto grid-cols-3 border border-border bg-white p-1.5 shadow-xl lg:sticky lg:top-6 lg:inset-auto lg:h-fit lg:grid-cols-1 lg:self-start lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
             <TabsTrigger
               value="profile"
-              className="flex min-h-12 flex-col gap-1 text-[10px] font-bold uppercase tracking-wide data-[state=active]:bg-secondary data-[state=active]:text-white lg:flex-row lg:justify-start lg:gap-3 lg:rounded-none lg:border-l-2 lg:border-transparent lg:px-4 lg:text-sm lg:normal-case lg:tracking-normal lg:data-[state=active]:border-primary"
+              className="flex min-h-12 w-full flex-col items-center justify-center gap-1 text-center text-[10px] font-bold uppercase tracking-wide data-[state=active]:bg-secondary data-[state=active]:text-white lg:flex-row lg:justify-start lg:gap-3 lg:rounded-none lg:border-l-2 lg:border-transparent lg:px-4 lg:text-sm lg:normal-case lg:tracking-normal lg:data-[state=active]:border-primary"
             >
               <UserRound className="size-4" />
               Profile
             </TabsTrigger>
             <TabsTrigger
               value="apply"
-              className="flex min-h-12 flex-col gap-1 text-[10px] font-bold uppercase tracking-wide data-[state=active]:bg-secondary data-[state=active]:text-white lg:flex-row lg:justify-start lg:gap-3 lg:rounded-none lg:border-l-2 lg:border-transparent lg:px-4 lg:text-sm lg:normal-case lg:tracking-normal lg:data-[state=active]:border-primary"
+              className="flex min-h-12 w-full flex-col items-center justify-center gap-1 text-center text-[10px] font-bold uppercase tracking-wide data-[state=active]:bg-secondary data-[state=active]:text-white lg:flex-row lg:justify-start lg:gap-3 lg:rounded-none lg:border-l-2 lg:border-transparent lg:px-4 lg:text-sm lg:normal-case lg:tracking-normal lg:data-[state=active]:border-primary"
             >
               <Send className="size-4" />
               Apply
             </TabsTrigger>
             <TabsTrigger
               value="applications"
-              className="flex min-h-12 flex-col gap-1 text-[10px] font-bold uppercase tracking-wide data-[state=active]:bg-secondary data-[state=active]:text-white lg:flex-row lg:justify-start lg:gap-3 lg:rounded-none lg:border-l-2 lg:border-transparent lg:px-4 lg:text-sm lg:normal-case lg:tracking-normal lg:data-[state=active]:border-primary"
+              className="flex min-h-12 w-full flex-col items-center justify-center gap-1 text-center text-[10px] font-bold uppercase tracking-wide data-[state=active]:bg-secondary data-[state=active]:text-white lg:flex-row lg:justify-start lg:gap-3 lg:rounded-none lg:border-l-2 lg:border-transparent lg:px-4 lg:text-sm lg:normal-case lg:tracking-normal lg:data-[state=active]:border-primary"
             >
               <ClipboardList className="size-4" />
               Applications
