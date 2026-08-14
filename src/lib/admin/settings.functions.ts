@@ -26,6 +26,20 @@ export const upsertSetting = createServerFn({ method: "POST" })
     return row;
   });
 
+export const upsertSettings = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .inputValidator(z.array(z.object({ key: z.string().min(1).max(120), value: z.unknown() })).min(1))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as any;
+    const rows = data.map((setting) => ({ key: setting.key, value: setting.value as any, updated_by: userId }));
+    const { data: saved, error } = await supabase.from("settings").upsert(rows, { onConflict: "key" }).select();
+    if (error) throw new Error(error.message);
+    await Promise.all(
+      data.map((setting) => writeAudit(supabase, userId, "upsert", "settings", setting.key, { value: setting.value })),
+    );
+    return saved ?? [];
+  });
+
 export const deleteSetting = createServerFn({ method: "POST" })
   .middleware([requireAdmin])
   .inputValidator(z.object({ key: z.string() }))
