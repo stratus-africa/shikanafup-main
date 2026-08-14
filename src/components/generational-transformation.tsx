@@ -9,7 +9,7 @@ export function GenerationalTransformation() {
           {/* Image Side */}
           <div className="order-2 lg:order-1">
             <img
-              src="https://shikana.co.ke/api/public/gallery/1786695498705-5evvqj-group-afro-americans-working-together.jpg"
+              src="https://images.unsplash.com/photo-1517457373614-b7152f800fd1?w=800&h=600&fit=crop"
               alt="Young diverse people working together for Kenya's future"
               className="w-full rounded-2xl shadow-2xl"
             />
@@ -45,16 +45,17 @@ export function GenerationalTransformation() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/shared-ui/register"
-                className="inline-flex items-center justify-center gap-2 bg-[#c9232b] text-white px-8 py-4 rounded-lg font-bold hover:bg-[#a9161d] transition-colors"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#c9232b] px-6 text-sm font-bold text-white transition-colors hover:bg-[#a9161d]"
               >
                 Register Now <ArrowRight size={18} />
               </Link>
-              <Link
-                href="/shared-ui/vote"
-                className="inline-flex items-center justify-center gap-2 border-2 border-[#c9232b] text-[#c9232b] px-8 py-4 rounded-lg font-bold hover:bg-[#c9232b] hover:text-white transition-colors"
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event("shikana:open-campaign-popup"))}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border-2 border-[#c9232b] px-6 text-sm font-bold text-[#c9232b] transition-colors hover:bg-[#c9232b] hover:text-white"
               >
                 Learn More <ArrowRight size={18} />
-              </Link>
+              </button>
             </div>
           </div>
         </div>
