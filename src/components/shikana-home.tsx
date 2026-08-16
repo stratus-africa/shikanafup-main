@@ -279,7 +279,7 @@ export function ShikanaHome() {
               <div
                 className="relative rounded-2xl overflow-hidden shadow-2xl h-[400px] sm:h-[500px] bg-cover bg-center mb-8"
                 style={{
-                  backgroundImage: "url(//api/public/gallery/1786695911107-q7kfad-worker-sitting-rusty-tubes.jpg)",
+                  backgroundImage: "url(/api/public/gallery/1786695911107-q7kfad-worker-sitting-rusty-tubes.jpg)",
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-[#162443]/90 via-[#162443]/70 to-[#162443]/50" />
